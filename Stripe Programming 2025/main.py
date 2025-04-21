@@ -39,13 +39,13 @@ class ButtonClass():
         self.btnText.blit()
         
 def CreateButton():
-    
+    pass
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-GameState = "TitleScreen"
+GameState = "BirdLevel"
 
 RunVar = True
 while RunVar == True:
@@ -62,9 +62,14 @@ while RunVar == True:
         case "EndScreen":
             screen.fill(WHITE)
             
-        case _:
-            #default
-            pass
+
+        #commented because of run error
+        # case _:
+        #     #default
+        #     pass
+
+        case "BirdLevel":
+            screen.fill(BLUE)
         
     
     
