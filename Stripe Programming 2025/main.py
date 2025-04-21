@@ -27,6 +27,7 @@ class TextClass():
         self.textRect = self.textRender.get_rect(center = self.textPos)
         self.resultText = screen.blit(self.textRender, self.textRect)
 
+
 class ButtonClass():
     def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list):
         self.btnText = btnText
@@ -37,6 +38,28 @@ class ButtonClass():
     def draw(self):
         self.rectangleRender = pygame.draw.rect(screen, self.bgColor, self.btnRect)
         self.btnText.blit()
+
+
+class Bird():
+    def __init__(self, xcor, ycor):
+        # animation if willing to add
+        birdRect = pygame.Rect((xcor, ycor), (50, 50))
+        sprite_sheet = pygame.image.load("pigeon_fiy-Sheet.png")
+        frame_width, frame_height = 32, 32
+        frames = []
+        for i in range(sprite_sheet.get_width() // frame_width):
+            frame = sprite_sheet.subsurface(pygame.Rect(i * frame_width, 0, frame_width, frame_height))
+            frames.append(frame)
+
+        
+
+        
+
+    def move(self):
+        pass
+
+
+
         
 def CreateButton():
     pass
@@ -70,6 +93,9 @@ while RunVar == True:
 
         case "BirdLevel":
             screen.fill(BLUE)
+            
+            bird = Bird(50, 50)
+            screen.blit()
         
     
     
