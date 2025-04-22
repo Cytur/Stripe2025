@@ -47,13 +47,17 @@ class Bird():
         self.xcor = xcor
         self.ycor = ycor
         self.birdRect = pygame.Rect((self.xcor, self.ycor), (256, 256))
-        sprite_sheet = pygame.image.load("PigeonAsset/pigeon_fiy-Sheet.png")
         self.frame_width, self.frame_height = 32, 32
+
+        # Loading all bird frames into a list
         self.frames = []
-        for i in range(sprite_sheet.get_width() // self.frame_width):
-            self.frame = sprite_sheet.subsurface(pygame.Rect(i * self.frame_width, 0, self.frame_width, self.frame_height))
-            self.frame = pygame.transform.scale(self.frame, size= (64, 64))
-            self.frames.append(self.frame)
+        for num in range(8):
+            frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
+            frame = pygame.transform.scale(frame, size= (64, 64))
+            frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
+            self.frames.append(frame)
+
+        
         self.frame_count = 0
         self.current_frame = self.frames[self.frame_count]
 
