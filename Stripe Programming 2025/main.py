@@ -43,7 +43,10 @@ class ButtonClass():
 class Bird():
     def __init__(self, xcor, ycor):
         # animation if willing to add
-        self.birdRect = pygame.Rect((xcor, ycor), (256, 256))
+        self.speed = 10
+        self.xcor = xcor
+        self.ycor = ycor
+        self.birdRect = pygame.Rect((self.xcor, self.ycor), (256, 256))
         sprite_sheet = pygame.image.load("PigeonAsset/pigeon_fiy-Sheet.png")
         self.frame_width, self.frame_height = 32, 32
         self.frames = []
@@ -59,15 +62,19 @@ class Bird():
         if self.frame_count == len(self.frames):
             self.frame_count = 0
         self.current_frame = self.frames[self.frame_count]
-        print(self.frame_count)
-        
 
-        
 
-        
+    def move(self, direction):
+        if direction == "UP":
+            self.ycor -= self.speed
 
-    def move(self):
-        pass
+        if direction == "DOWN":
+            self.ycor += self.speed
+
+
+        self.birdRect = pygame.Rect((self.xcor, self.ycor), (256, 256))
+
+        direction = ""
 
 
 
@@ -85,6 +92,10 @@ GameState = "BirdLevel"
 
 
 bird = Bird(50, 50)
+# turtle = Turtle(x, y)
+# deer = Deer(x, y)
+
+message_end_time = 0
 
 RunVar = True
 while RunVar == True:
@@ -108,20 +119,43 @@ while RunVar == True:
         #     pass
 
         case "BirdLevel":
+            current_player = bird
             screen.fill(BLUE)
             
-            
+                
+
+
+
             screen.blit(bird.current_frame, bird.birdRect)
-            bird.animation_update()
-        
-    
+            
+            current_time = pygame.time.get_ticks()
+
+            if current_time > message_end_time:
+                bird.animation_update()
+                message_end_time = pygame.time.get_ticks() + 50
+
+
+
+
+
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             RunVar = False
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            current_player.move("UP")
+        if keys[pygame.K_s]:
+            current_player.move("DOWN")
+
+        # if animal will have left and right
+        if keys[pygame.K_a]:
+            current_player.move("LEFT")
+        if keys[pygame.K_s]:
+            current_player.move("RIGHT")
             
     pygame.display.update()
     
-    pygame.time.Clock().tick(15)
+    pygame.time.Clock().tick(60)
 
 pygame.quit()
