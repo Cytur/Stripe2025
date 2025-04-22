@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # constants
 
@@ -48,6 +49,7 @@ class ObstacleClass():
         self.speed = speed
         self.width = width
         self.height = height
+        self.image = image
         self.rect = pygame.Rect(startx, starty, self.width, self.height)
         self.image = pygame.transform.scale(image, (width, height))
 
@@ -115,8 +117,10 @@ bird = Bird(50, 50)
 # deer = Deer(x, y)
 
 obstacle_list = []
+cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAsset/Cloud 12.png"]
 
-message_end_time = 0
+end_time_player_animation = 0
+end_time_cloud_animation = 0
 
 RunVar = True
 while RunVar == True:
@@ -143,19 +147,32 @@ while RunVar == True:
             current_player = bird
             screen.fill(BLUE)
             
-                
-
-
-
-            screen.blit(bird.current_frame, bird.birdRect)
-            
             current_time = pygame.time.get_ticks()
 
-            if current_time > message_end_time:
+            #Set up backround
+            if current_time > end_time_cloud_animation:
+                cloud_img = pygame.image.load(random.choice(cloud_img_list))
+                cloud = ObstacleClass(1000, random.randint(150, 450), random.randint(10, 20), cloud_img, cloud_img.get_width(), cloud_img.get_height())
+                end_time_cloud_animation = pygame.time.get_ticks() + 300
+                obstacle_list.append(cloud)
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                
+
+            if current_time > end_time_player_animation:
                 bird.animation_update()
-                message_end_time = pygame.time.get_ticks() + 50
+                end_time_player_animation = pygame.time.get_ticks() + 50
 
 
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                obstacle.move()
+                if obstacle.xcor < -200:
+                    del obstacle
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+            screen.blit(bird.current_frame, bird.birdRect)
 
 
 
