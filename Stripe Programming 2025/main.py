@@ -40,9 +40,24 @@ class ButtonClass():
         self.btnText.blit()
 
 
+#Enemies or obstacles which will move in a straight path
+class ObstacleClass():
+    def __init__(self, startx: int, starty: int, speed: int, image: pygame.Surface, width: int, height: int):
+        self.xcor = startx
+        self.ycor = starty
+        self.speed = speed
+        self.width = width
+        self.height = height
+        self.rect = pygame.Rect(startx, starty, self.width, self.height)
+        self.image = pygame.transform.scale(image, (width, height))
+
+    def move(self):
+        self.xcor -= self.speed
+        self.rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
+
+
 class Bird():
-    def __init__(self, xcor, ycor):
-        # animation if willing to add
+    def __init__(self, xcor:int, ycor:int):
         self.speed = 10
         self.xcor = xcor
         self.ycor = ycor
@@ -98,6 +113,8 @@ GameState = "BirdLevel"
 bird = Bird(50, 50)
 # turtle = Turtle(x, y)
 # deer = Deer(x, y)
+
+obstacle_list = []
 
 message_end_time = 0
 
