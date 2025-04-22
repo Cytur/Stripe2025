@@ -43,13 +43,24 @@ class ButtonClass():
 class Bird():
     def __init__(self, xcor, ycor):
         # animation if willing to add
-        birdRect = pygame.Rect((xcor, ycor), (50, 50))
-        sprite_sheet = pygame.image.load("pigeon_fiy-Sheet.png")
-        frame_width, frame_height = 32, 32
-        frames = []
-        for i in range(sprite_sheet.get_width() // frame_width):
-            frame = sprite_sheet.subsurface(pygame.Rect(i * frame_width, 0, frame_width, frame_height))
-            frames.append(frame)
+        self.birdRect = pygame.Rect((xcor, ycor), (256, 256))
+        sprite_sheet = pygame.image.load("PigeonAsset/pigeon_fiy-Sheet.png")
+        self.frame_width, self.frame_height = 32, 32
+        self.frames = []
+        for i in range(sprite_sheet.get_width() // self.frame_width):
+            self.frame = sprite_sheet.subsurface(pygame.Rect(i * self.frame_width, 0, self.frame_width, self.frame_height))
+            self.frame = pygame.transform.scale(self.frame, size= (64, 64))
+            self.frames.append(self.frame)
+        self.frame_count = 0
+        self.current_frame = self.frames[self.frame_count]
+
+    def animation_update(self):
+        self.frame_count += 1
+        if self.frame_count == len(self.frames):
+            self.frame_count = 0
+        self.current_frame = self.frames[self.frame_count]
+        print(self.frame_count)
+        
 
         
 
@@ -69,6 +80,11 @@ pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 GameState = "BirdLevel"
+
+
+
+
+bird = Bird(50, 50)
 
 RunVar = True
 while RunVar == True:
@@ -94,8 +110,9 @@ while RunVar == True:
         case "BirdLevel":
             screen.fill(BLUE)
             
-            bird = Bird(50, 50)
-            screen.blit()
+            
+            screen.blit(bird.current_frame, bird.birdRect)
+            bird.animation_update()
         
     
     
@@ -105,4 +122,6 @@ while RunVar == True:
             
     pygame.display.update()
     
+    pygame.time.Clock().tick(15)
+
 pygame.quit()
