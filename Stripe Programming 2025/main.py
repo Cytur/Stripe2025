@@ -131,7 +131,7 @@ pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-
+#Animal Frame Lists
 bird_frames = []
 turt_frames = []
 
@@ -147,24 +147,35 @@ for num in range(6):
             frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
             turt_frames.append(frame)
 
+
+#Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames)
 turtle = BirdTurtle(50, 50, turt_frames)
 # deer = Deer(x, y)
 
+
+#Info Cards
 bird_info = InfoCard(TextClass, ButtonClass, "Red Winged Blackbird", "A stocky, red and black bird, and one", "that is very common in North America.",
                      " Air pollution, Hawks, Eagles", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, bird_frames[0], SKYBLUE, 0)
 
 turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The largest sea turtle in the world, one", "that travels thousands of kilometers",
                        "Pollution, Sharks, Orcas", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40)
 
-
+#Obstacle Related Lists
 obstacle_list = []
 cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAsset/Cloud 12.png"]
 
+
+#Wait Animation Section
 end_time_player_animation = 0
 end_time_cloud_animation = 0
 
-GameState = "PlayerChoose"
+#Functions for Obstacles
+cloud_img = pygame.image.load(random.choice(cloud_img_list))
+def make_cloud():
+    return ObstacleClass(1000, random.randint(0, 600), random.randint(5, 15), cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
+
+GameState = "BirdLevel"
 
 RunVar = True
 while RunVar == True:
@@ -199,8 +210,7 @@ while RunVar == True:
 
             #Set up backround
             if current_time > end_time_cloud_animation:
-                cloud_img = pygame.image.load(random.choice(cloud_img_list))
-                cloud = ObstacleClass(1000, random.randint(150, 450), random.randint(5, 15), cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
+                cloud = make_cloud()
                 end_time_cloud_animation = pygame.time.get_ticks() + 300
                 obstacle_list.append(cloud)
 
