@@ -14,7 +14,7 @@ class TextClass():
 
 
 class ButtonClass():
-    def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list, screen: pygame.Surface, command: function, param):
+    def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list, screen: pygame.Surface, command, param):
         self.btnText = btnText
         self.btnRect = btnRect
         self.btnLineWidth = btnLineWidth

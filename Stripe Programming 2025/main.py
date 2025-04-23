@@ -62,6 +62,7 @@ turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The l
 #Obstacle Related Lists
 obstacle_list = []
 cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAsset/Cloud 12.png"]
+buttonlist = []
 
 
 #Wait Animation Section
@@ -89,7 +90,6 @@ def changegamestate(gamestate):
      GameState=gamestate
 
 
-
 RunVar = True
 while RunVar == True:
     match GameState:
@@ -100,6 +100,7 @@ while RunVar == True:
             titleText.blit()
             
             startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225)), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, changegamestate, "PlayerChoose")
+            buttonlist.append(startButton)
             startButton.draw()
 
         case "PlayerChoose":
@@ -184,6 +185,15 @@ while RunVar == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             RunVar = False
+
+        #detecting button clicks
+        if event.type == pygame.mouse.get_pressed:
+            mousepos = pygame.mouse.get_pos()
+            for button in buttonlist:
+                #  if 
+                pass
+        
+        #detecting key presses
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             current_player.move("UP")
