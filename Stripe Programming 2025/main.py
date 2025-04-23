@@ -12,6 +12,7 @@ RED = [255,0,0]
 GREEN = [0,255,0]
 SKYBLUE = [170,206,250]
 OCEANBLUE = [1,84,130]
+OCEANYELLOW = (128,128,0)
 
 SCREEN_WIDTH = 840
 SCREEN_HEIGHT = 600
@@ -66,13 +67,28 @@ cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAs
 #Wait Animation Section
 end_time_player_animation = 0
 end_time_cloud_animation = 0
+end_time_bubble_animation = 0
 
 #Functions for Obstacles
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
 def make_cloud():
-    return ObstacleClass(1000, random.randint(0, 600), random.randint(5, 15), cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
+    return ObstacleClass(1000, random.randint(0, 600), random.randint(5, 15), 0, cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
 
-GameState = "BirdLevel"
+bubble_img = pygame.image.load("BubbleAsset/bubble.png")
+def make_bubble():
+    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img, bubble_img.get_width(), bubble_img.get_height(), True)
+
+
+
+
+
+GameState = "TurtleLevel"
+
+
+def changegamestate(gamestate):
+     GameState=gamestate
+
+
 
 RunVar = True
 while RunVar == True:
@@ -83,7 +99,7 @@ while RunVar == True:
             titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175), screen)
             titleText.blit()
             
-            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225)), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen)
+            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225)), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, changegamestate, "PlayerChoose")
             startButton.draw()
 
         case "PlayerChoose":
@@ -135,29 +151,31 @@ while RunVar == True:
             
             current_time = pygame.time.get_ticks()
 
-            #Set up backround 
-            # if current_time > end_time_cloud_animation:
-            #     cloud_img = pygame.image.load(random.choice(cloud_img_list))
-            #     cloud = ObstacleClass(1000, random.randint(150, 450), random.randint(5, 15), cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
-            #     end_time_cloud_animation = pygame.time.get_ticks() + 300
-            #     obstacle_list.append(cloud)
+            pygame.draw.rect(screen, OCEANYELLOW, pygame.Rect(0,500,840,100))
 
-            # for obstacle in obstacle_list:
-            #     obstacle.move()
-                
+
+            # Set up backround 
+            if current_time > end_time_bubble_animation:
+                bubble = make_bubble()
+                obstacle_list.append(bubble)
+                end_time_bubble_animation = pygame.time.get_ticks() + random.randint(350, 450)
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+
 
             if current_time > end_time_player_animation:
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                end_time_player_animation = pygame.time.get_ticks() + 60
 
 
             #Blit all the objects
-            # for obstacle in obstacle_list:
-            #     obstacle.move()
-            #     if obstacle.xcor < -200:
-            #         del obstacle
-            #     else:
-            #         screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+            for obstacle in obstacle_list:
+                obstacle.move()
+                if obstacle.xcor < -200:
+                    del obstacle
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
             screen.blit(current_player.current_frame, current_player.Rect)
 
 

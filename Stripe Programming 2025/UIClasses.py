@@ -14,12 +14,13 @@ class TextClass():
 
 
 class ButtonClass():
-    def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list, screen: pygame.Surface):
+    def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list, screen: pygame.Surface, command: function, param):
         self.btnText = btnText
         self.btnRect = btnRect
         self.btnLineWidth = btnLineWidth
         self.bgColor = bgColor
         self.screen = screen
+        self.command = command
         
     def draw(self):
         self.rectangleRender = pygame.draw.rect(self.screen, self.bgColor, self.btnRect)
