@@ -1,6 +1,9 @@
 import pygame
 import random
-
+from birdturtle import BirdTurtle
+from ObstacleClass import ObstacleClass
+from InfoCard import InfoCard
+from UIClasses import TextClass, ButtonClass
 # constants
 
 WHITE = [255,255,255]
@@ -14,112 +17,6 @@ SCREEN_WIDTH = 840
 SCREEN_HEIGHT = 600
 SCREEN_WIDTH_CENTER = SCREEN_WIDTH / 2
 SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
-
-PoppinsFont = "Poppins-Medium.ttf"
-
-class TextClass():
-    def __init__(self, textString:str, textFont:pygame.font.Font, textColor:list, textPos:tuple):
-        self.textString = textString
-        self.textFont = textFont
-        self.textRender = textFont.render(textString, True, textColor)
-        self.textPos = textPos
-        self.textRect = None
-        
-    def blit(self):
-        self.textRect = self.textRender.get_rect(center = self.textPos)
-        self.resultText = screen.blit(self.textRender, self.textRect)
-
-
-class ButtonClass():
-    def __init__(self, btnText:TextClass, btnRect:pygame.Rect, btnLineWidth:int, bgColor:list):
-        self.btnText = btnText
-        self.btnRect = btnRect
-        self.btnLineWidth = btnLineWidth
-        self.bgColor = bgColor
-        
-    def draw(self):
-        self.rectangleRender = pygame.draw.rect(screen, self.bgColor, self.btnRect)
-        self.btnText.blit()
-
-
-class InfoCard():
-    def __init__(self, txt: TextClass, btn: ButtonClass, Title: str, Description1:str, Description2, Challenges:str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset):
-        self.title = Title
-        #splitting the description into 2 lines to fit onto info card
-        self.des1 = Description1
-        self.des2 = Description2
-        self.challenges = Challenges
-        self.width = 200
-        self.height = 200
-        self.xcor = xcor - self.width/2
-        self.ycor = ycor - self.height/2
-        self.txt = txt
-        self.icon = pygame.transform.scale2x(icon)
-        self.bg = bg
-        self.icon_y_offset = y_offset
-        self.iconRect = pygame.Rect(self.xcor, self.ycor + 20 - self.icon_y_offset, 96*2, 96*2)
-        self.desText1 = self.txt(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 30))
-        self.desText2 = self.txt(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 20))
-        self.titleText = self.txt(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15))
-        
-
-    def show(self, Screen: pygame.Surface):
-        self.card_rect = pygame.draw.rect(Screen, self.bg, pygame.Rect(self.xcor, self.ycor, self.width, self.height))
-        # print(self.ycor, self.xcor)
-        self.titleText.blit()
-        self.desText1.blit()
-        self.desText2.blit()
-        Screen.blit(self.icon, self.iconRect)
-
-
-
-#Enemies or obstacles which will move in a straight path
-class ObstacleClass():
-    def __init__(self, startx: int, starty: int, speed: int, image: pygame.Surface, width: int, height: int, collision: bool):
-        self.collision = collision
-        self.xcor = startx
-        self.ycor = starty
-        self.speed = speed
-        self.width = width
-        self.height = height
-        self.image = image
-        self.rect = pygame.Rect(startx, starty, self.width, self.height)
-        self.image = pygame.transform.scale(image, (width, height))
-
-    def move(self):
-        self.xcor -= self.speed
-        self.rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
-
-
-class BirdTurtle():
-    def __init__(self, xcor:int, ycor:int, frame_list:list):
-        self.speed = 10
-        self.xcor = xcor
-        self.ycor = ycor
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (288, 288))
-
-        self.frames = frame_list
-        self.frame_count = 0
-        self.current_frame = self.frames[self.frame_count]
-
-    def animation_update(self):
-        self.frame_count += 1
-        if self.frame_count == len(self.frames):
-            self.frame_count = 0
-        self.current_frame = self.frames[self.frame_count]
-
-
-    def move(self, direction):
-        if direction == "UP":
-            self.ycor -= self.speed
-
-        if direction == "DOWN":
-            self.ycor += self.speed
-
-
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (256, 256))
-
-        direction = ""
 
 
 
@@ -156,10 +53,10 @@ turtle = BirdTurtle(50, 50, turt_frames)
 
 #Info Cards
 bird_info = InfoCard(TextClass, ButtonClass, "Red Winged Blackbird", "A stocky, red and black bird, and one", "that is very common in North America.",
-                     " Air pollution, Hawks, Eagles", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, bird_frames[0], SKYBLUE, 0)
+                     " Air pollution, Hawks, Eagles", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, bird_frames[0], SKYBLUE, 0, screen)
 
 turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The largest sea turtle in the world, one", "that travels thousands of kilometers",
-                       "Pollution, Sharks, Orcas", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40)
+                       "Pollution, Sharks, Orcas", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40, screen)
 
 #Obstacle Related Lists
 obstacle_list = []
@@ -183,10 +80,10 @@ while RunVar == True:
         case "TitleScreen":
             screen.fill(WHITE)
             
-            titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175))
+            titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175), screen)
             titleText.blit()
             
-            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225)), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN)
+            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225)), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen)
             startButton.draw()
 
         case "PlayerChoose":
