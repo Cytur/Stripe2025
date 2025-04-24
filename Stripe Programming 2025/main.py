@@ -4,6 +4,7 @@ from birdturtle import BirdTurtle
 from ObstacleClass import ObstacleClass
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
+from deer import Deer
 
 # constants
 WHITE = [255,255,255]
@@ -13,6 +14,7 @@ GREEN = [0,255,0]
 SKYBLUE = [170,206,250]
 OCEANBLUE = [1,84,130]
 OCEANYELLOW = (128,128,0)
+GRASSGREEN = (0,154,23)
 
 SCREEN_WIDTH = 840
 SCREEN_HEIGHT = 600
@@ -68,6 +70,7 @@ for num in range(6):
 #Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames)
 turtle = BirdTurtle(50, 50, turt_frames)
+deer = Deer(50, 400)
 # deer = Deer(x, y)
 
 
@@ -91,8 +94,8 @@ end_time_bubble_animation = 0
 
 #Functions for Obstacles
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
-def make_cloud():
-    return ObstacleClass(1000, random.randint(0, 600), random.randint(5, 15), 0, cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
+def make_cloud(bottom_bound: int = 600):
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
 
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 def make_bubble():
@@ -102,7 +105,7 @@ def make_bubble():
 
 
 
-GameState = "TitleScreen"
+GameState = "DeerLevel"
 
 
 
@@ -217,6 +220,44 @@ while RunVar == True:
 
 
 
+        case "DeerLevel":
+            current_player = deer
+
+            screen.fill(SKYBLUE)
+            
+            current_time = pygame.time.get_ticks()
+
+            pygame.draw.rect(screen, GRASSGREEN, pygame.Rect(0,500,840,100))
+
+
+            # Set up backround 
+            if current_time > end_time_cloud_animation:
+                cloud = make_cloud(450)
+                obstacle_list.append(cloud)
+                end_time_cloud_animation = pygame.time.get_ticks() + 600
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+
+
+            if current_time > end_time_player_animation:
+                current_player.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 60
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                obstacle.move()
+                if obstacle.xcor < -200:
+                    del obstacle
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+
+            screen.blit(current_player.current_frame, current_player.Rect)
+
+
+
+
 
     
     for event in pygame.event.get():
@@ -238,11 +279,12 @@ while RunVar == True:
         if keys[pygame.K_s]:
             current_player.move("DOWN")
 
-        # if animal will have left and right
-        if keys[pygame.K_a]:
-            current_player.move("LEFT")
-        if keys[pygame.K_s]:
-            current_player.move("RIGHT")
+        #For deer
+        try:
+            if keys[pygame.K_SPACE]:
+                current_player.jump()
+        except:
+            pass
             
     pygame.display.update()
     
