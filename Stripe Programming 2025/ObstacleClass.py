@@ -1,8 +1,10 @@
 import pygame
 
+collide_list = []
+
 #Enemies or obstacles which will move in a straight path
 class ObstacleClass():
-    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, image: pygame.Surface, width: int, height: int, collision: bool):
+    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, collision: bool, frames: list):
         self.collision = collision
         self.xcor = startx
         self.ycor = starty
@@ -10,11 +12,24 @@ class ObstacleClass():
         self.speedy = speedy
         self.width = width
         self.height = height
-        self.image = image
-        self.rect = pygame.Rect(startx, starty, self.width, self.height)
-        self.image = pygame.transform.scale(image, (width, height))
+        self.images = []
+        for image in frames:
+            self.image = pygame.transform.scale(image, (width, height))
+            self.images.append(self.image)
+        self.frame_num = 0
+        self.Rect = pygame.Rect(startx, starty, self.width, self.height)
+        
+
+        if self.collision == True:
+            collide_list.append(self)
 
     def move(self):
         self.xcor -= self.speedx
         self.ycor -= self.speedy
-        self.rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
+        self.Rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
+
+    def update_frame(self):
+        self.frame_num += 1
+        if self.frame_num == len(self.images):
+            self.frame_num = 0
+        self.image = self.images[self.frame_num + 1]

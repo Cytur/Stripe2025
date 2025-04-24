@@ -1,7 +1,7 @@
 import pygame
 import random
 from birdturtle import BirdTurtle
-from ObstacleClass import ObstacleClass
+from ObstacleClass import ObstacleClass, collide_list
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
@@ -79,10 +79,10 @@ bird_info = InfoCard(TextClass, ButtonClass, "Red Winged Blackbird", "A stocky, 
                      " Air pollution, Hawks, Eagles", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, bird_frames[0], SKYBLUE, 0, screen, changegamestate, "BirdLevel")
 
 turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The largest sea turtle in the world, one", "that travels thousands of kilometers",
-                       "Pollution, Sharks, Orcas", SCREEN_WIDTH_CENTER - 300, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40, screen, changegamestate, "TurtleLevel")
+                       "Pollution, Sharks", SCREEN_WIDTH_CENTER - 300, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40, screen, changegamestate, "TurtleLevel")
 
 deer_info = InfoCard(TextClass, ButtonClass, "White-Tailed Deer", "A white and brown deer, which is", "abundant all over Central America",
-                       "Hunters, Wolves, Habitat Loss", SCREEN_WIDTH_CENTER + 300, SCREEN_HEIGHT_CENTER, pygame.transform.scale(deer.frames[0], (120, 96)), GRASSGREEN, 40, screen, changegamestate, "DeerLevel")
+                       "Wolves, Habitat Loss", SCREEN_WIDTH_CENTER + 300, SCREEN_HEIGHT_CENTER, pygame.transform.scale(deer.frames[1], (28*3, 75)), GRASSGREEN, 40, screen, changegamestate, "DeerLevel")
 
 #Obstacle Related Lists
 obstacle_list = []
@@ -92,19 +92,23 @@ cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAs
 
 #Wait Animation Section
 end_time_player_animation = 0
-end_time_cloud_animation = 0
-end_time_bubble_animation = 0
+end_time_cloud_spawn = 0
+end_time_bubble_spawn = 0
+end_time_wolf_spawn = 0
+end_time_wolf_animation = 0
 
 #Functions for Obstacles
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
 def make_cloud(bottom_bound: int = 600):
-    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img, cloud_img.get_width(), cloud_img.get_height(), True)
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width(), cloud_img.get_height(), False, [cloud_img])
 
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 def make_bubble():
-    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img, bubble_img.get_width(), bubble_img.get_height(), True)
+    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
-
+wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
+def make_wolf():
+    return ObstacleClass(900, 450,  8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
 
 
 
@@ -138,14 +142,6 @@ while RunVar == True:
             turtle_info.show(Screen=screen)
             bird_info.show(Screen=screen)
             deer_info.show(Screen=screen)
-
-            
-
-
-
-
-        case "EndScreen":
-            screen.fill(WHITE)
             
 
 
@@ -163,9 +159,9 @@ while RunVar == True:
             current_time = pygame.time.get_ticks()
 
             #Set up backround
-            if current_time > end_time_cloud_animation:
+            if current_time > end_time_cloud_spawn:
                 cloud = make_cloud()
-                end_time_cloud_animation = pygame.time.get_ticks() + 300
+                end_time_cloud_spawn = pygame.time.get_ticks() + 300
                 obstacle_list.append(cloud)
 
             for obstacle in obstacle_list:
@@ -186,6 +182,12 @@ while RunVar == True:
             screen.blit(bird.current_frame, bird.Rect)
 
 
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    changegamestate("EndScreen")
+
+
 
 
 
@@ -200,10 +202,10 @@ while RunVar == True:
 
 
             # Set up backround 
-            if current_time > end_time_bubble_animation:
+            if current_time > end_time_bubble_spawn:
                 bubble = make_bubble()
                 obstacle_list.append(bubble)
-                end_time_bubble_animation = pygame.time.get_ticks() + random.randint(350, 450)
+                end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -222,6 +224,11 @@ while RunVar == True:
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
             screen.blit(current_player.current_frame, current_player.Rect)
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    changegamestate("EndScreen")
 
 
 
@@ -237,10 +244,16 @@ while RunVar == True:
 
 
             # Set up backround 
-            if current_time > end_time_cloud_animation:
+            if current_time > end_time_cloud_spawn:
                 cloud = make_cloud(450)
                 obstacle_list.append(cloud)
-                end_time_cloud_animation = pygame.time.get_ticks() + 600
+                end_time_cloud_spawn = pygame.time.get_ticks() + 600
+
+            if current_time > end_time_wolf_spawn:
+                wolf = make_wolf()
+                print("wolf spawned")
+                obstacle_list.append(wolf)
+                end_time_wolf_spawn = pygame.time.get_ticks() + 4000
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -249,6 +262,7 @@ while RunVar == True:
             if current_time > end_time_player_animation:
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
+
 
 
             #Blit all the objects
@@ -260,6 +274,24 @@ while RunVar == True:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
 
             screen.blit(current_player.current_frame, current_player.Rect)
+
+
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    print(obstacle.xcor)
+                    
+                    pygame.time.delay(4000)
+                    changegamestate("EndScreen")
+
+
+
+
+
+        case "EndScreen":
+            screen.fill(WHITE)
+            obstacle_list = []
 
 
 
@@ -277,13 +309,19 @@ while RunVar == True:
                 if button.rectangleRender.collidepoint(mousepos):
                     button.command(button.param)
                     print("button clicked")
+
+        
         
         #detecting key presses
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            current_player.move("UP")
-        if keys[pygame.K_s]:
-            current_player.move("DOWN")
+        try:
+            if keys[pygame.K_w]:
+                current_player.move("UP")
+            if keys[pygame.K_s]:
+                current_player.move("DOWN")
+        except:
+            pass
+        
 
         #For deer
         try:

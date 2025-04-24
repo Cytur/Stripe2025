@@ -8,13 +8,13 @@ class Deer():
         self.speed = 10
         self.xcor = xcor
         self.ycor = ycor
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (288, 288))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
         
         self.frames = []
 
         for img in range(5):
             image=pygame.image.load(f'DeerAsset/deer{img+1}.png')
-            image = pygame.transform.scale(image, (160, 128))
+            image = pygame.transform.scale(image, (28*4, 100))
             self.frames.append(image)
         
 
