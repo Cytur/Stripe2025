@@ -2,32 +2,50 @@ import pygame
 from UIClasses import TextClass, ButtonClass
 
 
+WHITE = [255,255,255]
 BLACK = [0,0,0]
+RED = [255,0,0]
+GREEN = [0,255,0]
+SKYBLUE = [170,206,250]
+OCEANBLUE = [1,84,130]
+OCEANYELLOW = (128,128,0)
+
+SCREEN_WIDTH = 840
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH_CENTER = SCREEN_WIDTH / 2
+SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
 
 
 PoppinsFont = "Poppins-Medium.ttf"
 
 
 class InfoCard():
-    def __init__(self, txt: TextClass, btn: ButtonClass, Title: str, Description1:str, Description2, Challenges:str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen):
-        self.title = Title
+    def __init__(self, txt: TextClass, btn: ButtonClass, Title: str, Description1:str, Description2, Challenges:str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen, gamestatefunc, gamestate: str):
         self.screen = screen
+
+        self.title = Title
         #splitting the description into 2 lines to fit onto info card
         self.des1 = Description1
         self.des2 = Description2
         self.challenges = Challenges
+
         self.width = 200
-        self.height = 200
+        self.height = 300
         self.xcor = xcor - self.width/2
         self.ycor = ycor - self.height/2
+
         self.txt = txt
+        self.btn = btn
+
         self.icon = pygame.transform.scale2x(icon)
         self.bg = bg
         self.icon_y_offset = y_offset
+
         self.iconRect = pygame.Rect(self.xcor, self.ycor + 20 - self.icon_y_offset, 96*2, 96*2)
-        self.desText1 = self.txt(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 30), self.screen)
-        self.desText2 = self.txt(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 20), self.screen)
-        self.titleText = self.txt(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15), screen)
+        self.playbutton = self.btn(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, GREEN, screen, gamestatefunc, gamestate)
+        self.desText1 = self.txt(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
+        self.desText2 = self.txt(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)
+        self.titleText = self.txt(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15), self.screen)
         
 
     def show(self, Screen: pygame.Surface):
@@ -36,4 +54,5 @@ class InfoCard():
         self.titleText.blit()
         self.desText1.blit()
         self.desText2.blit()
+        self.playbutton.draw()
         Screen.blit(self.icon, self.iconRect)
