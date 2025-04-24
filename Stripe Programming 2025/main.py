@@ -81,6 +81,9 @@ bird_info = InfoCard(TextClass, ButtonClass, "Red Winged Blackbird", "A stocky, 
 turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The largest sea turtle in the world, one", "that travels thousands of kilometers",
                        "Pollution, Sharks, Orcas", SCREEN_WIDTH_CENTER - 300, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40, screen, changegamestate, "TurtleLevel")
 
+deer_info = InfoCard(TextClass, ButtonClass, "White-Tailed Deer", "A white and brown deer, which is", "abundant all over Central America",
+                       "Hunters, Wolves, Habitat Loss", SCREEN_WIDTH_CENTER + 300, SCREEN_HEIGHT_CENTER, pygame.transform.scale(deer.frames[0], (120, 96)), GRASSGREEN, 40, screen, changegamestate, "DeerLevel")
+
 #Obstacle Related Lists
 obstacle_list = []
 cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAsset/Cloud 12.png"]
@@ -105,7 +108,7 @@ def make_bubble():
 
 
 
-GameState = "DeerLevel"
+GameState = "TitleScreen"
 
 
 
@@ -131,8 +134,11 @@ while RunVar == True:
             screen.fill(WHITE)
             buttonlist.append(turtle_info.playbutton)
             buttonlist.append(bird_info.playbutton)
+            buttonlist.append(deer_info.playbutton)
             turtle_info.show(Screen=screen)
             bird_info.show(Screen=screen)
+            deer_info.show(Screen=screen)
+
             
 
 
