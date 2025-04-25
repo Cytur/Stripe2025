@@ -129,6 +129,15 @@ def make_wolf():
 
 
 
+#Vars for player jumping
+isJumping = False
+start_acceleration = 15
+vert_acceleration = 15
+gravity_force = 0.7
+
+#End screen args
+EndScreenReason = "N/A"
+EndScreenNextStage = "TitleScreen"
 
 GameState = "TitleScreen"
 RunVar = True
@@ -277,11 +286,11 @@ while RunVar == True:
                 obstacle_list.append(cloud)
                 end_time_cloud_spawn = pygame.time.get_ticks() + 600
 
-            if current_time > end_time_wolf_spawn:
-                wolf = make_wolf()
-                print("wolf spawned")
-                obstacle_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 4000
+            #if current_time > end_time_wolf_spawn:
+            #    wolf = make_wolf()
+            #    print("wolf spawned")
+            #    obstacle_list.append(wolf)
+            #    end_time_wolf_spawn = pygame.time.get_ticks() + 4000
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -291,7 +300,17 @@ while RunVar == True:
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
-
+            #Jumping
+            if isJumping == True:
+                deer.current_frame = deer.frames[4]
+                
+                if vert_acceleration > (-start_acceleration):
+                    vert_acceleration -= gravity_force
+                else:
+                    isJumping = False
+                    vert_acceleration = start_acceleration
+                    
+                current_player.jump(vert_acceleration)
 
             #Blit all the objects
             for obstacle in obstacle_list:
@@ -348,7 +367,8 @@ while RunVar == True:
         #For deer
         try:
             if keys[pygame.K_SPACE]:
-                current_player.jump(current_time)
+                isJumping = True
+                print("jumped")
         except:
             pass
             
