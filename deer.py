@@ -1,8 +1,5 @@
 import pygame
 
-
-
-
 class Deer():
     def __init__(self, xcor:int, ycor:int):
         self.speed = 10

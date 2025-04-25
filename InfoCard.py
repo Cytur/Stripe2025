@@ -1,27 +1,14 @@
 import pygame
 from UIClasses import TextClass, ButtonClass
 
-
-WHITE = [255,255,255]
 BLACK = [0,0,0]
-RED = [255,0,0]
 GREEN = [0,255,0]
-SKYBLUE = [170,206,250]
-OCEANBLUE = [1,84,130]
-OCEANYELLOW = (128,128,0)
-GRASSGREEN = (0,154,23)
-
-SCREEN_WIDTH = 840
-SCREEN_HEIGHT = 600
-SCREEN_WIDTH_CENTER = SCREEN_WIDTH / 2
-SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
-
 
 PoppinsFont = "Poppins-Medium.ttf"
 
 
 class InfoCard():
-    def __init__(self, txt: TextClass, btn: ButtonClass, Title: str, Description1:str, Description2, Challenges:str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen, gamestatefunc, gamestate: str):
+    def __init__(self, Title: str, Description1:str, Description2, Challenges:str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen, gamestatefunc, gamestate: str):
         self.screen = screen
 
         self.title = Title
@@ -35,18 +22,15 @@ class InfoCard():
         self.xcor = xcor - self.width/2
         self.ycor = ycor - self.height/2
 
-        self.txt = txt
-        self.btn = btn
-
         self.icon = pygame.transform.scale2x(icon)
         self.bg = bg
         self.icon_y_offset = y_offset
 
         self.iconRect = pygame.Rect(self.xcor, self.ycor + 30 - self.icon_y_offset, 96*2, 96*2)
-        self.playbutton = self.btn(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, GREEN, screen, gamestatefunc, gamestate)
-        self.desText1 = self.txt(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
-        self.desText2 = self.txt(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)
-        self.titleText = self.txt(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15), self.screen)
+        self.playbutton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, GREEN, screen, gamestatefunc, gamestate)
+        self.desText1 = TextClass(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
+        self.desText2 = TextClass(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)
+        self.titleText = TextClass(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15), self.screen)
         
 
     def show(self, Screen: pygame.Surface):

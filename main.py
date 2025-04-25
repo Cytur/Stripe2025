@@ -27,12 +27,12 @@ buttonlist = []
 def CreateButton():
     pass
 
-def changegamestate(gamestate):
-     global GameState
-     global buttonlist
+def ChangeGameState(newGameState):
+    global GameState
+    global buttonlist
 
-     GameState=gamestate
-     buttonlist = []
+    GameState = newGameState
+    buttonlist = []
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
@@ -48,22 +48,22 @@ turt_frames = []
 
 
 for num in range(8):
-            frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
-            frame = pygame.transform.scale(frame, size= (64, 64))
-            frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-            bird_frames.append(frame)
+    frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
+    frame = pygame.transform.scale(frame, size= (64, 64))
+    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
+    bird_frames.append(frame)
 
 for num in range(6):
-            frame = pygame.image.load(f"TurtleAsset/24bit-seaturtle{num+1}.png")
-            frame = pygame.transform.scale(frame, size= (96, 96))
-            frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-            turt_frames.append(frame)
+    frame = pygame.image.load(f"TurtleAsset/24bit-seaturtle{num+1}.png")
+    frame = pygame.transform.scale(frame, size= (96, 96))
+    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
+    turt_frames.append(frame)
 
 # for num in range([NUMBER_OF_FRAMES]):
-#             frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
-#             frame = pygame.transform.scale(frame, size= (96, 96))
-#             frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-#             turt_frames.append(frame)
+#    frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
+#    frame = pygame.transform.scale(frame, size= (96, 96))
+#    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
+#    turt_frames.append(frame)
 
 
 
@@ -75,14 +75,55 @@ deer = Deer(50, 400)
 
 
 #Info Cards
-bird_info = InfoCard(TextClass, ButtonClass, "Red Winged Blackbird", "A stocky, red and black bird, and one", "that is very common in North America.",
-                     " Air pollution, Hawks, Eagles", SCREEN_WIDTH_CENTER, SCREEN_HEIGHT_CENTER, bird_frames[0], SKYBLUE, 0, screen, changegamestate, "BirdLevel")
+bird_info = InfoCard(
+    TextClass,
+    ButtonClass,
+    "Red Winged Blackbird",
+    "A stocky, red and black bird, and one",
+    "that is very common in North America.",
+    " Air pollution, Hawks, Eagles",
+    SCREEN_WIDTH_CENTER,
+    SCREEN_HEIGHT_CENTER,
+    bird_frames[0],
+    SKYBLUE,
+    0,
+    screen,
+    ChangeGameState,
+    "BirdLevel"
+)
 
-turtle_info = InfoCard(TextClass, ButtonClass, "Leather-Back Sea Turtle", "The largest sea turtle in the world, one", "that travels thousands of kilometers",
-                       "Pollution, Sharks", SCREEN_WIDTH_CENTER - 300, SCREEN_HEIGHT_CENTER, turt_frames[0], OCEANBLUE, 40, screen, changegamestate, "TurtleLevel")
+turtle_info = InfoCard(
+    TextClass,
+    ButtonClass,
+    "Leather-Back Sea Turtle",
+    "The largest sea turtle in the world, one",
+    "that travels thousands of kilometers",
+    "Pollution, Sharks",
+    SCREEN_WIDTH_CENTER - 300,
+    SCREEN_HEIGHT_CENTER,
+    turt_frames[0],
+    OCEANBLUE,
+    40,
+    screen,
+    ChangeGameState,
+    "TurtleLevel"
+)
 
-deer_info = InfoCard(TextClass, ButtonClass, "White-Tailed Deer", "A white and brown deer, which is", "abundant all over Central America",
-                       "Wolves, Habitat Loss", SCREEN_WIDTH_CENTER + 300, SCREEN_HEIGHT_CENTER, pygame.transform.scale(deer.frames[1], (28*3, 75)), GRASSGREEN, 40, screen, changegamestate, "DeerLevel")
+deer_info = InfoCard(
+    TextClass, ButtonClass,
+    "White-Tailed Deer",
+    "A white and brown deer, which is",
+    "abundant all over Central America",
+    "Wolves, Habitat Loss",
+    SCREEN_WIDTH_CENTER + 300,
+    SCREEN_HEIGHT_CENTER,
+    pygame.transform.scale(deer.frames[1], (28*3, 75)),
+    GRASSGREEN,
+    40,
+    screen,
+    ChangeGameState,
+    "DeerLevel"
+)
 
 #Obstacle Related Lists
 obstacle_list = []
@@ -99,26 +140,24 @@ end_time_wolf_animation = 0
 
 #Functions for Obstacles
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
+bubble_img = pygame.image.load("BubbleAsset/bubble.png")
+wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
+
 def make_cloud(bottom_bound: int = 600):
     return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width(), cloud_img.get_height(), False, [cloud_img])
 
-bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
-wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
 def make_wolf():
     return ObstacleClass(900, 450,  8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
 
 
 
+
 GameState = "TitleScreen"
-
-
-
-
-
 RunVar = True
+
 while RunVar == True:
     match GameState:
         case "TitleScreen":
@@ -127,12 +166,9 @@ while RunVar == True:
             titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175), screen)
             titleText.blit()
             
-            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, changegamestate, "PlayerChoose")
+            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, ChangeGameState, "PlayerChoose")
             buttonlist.append(startButton)
             startButton.draw()
-
-
-
 
         case "PlayerChoose":
             screen.fill(WHITE)
@@ -142,15 +178,6 @@ while RunVar == True:
             turtle_info.show(Screen=screen)
             bird_info.show(Screen=screen)
             deer_info.show(Screen=screen)
-            
-
-
-
-
-        #commented because of run error
-        # case _:
-        #     #default
-        #     pass
 
         case "BirdLevel":
             current_player = bird
@@ -185,11 +212,7 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    changegamestate("EndScreen")
-
-
-
-
+                    ChangeGameState("EndScreen")
 
 
         case "TurtleLevel":
@@ -228,9 +251,7 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    changegamestate("EndScreen")
-
-
+                    ChangeGameState("EndScreen")
 
 
         case "DeerLevel":
@@ -275,18 +296,13 @@ while RunVar == True:
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
-
-
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     print(obstacle.xcor)
                     
                     pygame.time.delay(4000)
-                    changegamestate("EndScreen")
-
-
-
+                    ChangeGameState("EndScreen")
 
 
         case "EndScreen":
@@ -294,15 +310,17 @@ while RunVar == True:
             obstacle_list = []
 
 
+        #Commented because of run error
+        # case _:
+        #     #default
+        #     pass
 
 
-
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             RunVar = False
 
-        #detecting button clicks
+        #Detecting button clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
             mousepos = pygame.mouse.get_pos()
             for button in buttonlist:
@@ -310,9 +328,7 @@ while RunVar == True:
                     button.command(button.param)
                     print("button clicked")
 
-        
-        
-        #detecting key presses
+        #Detecting key presses
         keys = pygame.key.get_pressed()
         try:
             if keys[pygame.K_w]:
@@ -322,7 +338,6 @@ while RunVar == True:
         except:
             pass
         
-
         #For deer
         try:
             if keys[pygame.K_SPACE]:
