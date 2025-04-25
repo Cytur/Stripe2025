@@ -25,9 +25,7 @@ class Deer():
         self.current_frame = self.frames[self.frame_count]
 
 
-    def jump(self, direction):
-        pass
-        #Abdullah u mind doing this part, idk what to do
-
+    def jump(self, yIncrement):
+        self.ycor -= yIncrement
 
         self.Rect = pygame.Rect((self.xcor, self.ycor), (256, 256))

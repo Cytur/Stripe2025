@@ -1,10 +1,6 @@
 import pygame
+import DesignClass
 from UIClasses import TextClass, ButtonClass
-
-BLACK = [0,0,0]
-GREEN = [0,255,0]
-
-PoppinsFont = "Poppins-Medium.ttf"
 
 
 class InfoCard():
@@ -27,10 +23,10 @@ class InfoCard():
         self.icon_y_offset = y_offset
 
         self.iconRect = pygame.Rect(self.xcor, self.ycor + 30 - self.icon_y_offset, 96*2, 96*2)
-        self.playbutton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, GREEN, screen, gamestatefunc, gamestate)
-        self.desText1 = TextClass(self.des1, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
-        self.desText2 = TextClass(self.des2, pygame.font.Font(PoppinsFont, 9), BLACK, (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)
-        self.titleText = TextClass(self.title, pygame.font.Font(PoppinsFont, 15), BLACK, (self.xcor + self.width/2, self.ycor + 15), self.screen)
+        self.playbutton = ButtonClass(TextClass("Start", pygame.font.Font(DesignClass.Fonts["Poppins"], 20), DesignClass.Colors["BLACK"], (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, DesignClass.Colors["GREEN"], screen, gamestatefunc, gamestate)
+        self.desText1 = TextClass(self.des1, pygame.font.Font(DesignClass.Fonts["Poppins"], 9), DesignClass.Colors["BLACK"], (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
+        self.desText2 = TextClass(self.des2, pygame.font.Font(DesignClass.Fonts["Poppins"], 9), DesignClass.Colors["BLACK"], (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)
+        self.titleText = TextClass(self.title, pygame.font.Font(DesignClass.Fonts["Poppins"], 15), DesignClass.Colors["BLACK"], (self.xcor + self.width/2, self.ycor + 15), self.screen)
         
 
     def show(self, Screen: pygame.Surface):
