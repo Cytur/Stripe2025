@@ -135,13 +135,21 @@ start_acceleration = 15
 vert_acceleration = 15
 gravity_force = 0.7
 
-#End screen args
+#End screen args default
 EndScreenTitle = "You Died!"
+EndScreenTitleColor = DesignClass.Colors["RED"]
 EndScreenReason = "N/A"
 EndScreenNextStage = "TitleScreen"
 
-def EndLevel(TitleText, EndReason, NextStage):
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
+    global EndScreenTitle
+    global EndScreenTitleColor
+    global EndScreenReason
+    global EndScreenNextStage
+    global GameState
+    
     EndScreenTitle = TitleText
+    EndScreenTitleColor = TitleTextColor
     EndScreenReason = EndReason
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
@@ -335,16 +343,41 @@ while RunVar == True:
                     print(obstacle.xcor)
                     
                     pygame.time.delay(1500)
-                    ChangeGameState("EndScreen")
+                    EndLevel("You Died!", DesignClass.Colors["RED"], "Eaten by wolf", "TitleScreen")
 
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
             obstacle_list = []
+            collide_list = []
             
-            #endTitle = TextClass(
-            #    EndScreenTitle
-            #)
+            endTitle = TextClass(
+                EndScreenTitle,
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 100),
+                EndScreenTitleColor,
+                (DesignClass.SCREEN_WIDTH_CENTER, 150),
+                screen
+            )
+            endTitle.blit()
+            
+            endReasonText = TextClass(
+                EndScreenReason,
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 250),
+                screen
+            )
+            endReasonText.blit()
+            
+            continueText = TextClass(
+                "Press [Space] To Continue",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 450),
+                screen
+            )
+            continueText.blit()
+            
 
 
         #Commented because of run error
@@ -369,17 +402,22 @@ while RunVar == True:
         keys = pygame.key.get_pressed()
         try:
             if keys[pygame.K_w]:
-                current_player.move("UP")
+                if current_player.ycor > 10:
+                    current_player.move("UP")
             if keys[pygame.K_s]:
-                current_player.move("DOWN")
+                if current_player.ycor < 500:
+                    current_player.move("DOWN")
         except:
             pass
         
         #For deer
         try:
             if keys[pygame.K_SPACE]:
-                isJumping = True
-                print("jumped")
+                if GameState == "EndScreen":
+                    GameState = EndScreenNextStage
+                elif GameState == "DeerLevel":
+                    isJumping = True
+                    print("jumped")
         except:
             pass
             
