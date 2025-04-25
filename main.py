@@ -24,9 +24,6 @@ SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
 PoppinsFont = "Poppins-Medium.ttf"
 buttonlist = []
         
-def CreateButton():
-    pass
-
 def ChangeGameState(newGameState):
     global GameState
     global buttonlist
@@ -159,14 +156,30 @@ GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
+    current_time = pygame.time.get_ticks()
+
     match GameState:
         case "TitleScreen":
             screen.fill(WHITE)
             
-            titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175), screen)
+            titleText = TextClass(
+                "Animal Journey",
+                pygame.font.Font(PoppinsFont, 50),
+                BLACK,
+                (SCREEN_WIDTH_CENTER, 175),
+                screen
+            )
             titleText.blit()
             
-            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, ChangeGameState, "PlayerChoose")
+            startButton = ButtonClass(
+                TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen),
+                pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50),
+                0,
+                GREEN,
+                screen,
+                ChangeGameState,
+                "PlayerChoose"
+            )
             buttonlist.append(startButton)
             startButton.draw()
 
@@ -183,8 +196,6 @@ while RunVar == True:
             current_player = bird
             screen.fill(SKYBLUE)
             
-            current_time = pygame.time.get_ticks()
-
             #Set up backround
             if current_time > end_time_cloud_spawn:
                 cloud = make_cloud()
@@ -218,11 +229,8 @@ while RunVar == True:
         case "TurtleLevel":
             current_player = turtle
             screen.fill(OCEANBLUE)
-            
-            current_time = pygame.time.get_ticks()
 
             pygame.draw.rect(screen, OCEANYELLOW, pygame.Rect(0,500,840,100))
-
 
             # Set up backround 
             if current_time > end_time_bubble_spawn:
@@ -258,8 +266,6 @@ while RunVar == True:
             current_player = deer
 
             screen.fill(SKYBLUE)
-            
-            current_time = pygame.time.get_ticks()
 
             pygame.draw.rect(screen, GRASSGREEN, pygame.Rect(0,500,840,100))
 
@@ -341,7 +347,7 @@ while RunVar == True:
         #For deer
         try:
             if keys[pygame.K_SPACE]:
-                current_player.jump()
+                current_player.jump(current_time)
         except:
             pass
             
