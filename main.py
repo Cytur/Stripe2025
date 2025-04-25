@@ -27,8 +27,6 @@ screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_H
 bird_frames = []
 turt_frames = []
 
-
-
 for num in range(8):
     frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 64))
@@ -146,14 +144,20 @@ while RunVar == True:
                 "Animal Journey",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 175),
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
             titleText.blit()
             
             startButton = ButtonClass(
-                TextClass("Start", pygame.font.Font(DesignClass.Fonts["Poppins"], 20), DesignClass.Colors["BLACK"], (DesignClass.SCREEN_WIDTH_CENTER, 225), screen),
-                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50),
+                TextClass(
+                    "Start",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
+                    DesignClass.Colors["BLACK"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 250),
+                    screen
+                ),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 75, 250 - 25, 150, 50),
                 0,
                 DesignClass.Colors["GREEN"],
                 screen,
@@ -162,6 +166,23 @@ while RunVar == True:
             )
             buttonlist.append(startButton)
             startButton.draw()
+
+            controlsButton = ButtonClass(
+                TextClass(
+                    "Controls",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
+                    DesignClass.Colors["BLACK"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 325),
+                    screen
+                ),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 75, 325 - 25, 150, 50),
+                0,
+                DesignClass.Colors["GREEN"],
+                screen,
+                ChangeGameState,
+                "ControlsPage"
+            )
+            controlsButton.draw()
 
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
