@@ -92,7 +92,7 @@ deer_info = InfoCard(
     "Wolves, Habitat Loss",
     DesignClass.SCREEN_WIDTH_CENTER + 300,
     DesignClass.SCREEN_HEIGHT_CENTER,
-    pygame.transform.scale(deer.frames[1], (28*3, 75)),
+    pygame.transform.scale(deer.icon, (28*3, 75)),
     DesignClass.Colors["GRASSGREEN"],
     40,
     screen,
