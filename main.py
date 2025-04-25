@@ -125,7 +125,7 @@ def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
 def make_wolf():
-    return ObstacleClass(900, 450,  8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
+    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
 
 
 
@@ -136,8 +136,15 @@ vert_acceleration = 15
 gravity_force = 0.7
 
 #End screen args
+EndScreenTitle = "You Died!"
 EndScreenReason = "N/A"
 EndScreenNextStage = "TitleScreen"
+
+def EndLevel(TitleText, EndReason, NextStage):
+    EndScreenTitle = TitleText
+    EndScreenReason = EndReason
+    EndScreenNextStage = NextStage
+    GameState = "EndScreen"
 
 GameState = "TitleScreen"
 RunVar = True
@@ -286,11 +293,11 @@ while RunVar == True:
                 obstacle_list.append(cloud)
                 end_time_cloud_spawn = pygame.time.get_ticks() + 600
 
-            #if current_time > end_time_wolf_spawn:
-            #    wolf = make_wolf()
-            #    print("wolf spawned")
-            #    obstacle_list.append(wolf)
-            #    end_time_wolf_spawn = pygame.time.get_ticks() + 4000
+            if current_time > end_time_wolf_spawn:
+                wolf = make_wolf()
+                print("wolf spawned")
+                obstacle_list.append(wolf)
+                end_time_wolf_spawn = pygame.time.get_ticks() + 4000
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -334,6 +341,10 @@ while RunVar == True:
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
             obstacle_list = []
+            
+            #endTitle = TextClass(
+            #    EndScreenTitle
+            #)
 
 
         #Commented because of run error
