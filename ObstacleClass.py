@@ -14,14 +14,12 @@ class ObstacleClass():
         self.height = height
         self.images = []
         for image in frames:
-            self.image = pygame.transform.scale(image, (width, height))
+            self.image = pygame.transform.scale(image, (width * 4, height * 4))
             self.images.append(self.image)
         self.frame_num = 0
         self.Rect = pygame.Rect(startx, starty, self.width, self.height)
         
 
-        if self.collision == True:
-            collide_list.append(self)
 
     def move(self):
         self.xcor -= self.speedx

@@ -30,4 +30,4 @@ class Deer():
     def jump(self, yIncrement):
         self.ycor -= yIncrement
 
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (256, 256))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))

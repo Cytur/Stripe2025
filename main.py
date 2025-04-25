@@ -126,7 +126,7 @@ def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
+    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
 
 
 
@@ -294,12 +294,9 @@ while RunVar == True:
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
-            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
-
-
             # Set up backround 
             if current_time > end_time_cloud_spawn:
-                cloud = make_cloud(450)
+                cloud = make_cloud(300)
                 obstacle_list.append(cloud)
                 end_time_cloud_spawn = pygame.time.get_ticks() + 600
 
@@ -307,6 +304,7 @@ while RunVar == True:
                 wolf = make_wolf()
                 print("wolf spawned")
                 obstacle_list.append(wolf)
+                collide_list.append(wolf)
                 end_time_wolf_spawn = pygame.time.get_ticks() + 4000
 
             for obstacle in obstacle_list:
@@ -336,6 +334,8 @@ while RunVar == True:
                     del obstacle
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
@@ -349,6 +349,9 @@ while RunVar == True:
 
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
+            
+            Key_W = pygame.image.load("KeyboardAsset/W.png")
+            Key_W.get_rect(center = (50, 50))
             
             
 
