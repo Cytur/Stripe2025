@@ -58,8 +58,6 @@ deer = Deer(50, 400)
 
 #Info Cards
 bird_info = InfoCard(
-    TextClass,
-    ButtonClass,
     "Red Winged Blackbird",
     "A stocky, red and black bird, and one",
     "that is very common in North America.",
@@ -75,8 +73,6 @@ bird_info = InfoCard(
 )
 
 turtle_info = InfoCard(
-    TextClass,
-    ButtonClass,
     "Leather-Back Sea Turtle",
     "The largest sea turtle in the world, one",
     "that travels thousands of kilometers",
@@ -92,7 +88,6 @@ turtle_info = InfoCard(
 )
 
 deer_info = InfoCard(
-    TextClass, ButtonClass,
     "White-Tailed Deer",
     "A white and brown deer, which is",
     "abundant all over Central America",
@@ -149,7 +144,7 @@ while RunVar == True:
             
             titleText = TextClass(
                 "Animal Journey",
-                pygame.font.Font(DesignClass.Fonts["PoppinsFont"], 50),
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 175),
                 screen
@@ -157,7 +152,7 @@ while RunVar == True:
             titleText.blit()
             
             startButton = ButtonClass(
-                TextClass("Start", pygame.font.Font(DesignClass.Fonts["PoppinsFont"], 20), DesignClass.Colors["BLACK"], (DesignClass.SCREEN_WIDTH_CENTER, 225), screen),
+                TextClass("Start", pygame.font.Font(DesignClass.Fonts["Poppins"], 20), DesignClass.Colors["BLACK"], (DesignClass.SCREEN_WIDTH_CENTER, 225), screen),
                 pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50),
                 0,
                 DesignClass.Colors["GREEN"],
@@ -169,7 +164,7 @@ while RunVar == True:
             startButton.draw()
 
         case "PlayerChoose":
-            screen.fill(WHITE)
+            screen.fill(DesignClass.Colors["WHITE"])
             buttonlist.append(turtle_info.playbutton)
             buttonlist.append(bird_info.playbutton)
             buttonlist.append(deer_info.playbutton)
@@ -213,7 +208,7 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
-            screen.fill(DesignClass.Fonts["OCEANBLUE"])
+            screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
@@ -292,7 +287,7 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     print(obstacle.xcor)
                     
-                    pygame.time.delay(4000)
+                    pygame.time.delay(1500)
                     ChangeGameState("EndScreen")
 
 
