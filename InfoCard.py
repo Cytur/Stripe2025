@@ -22,7 +22,7 @@ class InfoCard():
         self.bg = bg
         self.icon_y_offset = y_offset
 
-        self.iconRect = pygame.Rect(self.xcor, self.ycor + 30 - self.icon_y_offset, 96*2, 96*2)
+        self.iconRect = pygame.Rect(self.xcor, self.ycor + 60 - self.icon_y_offset, 96*2, 96*2)
         self.playbutton = ButtonClass(TextClass("Start", pygame.font.Font(DesignClass.Fonts["Poppins"], 20), DesignClass.Colors["BLACK"], (self.xcor + self.width/2 - 50, self.ycor + 300 - 25), screen), pygame.Rect(self.xcor, self.ycor + 300 - 50, 100, 50), 0, DesignClass.Colors["GREEN"], screen, gamestatefunc, gamestate)
         self.desText1 = TextClass(self.des1, pygame.font.Font(DesignClass.Fonts["Poppins"], 9), DesignClass.Colors["BLACK"], (self.xcor + self.width/2, self.ycor + self.height - 80), self.screen)
         self.desText2 = TextClass(self.des2, pygame.font.Font(DesignClass.Fonts["Poppins"], 9), DesignClass.Colors["BLACK"], (self.xcor + self.width/2, self.ycor + self.height - 70), self.screen)

@@ -117,6 +117,7 @@ end_time_wolf_animation = 0
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
+#wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
     return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width(), cloud_img.get_height(), False, [cloud_img])
@@ -206,6 +207,7 @@ while RunVar == True:
                 ChangeGameState,
                 "ControlsPage"
             )
+            buttonlist.append(controlsButton)
             controlsButton.draw()
 
         case "PlayerChoose":
@@ -248,7 +250,7 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    ChangeGameState("EndScreen")
+                    EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
 
         case "TurtleLevel":
@@ -284,7 +286,7 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    ChangeGameState("EndScreen")
+                    EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
 
         case "DeerLevel":
@@ -345,6 +347,11 @@ while RunVar == True:
                     pygame.time.delay(1500)
                     EndLevel("You Died!", DesignClass.Colors["RED"], "Eaten by wolf", "TitleScreen")
 
+        case "ControlsPage":
+            screen.fill(DesignClass.Colors["WHITE"])
+            
+            
+
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
@@ -396,7 +403,7 @@ while RunVar == True:
             for button in buttonlist:
                 if button.rectangleRender.collidepoint(mousepos):
                     button.command(button.param)
-                    print("button clicked")
+                    #print("button clicked")
 
         #Detecting key presses
         keys = pygame.key.get_pressed()
