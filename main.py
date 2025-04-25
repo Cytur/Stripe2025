@@ -1,27 +1,12 @@
 import pygame
 import random
+import DesignClass
 from birdturtle import BirdTurtle
 from ObstacleClass import ObstacleClass, collide_list
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
 
-# constants
-WHITE = [255,255,255]
-BLACK = [0,0,0]
-RED = [255,0,0]
-GREEN = [0,255,0]
-SKYBLUE = [170,206,250]
-OCEANBLUE = [1,84,130]
-OCEANYELLOW = (128,128,0)
-GRASSGREEN = (0,154,23)
-
-SCREEN_WIDTH = 840
-SCREEN_HEIGHT = 600
-SCREEN_WIDTH_CENTER = SCREEN_WIDTH / 2
-SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
-
-PoppinsFont = "Poppins-Medium.ttf"
 buttonlist = []
         
 def ChangeGameState(newGameState):
@@ -33,7 +18,7 @@ def ChangeGameState(newGameState):
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
 
 
 
@@ -79,10 +64,10 @@ bird_info = InfoCard(
     "A stocky, red and black bird, and one",
     "that is very common in North America.",
     " Air pollution, Hawks, Eagles",
-    SCREEN_WIDTH_CENTER,
-    SCREEN_HEIGHT_CENTER,
+    DesignClass.SCREEN_WIDTH_CENTER,
+    DesignClass.SCREEN_HEIGHT_CENTER,
     bird_frames[0],
-    SKYBLUE,
+    DesignClass.Colors["SKYBLUE"],
     0,
     screen,
     ChangeGameState,
@@ -96,10 +81,10 @@ turtle_info = InfoCard(
     "The largest sea turtle in the world, one",
     "that travels thousands of kilometers",
     "Pollution, Sharks",
-    SCREEN_WIDTH_CENTER - 300,
-    SCREEN_HEIGHT_CENTER,
+    DesignClass.SCREEN_WIDTH_CENTER - 300,
+    DesignClass.SCREEN_HEIGHT_CENTER,
     turt_frames[0],
-    OCEANBLUE,
+    DesignClass.Colors["OCEANBLUE"],
     40,
     screen,
     ChangeGameState,
@@ -112,10 +97,10 @@ deer_info = InfoCard(
     "A white and brown deer, which is",
     "abundant all over Central America",
     "Wolves, Habitat Loss",
-    SCREEN_WIDTH_CENTER + 300,
-    SCREEN_HEIGHT_CENTER,
+    DesignClass.SCREEN_WIDTH_CENTER + 300,
+    DesignClass.SCREEN_HEIGHT_CENTER,
     pygame.transform.scale(deer.frames[1], (28*3, 75)),
-    GRASSGREEN,
+    DesignClass.Colors["GRASSGREEN"],
     40,
     screen,
     ChangeGameState,
@@ -160,22 +145,22 @@ while RunVar == True:
 
     match GameState:
         case "TitleScreen":
-            screen.fill(WHITE)
+            screen.fill(DesignClass.Colors["WHITE"])
             
             titleText = TextClass(
                 "Animal Journey",
-                pygame.font.Font(PoppinsFont, 50),
-                BLACK,
-                (SCREEN_WIDTH_CENTER, 175),
+                pygame.font.Font(DesignClass.Fonts["PoppinsFont"], 50),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 175),
                 screen
             )
             titleText.blit()
             
             startButton = ButtonClass(
-                TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen),
-                pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50),
+                TextClass("Start", pygame.font.Font(DesignClass.Fonts["PoppinsFont"], 20), DesignClass.Colors["BLACK"], (DesignClass.SCREEN_WIDTH_CENTER, 225), screen),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50),
                 0,
-                GREEN,
+                DesignClass.Colors["GREEN"],
                 screen,
                 ChangeGameState,
                 "PlayerChoose"
@@ -194,7 +179,7 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
-            screen.fill(SKYBLUE)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
             
             #Set up backround
             if current_time > end_time_cloud_spawn:
@@ -228,9 +213,9 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
-            screen.fill(OCEANBLUE)
+            screen.fill(DesignClass.Fonts["OCEANBLUE"])
 
-            pygame.draw.rect(screen, OCEANYELLOW, pygame.Rect(0,500,840,100))
+            pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
             # Set up backround 
             if current_time > end_time_bubble_spawn:
@@ -265,9 +250,9 @@ while RunVar == True:
         case "DeerLevel":
             current_player = deer
 
-            screen.fill(SKYBLUE)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
 
-            pygame.draw.rect(screen, GRASSGREEN, pygame.Rect(0,500,840,100))
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
 
             # Set up backround 
@@ -312,7 +297,7 @@ while RunVar == True:
 
 
         case "EndScreen":
-            screen.fill(WHITE)
+            screen.fill(DesignClass.Colors["WHITE"])
             obstacle_list = []
 
 
