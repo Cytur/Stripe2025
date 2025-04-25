@@ -9,6 +9,8 @@ class Deer():
         
         self.frames = []
 
+        self.icon = pygame.image.load("DeerAsset/deer_icon.png")
+
         for img in range(5):
             image=pygame.image.load(f'DeerAsset/deer{img+1}.png')
             image = pygame.transform.scale(image, (28*4, 100))
