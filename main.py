@@ -294,6 +294,8 @@ while RunVar == True:
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+
             # Set up backround 
             if current_time > end_time_cloud_spawn:
                 cloud = make_cloud(300)
@@ -308,6 +310,7 @@ while RunVar == True:
                 end_time_wolf_spawn = pygame.time.get_ticks() + 4000
 
             for obstacle in obstacle_list:
+                obstacle.update_frame()
                 obstacle.move()
 
 
@@ -335,7 +338,7 @@ while RunVar == True:
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     
-            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+            
 
             screen.blit(current_player.current_frame, current_player.Rect)
 

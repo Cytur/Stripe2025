@@ -30,4 +30,4 @@ class ObstacleClass():
         self.frame_num += 1
         if self.frame_num == len(self.images):
             self.frame_num = 0
-        self.image = self.images[self.frame_num + 1]
+        self.image = self.images[self.frame_num]
