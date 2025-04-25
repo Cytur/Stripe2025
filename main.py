@@ -76,8 +76,6 @@ deer = Deer(50, 400)
 
 #Info Cards
 bird_info = InfoCard(
-    TextClass,
-    ButtonClass,
     "Red Winged Blackbird",
     "A stocky, red and black bird, and one",
     "that is very common in North America.",
@@ -93,8 +91,6 @@ bird_info = InfoCard(
 )
 
 turtle_info = InfoCard(
-    TextClass,
-    ButtonClass,
     "Leather-Back Sea Turtle",
     "The largest sea turtle in the world, one",
     "that travels thousands of kilometers",
@@ -110,7 +106,6 @@ turtle_info = InfoCard(
 )
 
 deer_info = InfoCard(
-    TextClass, ButtonClass,
     "White-Tailed Deer",
     "A white and brown deer, which is",
     "abundant all over Central America",
