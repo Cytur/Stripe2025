@@ -1,14 +1,32 @@
 import pygame
 import random
-import DesignClass
 from birdturtle import BirdTurtle
 from ObstacleClass import ObstacleClass, collide_list
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
 
+# constants
+WHITE = [255,255,255]
+BLACK = [0,0,0]
+RED = [255,0,0]
+GREEN = [0,255,0]
+SKYBLUE = [170,206,250]
+OCEANBLUE = [1,84,130]
+OCEANYELLOW = (128,128,0)
+GRASSGREEN = (0,154,23)
+
+SCREEN_WIDTH = 840
+SCREEN_HEIGHT = 600
+SCREEN_WIDTH_CENTER = SCREEN_WIDTH / 2
+SCREEN_HEIGHT_CENTER = SCREEN_HEIGHT / 2
+
+PoppinsFont = "Poppins-Medium.ttf"
 buttonlist = []
         
+def CreateButton():
+    pass
+
 def ChangeGameState(newGameState):
     global GameState
     global buttonlist
@@ -18,7 +36,7 @@ def ChangeGameState(newGameState):
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
-screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 
@@ -26,6 +44,8 @@ screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_H
 #Animal Frame Lists
 bird_frames = []
 turt_frames = []
+
+
 
 for num in range(8):
     frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
@@ -60,10 +80,10 @@ bird_info = InfoCard(
     "A stocky, red and black bird, and one",
     "that is very common in North America.",
     " Air pollution, Hawks, Eagles",
-    DesignClass.SCREEN_WIDTH_CENTER,
-    DesignClass.SCREEN_HEIGHT_CENTER,
+    SCREEN_WIDTH_CENTER,
+    SCREEN_HEIGHT_CENTER,
     bird_frames[0],
-    DesignClass.Colors["SKYBLUE"],
+    SKYBLUE,
     0,
     screen,
     ChangeGameState,
@@ -75,10 +95,10 @@ turtle_info = InfoCard(
     "The largest sea turtle in the world, one",
     "that travels thousands of kilometers",
     "Pollution, Sharks",
-    DesignClass.SCREEN_WIDTH_CENTER - 300,
-    DesignClass.SCREEN_HEIGHT_CENTER,
+    SCREEN_WIDTH_CENTER - 300,
+    SCREEN_HEIGHT_CENTER,
     turt_frames[0],
-    DesignClass.Colors["OCEANBLUE"],
+    OCEANBLUE,
     40,
     screen,
     ChangeGameState,
@@ -90,10 +110,10 @@ deer_info = InfoCard(
     "A white and brown deer, which is",
     "abundant all over Central America",
     "Wolves, Habitat Loss",
-    DesignClass.SCREEN_WIDTH_CENTER + 300,
-    DesignClass.SCREEN_HEIGHT_CENTER,
-    pygame.transform.scale(deer.frames[1], (28*3, 75)),
-    DesignClass.Colors["GRASSGREEN"],
+    SCREEN_WIDTH_CENTER + 300,
+    SCREEN_HEIGHT_CENTER,
+    pygame.transform.scale(deer.icon, (96, 96)),
+    GRASSGREEN,
     40,
     screen,
     ChangeGameState,
@@ -125,91 +145,28 @@ def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
+    return ObstacleClass(900, 450,  8, 0, wolf_imgs[0].get_width() * 4, wolf_imgs[0].get_height() * 4, True, wolf_imgs)
 
 
 
-#Vars for player jumping
-isJumping = False
-start_acceleration = 15
-vert_acceleration = 15
-gravity_force = 0.7
-
-#End screen args default
-EndScreenTitle = "You Died!"
-EndScreenTitleColor = DesignClass.Colors["RED"]
-EndScreenReason = "N/A"
-EndScreenNextStage = "TitleScreen"
-
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
-    global EndScreenTitle
-    global EndScreenTitleColor
-    global EndScreenReason
-    global EndScreenNextStage
-    global GameState
-    
-    EndScreenTitle = TitleText
-    EndScreenTitleColor = TitleTextColor
-    EndScreenReason = EndReason
-    EndScreenNextStage = NextStage
-    GameState = "EndScreen"
 
 GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
-    current_time = pygame.time.get_ticks()
-
     match GameState:
         case "TitleScreen":
-            screen.fill(DesignClass.Colors["WHITE"])
+            screen.fill(WHITE)
             
-            titleText = TextClass(
-                "Animal Journey",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 125),
-                screen
-            )
+            titleText = TextClass("Animal Journey", pygame.font.Font(PoppinsFont, 50), BLACK, (SCREEN_WIDTH_CENTER, 175), screen)
             titleText.blit()
             
-            startButton = ButtonClass(
-                TextClass(
-                    "Start",
-                    pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
-                    DesignClass.Colors["BLACK"],
-                    (DesignClass.SCREEN_WIDTH_CENTER, 250),
-                    screen
-                ),
-                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 75, 250 - 25, 150, 50),
-                0,
-                DesignClass.Colors["GREEN"],
-                screen,
-                ChangeGameState,
-                "PlayerChoose"
-            )
+            startButton = ButtonClass(TextClass("Start", pygame.font.Font(PoppinsFont, 20), BLACK, (SCREEN_WIDTH_CENTER, 225), screen), pygame.Rect(SCREEN_WIDTH_CENTER - 50, 225 - 25, 100, 50), 0, GREEN, screen, ChangeGameState, "PlayerChoose")
             buttonlist.append(startButton)
             startButton.draw()
 
-            controlsButton = ButtonClass(
-                TextClass(
-                    "Controls",
-                    pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
-                    DesignClass.Colors["BLACK"],
-                    (DesignClass.SCREEN_WIDTH_CENTER, 325),
-                    screen
-                ),
-                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 75, 325 - 25, 150, 50),
-                0,
-                DesignClass.Colors["GREEN"],
-                screen,
-                ChangeGameState,
-                "ControlsPage"
-            )
-            controlsButton.draw()
-
         case "PlayerChoose":
-            screen.fill(DesignClass.Colors["WHITE"])
+            screen.fill(WHITE)
             buttonlist.append(turtle_info.playbutton)
             buttonlist.append(bird_info.playbutton)
             buttonlist.append(deer_info.playbutton)
@@ -219,8 +176,10 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
-            screen.fill(DesignClass.Colors["SKYBLUE"])
+            screen.fill(SKYBLUE)
             
+            current_time = pygame.time.get_ticks()
+
             #Set up backround
             if current_time > end_time_cloud_spawn:
                 cloud = make_cloud()
@@ -253,9 +212,12 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
-            screen.fill(DesignClass.Colors["OCEANBLUE"])
+            screen.fill(OCEANBLUE)
+            
+            current_time = pygame.time.get_ticks()
 
-            pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
+            pygame.draw.rect(screen, OCEANYELLOW, pygame.Rect(0,500,840,100))
+
 
             # Set up backround 
             if current_time > end_time_bubble_spawn:
@@ -290,9 +252,11 @@ while RunVar == True:
         case "DeerLevel":
             current_player = deer
 
-            screen.fill(DesignClass.Colors["SKYBLUE"])
+            screen.fill(SKYBLUE)
+            
+            current_time = pygame.time.get_ticks()
 
-            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+            pygame.draw.rect(screen, GRASSGREEN, pygame.Rect(0,500,840,100))
 
 
             # Set up backround 
@@ -315,17 +279,7 @@ while RunVar == True:
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
-            #Jumping
-            if isJumping == True:
-                deer.current_frame = deer.frames[4]
-                
-                if vert_acceleration > (-start_acceleration):
-                    vert_acceleration -= gravity_force
-                else:
-                    isJumping = False
-                    vert_acceleration = start_acceleration
-                    
-                current_player.jump(vert_acceleration)
+
 
             #Blit all the objects
             for obstacle in obstacle_list:
@@ -342,42 +296,13 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     print(obstacle.xcor)
                     
-                    pygame.time.delay(1500)
-                    EndLevel("You Died!", DesignClass.Colors["RED"], "Eaten by wolf", "TitleScreen")
+                    pygame.time.delay(500)
+                    ChangeGameState("EndScreen")
 
 
         case "EndScreen":
-            screen.fill(DesignClass.Colors["WHITE"])
+            screen.fill(WHITE)
             obstacle_list = []
-            collide_list = []
-            
-            endTitle = TextClass(
-                EndScreenTitle,
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 100),
-                EndScreenTitleColor,
-                (DesignClass.SCREEN_WIDTH_CENTER, 150),
-                screen
-            )
-            endTitle.blit()
-            
-            endReasonText = TextClass(
-                EndScreenReason,
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 250),
-                screen
-            )
-            endReasonText.blit()
-            
-            continueText = TextClass(
-                "Press [Space] To Continue",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 450),
-                screen
-            )
-            continueText.blit()
-            
 
 
         #Commented because of run error
@@ -402,22 +327,16 @@ while RunVar == True:
         keys = pygame.key.get_pressed()
         try:
             if keys[pygame.K_w]:
-                if current_player.ycor > 10:
-                    current_player.move("UP")
+                current_player.move("UP")
             if keys[pygame.K_s]:
-                if current_player.ycor < 500:
-                    current_player.move("DOWN")
+                current_player.move("DOWN")
         except:
             pass
         
         #For deer
         try:
             if keys[pygame.K_SPACE]:
-                if GameState == "EndScreen":
-                    GameState = EndScreenNextStage
-                elif GameState == "DeerLevel":
-                    isJumping = True
-                    print("jumped")
+                current_player.jump()
         except:
             pass
             
