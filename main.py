@@ -277,7 +277,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "Deer Level 2"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
@@ -1062,6 +1062,7 @@ while RunVar == True:
         try:
             if keys[pygame.K_SPACE]:
                 if GameState == "EndScreen":
+                    pygame.time.delay(100)
                     GameState = EndScreenNextStage
                 elif GameState == "DeerLevel":
                     isJumping = True
