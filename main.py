@@ -121,12 +121,15 @@ end_time_wolf_spawn = 1000
 end_time_wolf_animation = 0
 end_time_tree_spawn = 1000
 end_time_text = 0
+end_time_snow_spawn = 0
 
 
 #Functions for Obstacles
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
 tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
+snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.png"), (2, 2))
+#wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
@@ -141,8 +144,8 @@ def make_wolf():
 def make_tree():
     return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img])
 
-# def make_snow():
-    # return ObstacleClass()
+def make_snow():
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img])
     
 
 
@@ -238,7 +241,7 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
-            lives.load_hearts(2)
+            lives.load_hearts(1)
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
             instructText = TextClass(
@@ -260,6 +263,11 @@ while RunVar == True:
                 end_time_tree_spawn = pygame.time.get_ticks() + 1000
                 obstacle_list.append(tree)
                 collide_list.append(tree)
+
+            if current_time > end_time_snow_spawn:
+                snow = make_snow()
+                end_time_snow_spawn = pygame.time.get_ticks() + 5
+                obstacle_list.append(snow)
 
             for obstacle in obstacle_list:
                 obstacle.move()
