@@ -397,9 +397,11 @@ while RunVar == True:
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
             
-            Key_W = pygame.image.load("KeyboardAsset/W.png")
-            Key_W.get_rect(center = (50, 50))
-            
+            Key_W = pygame.transform.scale(pygame.image.load("KeyboardAsset/W.png"), (40,40))
+            screen.blit(Key_W, Key_W.get_rect(center = (50, 50)))
+
+            Key_S = pygame.transform.scale(pygame.image.load("KeyboardAsset/S.png"), (40,40))
+            screen.blit(Key_S, Key_S.get_rect(center = (50, 95)))
             
 
 
