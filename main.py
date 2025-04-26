@@ -1216,6 +1216,23 @@ while RunVar == True:
             )
             BirdText1.blit()
 
+            TurtleTitle = TextClass(
+                "Leather-Back Sea Turtle",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 200, 260),
+                screen
+            )
+            TurtleTitle.blit()
+            TurtleText1 = TextClass(
+                "The Leather-Back Sea Turtle is one of the largest turtles in the world. It typically travels from colder to warmer waters.",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 30, 300),
+                screen
+            )
+            TurtleText1.blit()
+
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
             obstacle_list = []
