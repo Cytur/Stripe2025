@@ -6,6 +6,7 @@ from ObstacleClass import ObstacleClass, collide_list
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
+from livesclass import Lives
 
 buttonlist = []
         
@@ -51,7 +52,7 @@ for num in range(6):
 bird = BirdTurtle(50, 50, bird_frames)
 turtle = BirdTurtle(50, 50, turt_frames)
 deer = Deer(50, 400)
-# deer = Deer(x, y)
+lives = Lives()
 
 
 #Info Cards
@@ -221,6 +222,7 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
+            lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
             
             #Set up backround
@@ -244,17 +246,29 @@ while RunVar == True:
                     del obstacle
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+
             screen.blit(bird.current_frame, bird.Rect)
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
 
 
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    del obstacle
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
 
         case "TurtleLevel":
             current_player = turtle
+            lives.load_hearts(2)
+
             screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
@@ -281,16 +295,27 @@ while RunVar == True:
                     del obstacle
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+
             screen.blit(current_player.current_frame, current_player.Rect)
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
 
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    del obstacle
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
 
         case "DeerLevel":
             current_player = deer
+            lives.load_hearts(2)
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
@@ -307,7 +332,7 @@ while RunVar == True:
                 print("wolf spawned")
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 4000
+                end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000,21000)
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -338,17 +363,22 @@ while RunVar == True:
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     
-            
 
             screen.blit(current_player.current_frame, current_player.Rect)
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
 
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    print(obstacle.xcor)
-                    
-                    pygame.time.delay(1500)
-                    EndLevel("You Died!", DesignClass.Colors["RED"], "Eaten by wolf", "TitleScreen")
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
