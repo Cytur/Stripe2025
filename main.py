@@ -103,7 +103,7 @@ for num in range(6):
 #Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames, 64)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
-turtle = BirdTurtle(50, 50, turt_frames, 96)
+turtle = BirdTurtle(50, 400, turt_frames, 96)
 deer = Deer(50, 400)
 lives = Lives()
 
@@ -182,6 +182,10 @@ time_pass = 0
 end_time_hawk_spawn = 0
 end_time_hawk_animation = 0
 end_time_bullet_spawn = 0
+end_time_eggs_move = 5000
+end_time_trash_spawn = 5000
+end_time_shark_spawn = 8000
+end_time_killerwhale_spawn = 8000
 
 
 #Functions for Obstacles
@@ -194,7 +198,7 @@ hawk_imgs = [pygame.image.load(f"HawkAsset/bird{x+1}.png") for x in range(3)]
 shark_img = pygame.transform.scale(pygame.image.load("SharkAsset/shark.png"), (32, 18))
 killerwhale_img = pygame.transform.scale(pygame.image.load("KillerWhaleAsset/killerwhale.png"), (32, 18))
 trash_img = pygame.transform.scale(pygame.image.load("TrashAsset/Trash.png"), (20, 18))
-bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (20, 120))
+bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (10, 30))
 bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -266,7 +270,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "Turtle Level 2"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
@@ -484,8 +488,100 @@ while RunVar == True:
             for obstacle in obstacle_list:
                 obstacle.move()
 
-            if current_player.xcor < 1000:
+            if km_count < 300:
                 instructText.blit()
+
+            if km_count > routelen:
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Turtle Level 2")
+
+            if current_time > end_time_player_animation:
+                current_player.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 60
+
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 1
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                obstacle.move()
+                if obstacle.xcor < -200:
+                    del obstacle
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+
+            screen.blit(current_player.current_frame, current_player.Rect)
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
+
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+
+        case "Turtle Level 2":
+            current_player = turtle
+            routelen = 2000
+            lives.load_hearts(2)
+
+            screen.fill(DesignClass.Colors["OCEANBLUE"])
+
+            pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
+
+            instructText = TextClass(
+                "Get to the end and lay your eggs! Beware: Killer Sharks",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+
+            # Set up backround 
+            if current_time > end_time_bubble_spawn:
+                bubble = make_bubble()
+                obstacle_list.append(bubble)
+                end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
+
+            if current_time > end_time_trash_spawn:
+                bottle = make_bottle()
+                obstacle_list.append(bottle)
+                end_time_trash_spawn = pygame.time.get_ticks() + 7000
+                obstacle_list.append(bottle)
+                collide_list.append(bottle)
+
+            if current_time > end_time_killerwhale_spawn:
+                killerwhale = make_killerwhale()
+                obstacle_list.append(killerwhale)
+                end_time_killerwhale_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
+                obstacle_list.append(killerwhale)
+                collide_list.append(killerwhale)
+
+            if km_count < 300:
+                instructText.blit()
+
+            if km_count > routelen:
+                EndLevel("You Reached The End!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+
 
             if current_time > end_time_player_animation:
                 current_player.animation_update()
