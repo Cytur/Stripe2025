@@ -196,7 +196,7 @@ time_pass = 0
 end_time_hawk_spawn = 0
 end_time_hawk_animation = 0
 end_time_bullet_spawn = 5000
-end_time_eggs_move = 5000
+end_time_eggs_move = 7000
 end_time_trash_spawn = 5000
 end_time_shark_spawn = 8000
 end_time_killerwhale_spawn = 8000
@@ -307,7 +307,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
 isCompletedBonus = False
 bugsCaughtAmount = 0
 
-GameState = "Bird Bonus"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
@@ -619,6 +619,7 @@ while RunVar == True:
                 end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
 
             if current_time > end_time_tNPC_move:
+                fishNPC.speed = 5
                 fishNPC.move("LEFT")
                 end_time_tNPC_move += 80
 
