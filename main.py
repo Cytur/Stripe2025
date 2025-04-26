@@ -202,8 +202,11 @@ def make_tree():
 def make_snow():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img], "Snow")
 
-def make_rain():
+def make_rain_diagonal():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [rain_img], "Rain")
+
+def make_rain_straight():
+    return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, False, [rain_img], "Rain")
 
 def make_hawk():
     return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True, hawk_imgs, "Hawk")
@@ -236,7 +239,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "TitleScreen"
+GameState = "Deer Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -497,13 +500,13 @@ while RunVar == True:
                 end_time_wolf_spawn = pygame.time.get_ticks() + 7000 #random.randint(7000,21000)
 
             if current_time > end_time_rain_spawn:
-                rain = make_rain()
+                rain = make_rain_diagonal()
                 end_time_rain_spawn = pygame.time.get_ticks() + 15
                 obstacle_list.append(rain)
 
             if current_time > end_time_km_update:
                 km_count += 1
-                end_time_km_update += 500
+                end_time_km_update += 200
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -513,6 +516,9 @@ while RunVar == True:
             if current_time > end_time_player_animation:
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
+
+            if km_count > routelen:
+                EndLevel("You Won", DesignClass["GREEN"], "Level Won", "Deer Level 2")
 
             #Jumping
             if isJumping == True:
@@ -649,6 +655,79 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
+        case "Deer Level 2":
+            current_player = deer
+            routelen = 24
+            lives.load_hearts(3)
+            time_pass += 1
+
+            screen.fill([int(170+time_pass/24),int(206+time_pass/24),250])
+
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+
+            kmText = TextClass(
+                f"{km_count} hours till safe",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (200, 25),
+                screen
+            )
+
+            # Set up backround 
+            if current_time > end_time_cloud_spawn:
+                cloud = make_cloud(300)
+                obstacle_list.append(cloud)
+                end_time_cloud_spawn = pygame.time.get_ticks() + 600
+
+            if current_time > end_time_rain_spawn:
+                rain = make_rain_straight()
+                end_time_rain_spawn = pygame.time.get_ticks() + 15
+                obstacle_list.append(rain)
+
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 5000
+
+            for obstacle in obstacle_list:
+                obstacle.update_frame()
+                obstacle.move()
+
+
+            if current_time > end_time_player_animation:
+                current_player.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 60
+
+            if km_count > routelen:
+                EndLevel("You Won", DesignClass["GREEN"], "Level Won", "TitleScreen")
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                obstacle.move()
+                if obstacle.xcor < -200:
+                    del obstacle
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    
+            deer.blit(screen)
+            screen.blit(current_player.current_frame, current_player.Rect)
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
+
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+
 
 
         
@@ -772,6 +851,16 @@ while RunVar == True:
             if keys[pygame.K_s]:
                 if current_player.ycor < 500:
                     current_player.move("DOWN")
+
+            if keys[pygame.K_d]:
+                if current_player.xcor < 730:
+                    print("rioht")
+                    current_player.move("RIGHT")
+
+            if keys[pygame.K_a]:
+                print("sad")
+                if current_player.ycor > 15:
+                    current_player.move("LEFT")
         except:
             pass
         
