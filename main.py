@@ -462,7 +462,10 @@ while RunVar == True:
                 current_player.move("DOWN")
                 print(current_player.ycor)
                 if 600 < current_player.ycor:
-                    GameState == "Bird Bonus"
+                    print("state chagne")
+                    ChangeGameState("Bird Bonus")
+                    current_player.ycor = 60
+                    current_player.move("UP")
 
             if birdNPC.xcor < 1000:
                 screen.blit(birdNPC.current_frame, birdNPC.Rect)
@@ -779,6 +782,7 @@ while RunVar == True:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
         case "Bird Bonus":
+            specialTransition = False
             current_player = bird
             routelen = 99999
             lives.load_hearts(2)
