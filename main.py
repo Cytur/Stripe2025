@@ -55,6 +55,10 @@ def ResetGame():
     # Reset jump variables
     isJumping = False
     vert_acceleration = start_acceleration
+    deer.ycor = 400
+
+    #Reset hearts
+    lives.lives = []
     
     GameState = "TitleScreen"
 
@@ -484,15 +488,14 @@ while RunVar == True:
             #Jumping
             if isJumping == True:
                 deer.current_frame = deer.frames[4]
+
+                current_player.jump(vert_acceleration)
                 
                 if vert_acceleration > (-start_acceleration):
-                    print(deer.ycor)
                     vert_acceleration -= gravity_force
                 else:
                     isJumping = False
                     vert_acceleration = start_acceleration
-                    
-                current_player.jump(vert_acceleration)
 
             #Blit all the objects
             for obstacle in obstacle_list:
