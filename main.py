@@ -142,10 +142,10 @@ def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
 
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
+    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs, "Wolf")
 
 def make_tree():
-    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img])
+    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img], "Tree")
 
 def make_snow():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img])

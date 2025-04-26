@@ -4,7 +4,7 @@ collide_list = []
 
 #Enemies or obstacles which will move in a straight path
 class ObstacleClass():
-    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, collision: bool, frames: list):
+    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, collision: bool, frames: list, descriptor: str):
         self.collision = collision
         self.xcor = startx
         self.ycor = starty
@@ -12,6 +12,7 @@ class ObstacleClass():
         self.speedy = speedy
         self.width = width
         self.height = height
+        self.descriptor = descriptor
         self.images = []
         for image in frames:
             self.image = pygame.transform.scale(image, (width * 4, height * 4))
