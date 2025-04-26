@@ -4,7 +4,7 @@ import pygame
 
 class BirdTurtle():
     def __init__(self, xcor:int, ycor:int, frame_list:list, size):
-        self.speed = 10
+        self.speed = 20
         self.size = size
         self.xcor = xcor
         self.ycor = ycor
