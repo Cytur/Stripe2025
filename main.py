@@ -274,7 +274,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "Turtle Level 2"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
