@@ -27,7 +27,7 @@ def ChangeGameState(newGameState):
 def ResetGame():
     global GameState, buttonlist, end_time_text, km_count
     global obstacle_list, collide_list
-    global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn
+    global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn, end_time_wolf_animation, time_pass, end_time_hawk_animation, end_time_hawk_spawn, end_time_bullet_spawn
     global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn
     global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
@@ -862,8 +862,11 @@ while RunVar == True:
                 obstacle_list.append(rain)
 
             if current_time > end_time_bullet_spawn:
+                if end_time_bullet_spawn == 0:
+                    end_time_bullet_spawn = pygame.time.get_ticks() + 5000
+                    pass
                 bullet = make_bullet()
-                end_time_bullet_spawn = pygame.time.get_ticks() + 1200
+                end_time_bullet_spawn = pygame.time.get_ticks() + 1300
                 obstacle_list.append(bullet)
                 collide_list.append(bullet)
 
