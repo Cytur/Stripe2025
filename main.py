@@ -274,7 +274,7 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
-                    del obstacle
+                    collide_list.remove(obstacle)
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
@@ -322,7 +322,7 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
-                    del obstacle
+                    collide_list.remove(obstacle)
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
 
