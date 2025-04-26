@@ -9,13 +9,16 @@ from deer import Deer
 from livesclass import Lives
 
 buttonlist = []
+
         
 def ChangeGameState(newGameState):
     global GameState
     global buttonlist
+    global end_time_text
 
     GameState = newGameState
     buttonlist = []
+    end_time_text = 10000
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
@@ -117,6 +120,8 @@ end_time_bubble_spawn = 0
 end_time_wolf_spawn = 1000
 end_time_wolf_animation = 0
 end_time_tree_spawn = 1000
+end_time_text = 0
+
 
 #Functions for Obstacles
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
@@ -135,7 +140,10 @@ def make_wolf():
     return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
 
 def make_tree():
-    return ObstacleClass(1000, random.randint(200, 600), 10, 0, 16, tree_img.get_height(), True, [tree_img])
+    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img])
+
+# def make_snow():
+    # return ObstacleClass()
     
 
 
@@ -233,6 +241,14 @@ while RunVar == True:
             current_player = bird
             lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
+
+            instructText = TextClass(
+                "You can hit the stumps",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
             
             #Set up backround
             if current_time > end_time_cloud_spawn:
@@ -270,6 +286,9 @@ while RunVar == True:
                 img = heart[0]
                 rect = heart[1]
                 screen.blit(img, rect)
+
+            if current_time < end_time_text:
+                instructText.blit()
 
 
             #detecting player collisions with objects
