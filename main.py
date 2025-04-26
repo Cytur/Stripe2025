@@ -269,15 +269,17 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     global EndScreenTitleColor
     global EndScreenReason
     global EndScreenNextStage
+    global km_count
     global GameState
     
     EndScreenTitle = TitleText
     EndScreenTitleColor = TitleTextColor
     EndScreenReason = EndReason
     EndScreenNextStage = NextStage
+    km_count = 0
     GameState = "EndScreen"
 
-GameState = "TitleScreen"
+GameState = "DeerLevel"
 RunVar = True
 
 while RunVar == True:
@@ -674,9 +676,6 @@ while RunVar == True:
             if current_time > end_time_km_update:
                 km_count += 1
                 end_time_km_update += 200
-
-            if km_count > routelen:
-                EndLevel("You Won, Try Other Animals Too!", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
