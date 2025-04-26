@@ -219,7 +219,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "TitleScreen"
+GameState = "Bird Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -285,8 +285,9 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
-            lives.load_hearts(1)
-            screen.fill(DesignClass.Colors["SKYBLUE"])
+            routelen = 6000
+            lives.load_hearts(3)
+            screen.fill(DesignClass.Colors["FORESTGREEN"])
 
             instructText = TextClass(
                 "Hurry Up! Pass through tree trunks",
@@ -306,11 +307,6 @@ while RunVar == True:
             
             
             #Set up backround
-            if current_time > end_time_cloud_spawn:
-                cloud = make_cloud()
-                end_time_cloud_spawn = pygame.time.get_ticks() + 700
-                obstacle_list.append(cloud)
-
             if current_time > end_time_tree_spawn:
                 tree = make_tree()
                 end_time_tree_spawn = pygame.time.get_ticks() + 1000
@@ -329,6 +325,9 @@ while RunVar == True:
             if current_time > end_time_km_update:
                 km_count += 3
                 end_time_km_update += 1
+
+            if km_count > routelen:
+                EndLevel("You Won", DesignClass["GREEN"], "Level Won", "Bird Level 2")
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -378,6 +377,7 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
+            routelen = 4000
             lives.load_hearts(2)
 
             screen.fill(DesignClass.Colors["OCEANBLUE"])
@@ -440,6 +440,7 @@ while RunVar == True:
 
         case "DeerLevel":
             current_player = deer
+            routelen = 250
             lives.load_hearts(2)
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
@@ -520,6 +521,98 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
+        case "Bird Level 2":
+            current_player = bird
+            routelen = 7000
+            lives.load_hearts(3)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
+
+            instructText = TextClass(
+                "You're catching up! Watch out for eagles!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+            
+            
+            
+            #Set up backround
+            if current_time > end_time_cloud_spawn:
+                cloud = make_cloud()
+                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                obstacle_list.append(cloud)
+
+
+            if current_time > end_time_snow_spawn:
+                snow = make_snow()
+                end_time_snow_spawn = pygame.time.get_ticks() + 120
+                obstacle_list.append(snow)
+
+            if current_time > end_time_bNPC_move:
+                birdNPC.move("RIGHT")
+                end_time_bNPC_move += 80
+
+            if current_time > end_time_km_update:
+                km_count += 3
+                end_time_km_update += 1
+
+            if km_count > routelen:
+                EndLevel("You Won, Try Other Animals Too!", DesignClass["GREEN"], "Level Won", "TitleScreen")
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+
+
+            if current_time > end_time_player_animation:
+                birdNPC.animation_update()
+                bird.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            if birdNPC.xcor < 1000:
+                screen.blit(birdNPC.current_frame, birdNPC.Rect)
+
+            screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    print(obstacle.xcor, obstacle.ycor)
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+
+
+
+        
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
 
