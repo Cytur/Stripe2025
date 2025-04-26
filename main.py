@@ -51,6 +51,7 @@ def ResetGame():
     end_time_player_animation = 0
     end_time_bNPC_move = 0
     end_time_km_update = 0
+    end_time_rain_spawn = 0
 
     # Reset jump variables
     isJumping = False
@@ -170,6 +171,7 @@ end_time_text = 0
 end_time_snow_spawn = 0
 end_time_bNPC_move = 0
 end_time_km_update = 0
+end_time_rain_spawn = 0
 
 
 #Functions for Obstacles
@@ -177,6 +179,7 @@ bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
 tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
 snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.png"), (2, 2))
+rain_img = pygame.transform.scale(pygame.image.load("RainAsset/Raindrop.png"), (10, 10))
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -194,6 +197,9 @@ def make_tree():
 
 def make_snow():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img], "Snow")
+
+def make_rain():
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [rain_img], "Rain")
     
 
 
@@ -470,6 +476,11 @@ while RunVar == True:
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
                 end_time_wolf_spawn = pygame.time.get_ticks() + 7000 #random.randint(7000,21000)
+
+            if current_time > end_time_rain_spawn:
+                rain = make_rain()
+                end_time_rain_spawn = pygame.time.get_ticks() + 15
+                obstacle_list.append(rain)
 
             if current_time > end_time_km_update:
                 km_count += 1
