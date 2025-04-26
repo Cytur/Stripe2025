@@ -698,7 +698,7 @@ while RunVar == True:
                 bullet = make_bullet()
                 end_time_bullet_spawn = pygame.time.get_ticks() + 1200
                 obstacle_list.append(bullet)
-                # collide_list.append(bullet)
+                collide_list.append(bullet)
 
             if current_time > end_time_km_update:
                 km_count += 1
