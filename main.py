@@ -306,7 +306,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
 
         case "TurtleLevel":
@@ -354,7 +354,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
 
         case "DeerLevel":
@@ -422,7 +422,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
@@ -450,6 +450,17 @@ while RunVar == True:
             JumpText.blit()
             Key_Space = pygame.transform.scale(pygame.image.load("KeyboardAsset/SPACE.png"), (100,40))
             screen.blit(Key_Space, Key_Space.get_rect(center = (80, 150)))
+
+            EscText = TextClass(
+                "Shortcut to main menu",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (270, 240),
+                screen
+            )
+            EscText.blit()
+            Key_Esc = pygame.transform.scale(pygame.image.load("KeyboardAsset/ESC.png"), (40,40))
+            screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 240)))
 
             BackButton = ButtonClass(
                 TextClass(
@@ -544,6 +555,13 @@ while RunVar == True:
                 elif GameState == "DeerLevel":
                     isJumping = True
                     print("jumped")
+        except:
+            pass
+
+        #Returning to main menu during gameplay
+        try:
+            if keys[pygame.K_ESCAPE]:
+                ChangeGameState("TitleScreen")
         except:
             pass
             
