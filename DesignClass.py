@@ -12,6 +12,7 @@ Colors = {
     "OCEANBLUE": [1,84,130],
     "OCEANYELLOW": [128,128,0],
     "GRASSGREEN": [0,154,23],
+    "FORESTGREEN": [0,110,51],
 }
 
 Fonts = {
