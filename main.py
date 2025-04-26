@@ -421,15 +421,45 @@ while RunVar == True:
 
             UpDownText = TextClass(
                 "Up/Down (Bird & Turtle)",
-                pygame.font.Font(DesignClass.Fonts["Poppins"]),
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (100, 72),
+                (330, 50),
                 screen
             )
+            UpDownText.blit()
             Key_W = pygame.transform.scale(pygame.image.load("KeyboardAsset/W.png"), (40,40))
             screen.blit(Key_W, Key_W.get_rect(center = (50, 50)))
             Key_S = pygame.transform.scale(pygame.image.load("KeyboardAsset/S.png"), (40,40))
-            screen.blit(Key_S, Key_S.get_rect(center = (50, 95)))
+            screen.blit(Key_S, Key_S.get_rect(center = (95, 50)))
+
+            JumpText = TextClass(
+                "Jump (Deer)",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (250, 150),
+                screen
+            )
+            JumpText.blit()
+            Key_Space = pygame.transform.scale(pygame.image.load("KeyboardAsset/SPACE.png"), (100,40))
+            screen.blit(Key_Space, Key_Space.get_rect(center = (80, 150)))
+
+            BackButton = ButtonClass(
+                TextClass(
+                    "Understood!",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["BLACK"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 500),
+                    screen
+                ),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 175, 475, 350, 50),
+                0,
+                DesignClass.Colors["GREEN"],
+                screen,
+                ChangeGameState,
+                "TitleScreen"
+            )
+            buttonlist.append(BackButton)
+            BackButton.draw()
             
 
 
