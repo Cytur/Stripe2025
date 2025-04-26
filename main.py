@@ -49,8 +49,8 @@ for num in range(6):
 
 
 #Animal Obj s
-bird = BirdTurtle(50, 50, bird_frames)
-turtle = BirdTurtle(50, 50, turt_frames)
+bird = BirdTurtle(50, 50, bird_frames, 64)
+turtle = BirdTurtle(50, 50, turt_frames, 96)
 deer = Deer(50, 400)
 lives = Lives()
 
@@ -119,14 +119,14 @@ end_time_wolf_animation = 0
 end_time_tree_spawn = 1000
 
 #Functions for Obstacles
-cloud_img = pygame.image.load(random.choice(cloud_img_list))
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
-tree_img = pygame.image.load("TreeAsset/tree.png")
+tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
-    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width(), cloud_img.get_height(), False, [cloud_img])
+    cloud_img = pygame.image.load(random.choice(cloud_img_list))
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, [cloud_img])
 
 def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
@@ -135,7 +135,8 @@ def make_wolf():
     return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
 
 def make_tree():
-    return ObstacleClass(1000, random.randint(200, 600), 10, 0, tree_img.get_width(), cloud_img.get_height(), True, [tree_img])
+    return ObstacleClass(1000, random.randint(200, 600), 10, 0, 16, tree_img.get_height(), True, [tree_img])
+    
 
 
 
@@ -236,7 +237,7 @@ while RunVar == True:
             #Set up backround
             if current_time > end_time_cloud_spawn:
                 cloud = make_cloud()
-                end_time_cloud_spawn = pygame.time.get_ticks() + 300
+                end_time_cloud_spawn = pygame.time.get_ticks() + 700
                 obstacle_list.append(cloud)
 
             if current_time > end_time_tree_spawn:
@@ -257,11 +258,13 @@ while RunVar == True:
             #Blit all the objects
             for obstacle in obstacle_list:
                 if obstacle.xcor < -200:
-                    del obstacle
+                    obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
             for heart in lives.lives:
                 img = heart[0]
@@ -273,6 +276,7 @@ while RunVar == True:
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
+                    print(obstacle.xcor, obstacle.ycor)
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
