@@ -23,7 +23,7 @@ class collectibleClass:
     def move(self):
         self.xcor -= self.speedx
         self.ycor -= self.speedy
-        self.Rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
+        self.Rect = pygame.Rect(self.xcor, self.ycor, self.width*2, self.height*2)
     
     def update_frame(self):
         self.frame_num += 1
