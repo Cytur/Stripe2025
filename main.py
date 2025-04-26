@@ -176,6 +176,7 @@ end_time_tree_spawn = 1000
 end_time_text = 0
 end_time_snow_spawn = 0
 end_time_bNPC_move = 0
+end_time_tNPC_move = 0
 end_time_km_update = 0
 end_time_rain_spawn = 0
 time_pass = 0
@@ -200,6 +201,7 @@ killerwhale_img = pygame.transform.scale(pygame.image.load("KillerWhaleAsset/kil
 trash_img = pygame.transform.scale(pygame.image.load("TrashAsset/Trash.png"), (20, 18))
 bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (10, 30))
 bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
+fish_img = pygame.transform.scale(pygame.image.load("GoldfishAsset/goldfish.png"), (50, 35))
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -242,6 +244,8 @@ def make_trash():
 def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True, [bottle_img], "Plastic bottle")
     
+fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
+
 
 
 
@@ -270,7 +274,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "TitleScreen"
+GameState = "Turtle Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -559,6 +563,10 @@ while RunVar == True:
                 obstacle_list.append(bubble)
                 end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
 
+            if current_time > end_time_tNPC_move:
+                fishNPC.move("LEFT")
+                end_time_tNPC_move += 80
+
             if current_time > end_time_trash_spawn:
                 bottle = make_bottle()
                 obstacle_list.append(bottle)
@@ -573,17 +581,18 @@ while RunVar == True:
                 obstacle_list.append(killerwhale)
                 collide_list.append(killerwhale)
 
-            if km_count < 300:
+            if km_count < 200:
                 instructText.blit()
 
             if km_count > routelen:
-                EndLevel("You Reached The End!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
+                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
 
             for obstacle in obstacle_list:
                 obstacle.move()
 
 
             if current_time > end_time_player_animation:
+                fishNPC.animation_update()
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
@@ -599,6 +608,9 @@ while RunVar == True:
                     del obstacle
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+            
+            if fishNPC.xcor < 1000:
+                screen.blit(fishNPC.current_frame, fishNPC.Rect)
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
@@ -673,7 +685,7 @@ while RunVar == True:
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass["GREEN"], "Level Won", "Deer Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Deer Level 2")
 
             #Jumping
             if isJumping == True:

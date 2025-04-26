@@ -31,6 +31,8 @@ class BirdTurtle():
         #FOR NPCs
         if direction == "RIGHT":
             self.xcor += self.speed
+        if direction == "LEFT":
+            self.xcor -= self.speed
 
 
         self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))
