@@ -17,7 +17,7 @@ class ObstacleClass():
             self.image = pygame.transform.scale(image, (width * 4, height * 4))
             self.images.append(self.image)
         self.frame_num = 0
-        self.Rect = pygame.Rect(startx, starty, self.width, self.height)
+        self.Rect = pygame.Rect(startx, starty, self.width, self.height * 3)
         
 
 
