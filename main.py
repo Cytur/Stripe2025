@@ -24,6 +24,40 @@ def ChangeGameState(newGameState):
     birdNPC.xcor = -100
     km_count = 0
 
+def ResetGame():
+    global GameState, buttonlist, end_time_text, km_count
+    global obstacle_list, collide_list
+    global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn
+    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation
+    global end_time_bNPC_move, end_time_km_update
+    global isJumping, vert_acceleration
+    global current_player
+
+    buttonlist = []
+    end_time_text = pygame.time.get_ticks() + 10000
+    birdNPC.xcor = -100
+    km_count = 0
+
+    # reset objects
+    obstacle_list = []
+    collide_list = []
+
+    # Reset all timers
+    end_time_cloud_spawn = 0
+    end_time_bubble_spawn = 0
+    end_time_wolf_spawn = 1000
+    end_time_tree_spawn = 1000
+    end_time_snow_spawn = 0
+    end_time_player_animation = 0
+    end_time_bNPC_move = 0
+    end_time_km_update = 0
+
+    # Reset jump variables
+    isJumping = False
+    vert_acceleration = start_acceleration
+    
+    GameState = "TitleScreen"
+
 pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
@@ -162,9 +196,9 @@ def make_snow():
 
 #Vars for player jumping
 isJumping = False
-start_acceleration = 15
-vert_acceleration = 15
-gravity_force = 0.7
+start_acceleration = 12
+vert_acceleration = 12
+gravity_force = 0.5
 
 #End screen args default
 EndScreenTitle = "You Died!"
@@ -451,6 +485,7 @@ while RunVar == True:
                 deer.current_frame = deer.frames[4]
                 
                 if vert_acceleration > (-start_acceleration):
+                    print(deer.ycor)
                     vert_acceleration -= gravity_force
                 else:
                     isJumping = False
@@ -622,11 +657,7 @@ while RunVar == True:
         #Returning to main menu during gameplay
         try:
             if keys[pygame.K_ESCAPE]:
-                GameState = "TitleScreen"
-
-                buttonlist = []
-                collide_list = []
-                obstacle_list = []
+                ResetGame()
         except:
             pass
             
