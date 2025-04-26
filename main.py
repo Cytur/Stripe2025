@@ -136,10 +136,10 @@ snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.p
 
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
-    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, [cloud_img])
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, [cloud_img], "Cloud")
 
 def make_bubble():
-    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img])
+    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img], "Bubble")
 
 def make_wolf():
     return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
@@ -148,7 +148,7 @@ def make_tree():
     return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img])
 
 def make_snow():
-    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img])
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img], "Snow")
     
 
 
