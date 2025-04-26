@@ -1215,6 +1215,22 @@ while RunVar == True:
                 screen
             )
             BirdText1.blit()
+            BirdText2 = TextClass(
+                "Your goal is to migrate south. Avoid trees and predators to migrate successfully!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 85, 210),
+                screen
+            )
+            BirdText2.blit()
+            BirdText3 = TextClass(
+                "Hint: Find a bonus level for 1 extra heart!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 120, 230),
+                screen
+            )
+            BirdText3.blit()
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
