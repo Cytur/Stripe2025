@@ -1256,6 +1256,50 @@ while RunVar == True:
                 screen
             )
             TurtleText2.blit()
+            
+            DeerTitle = TextClass(
+                "White-Tailed Deer",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 240, 370),
+                screen
+            )
+            DeerTitle.blit()
+            DeerText1 = TextClass(
+                "The white-tailed deer is abundant throughout Central America.",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 160, 410),
+                screen
+            )
+            DeerText1.blit()
+            DeerText2 = TextClass(
+                "Your goal is to migrate to marshes. Avoid wolves and hunters!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 160, 430),
+                screen
+            )
+            DeerText2.blit()
+            
+            
+            BackButton = ButtonClass(
+                TextClass(
+                    "Understood!",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["BLACK"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 500),
+                    screen
+                ),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 175, 475, 350, 50),
+                0,
+                DesignClass.Colors["GREEN"],
+                screen,
+                ChangeGameState,
+                "TitleScreen"
+            )
+            buttonlist.append(BackButton)
+            BackButton.draw()
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
