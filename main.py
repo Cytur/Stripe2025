@@ -18,7 +18,8 @@ def ChangeGameState(newGameState):
 
     GameState = newGameState
     buttonlist = []
-    end_time_text = 10000
+    end_time_text = current_time + 10000
+    birdNPC.xcor = -100
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
@@ -53,6 +54,7 @@ for num in range(6):
 
 #Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames, 64)
+birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
 turtle = BirdTurtle(50, 50, turt_frames, 96)
 deer = Deer(50, 400)
 lives = Lives()
@@ -122,6 +124,7 @@ end_time_wolf_animation = 0
 end_time_tree_spawn = 1000
 end_time_text = 0
 end_time_snow_spawn = 0
+end_time_bNPC_move = 0
 
 
 #Functions for Obstacles
@@ -245,12 +248,14 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
             instructText = TextClass(
-                "You can hit the stumps",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
+                "Hurry Up! Pass through tree trunks",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
+            
+            
             
             #Set up backround
             if current_time > end_time_cloud_spawn:
@@ -266,14 +271,21 @@ while RunVar == True:
 
             if current_time > end_time_snow_spawn:
                 snow = make_snow()
-                end_time_snow_spawn = pygame.time.get_ticks() + 5
+                end_time_snow_spawn = pygame.time.get_ticks() + 40
                 obstacle_list.append(snow)
+
+            if current_time > end_time_bNPC_move:
+                birdNPC.move("RIGHT")
+                end_time_bNPC_move += 80
 
             for obstacle in obstacle_list:
                 obstacle.move()
+
+            
                 
 
             if current_time > end_time_player_animation:
+                birdNPC.animation_update()
                 bird.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 50
 
@@ -285,6 +297,9 @@ while RunVar == True:
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            if birdNPC.xcor < 1000:
+                screen.blit(birdNPC.current_frame, birdNPC.Rect)
 
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
@@ -567,6 +582,6 @@ while RunVar == True:
             
     pygame.display.update()
     
-    pygame.time.Clock().tick(60)
+    pygame.time.Clock().tick(40)
 
 pygame.quit()
