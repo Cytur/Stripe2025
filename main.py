@@ -9,17 +9,20 @@ from deer import Deer
 from livesclass import Lives
 
 buttonlist = []
+km_count = 0
 
         
 def ChangeGameState(newGameState):
     global GameState
     global buttonlist
     global end_time_text
+    global km_count
 
     GameState = newGameState
     buttonlist = []
     end_time_text = current_time + 10000
     birdNPC.xcor = -100
+    km_count = 0
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
@@ -128,6 +131,7 @@ end_time_tree_spawn = 1000
 end_time_text = 0
 end_time_snow_spawn = 0
 end_time_bNPC_move = 0
+end_time_km_update = 0
 
 
 #Functions for Obstacles
@@ -257,6 +261,13 @@ while RunVar == True:
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
             
             
             
@@ -280,6 +291,10 @@ while RunVar == True:
             if current_time > end_time_bNPC_move:
                 birdNPC.move("RIGHT")
                 end_time_bNPC_move += 80
+
+            if current_time > end_time_km_update:
+                km_count += 3
+                end_time_km_update += 1
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -314,7 +329,7 @@ while RunVar == True:
 
             if current_time < end_time_text:
                 instructText.blit()
-
+            kmText.blit()
 
             #detecting player collisions with objects
             for obstacle in collide_list:
@@ -335,6 +350,14 @@ while RunVar == True:
 
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+
             # Set up backround 
             if current_time > end_time_bubble_spawn:
                 bubble = make_bubble()
@@ -348,6 +371,10 @@ while RunVar == True:
             if current_time > end_time_player_animation:
                 current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 60
+
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 1
 
 
             #Blit all the objects
@@ -364,6 +391,8 @@ while RunVar == True:
                 img = heart[0]
                 rect = heart[1]
                 screen.blit(img, rect)
+
+            kmText.blit()
 
             #detecting player collisions with objects
             for obstacle in collide_list:
@@ -383,6 +412,14 @@ while RunVar == True:
 
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+
             # Set up backround 
             if current_time > end_time_cloud_spawn:
                 cloud = make_cloud(300)
@@ -395,6 +432,10 @@ while RunVar == True:
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
                 end_time_wolf_spawn = pygame.time.get_ticks() + 7000 #random.randint(7000,21000)
+
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 500
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -432,6 +473,8 @@ while RunVar == True:
                 img = heart[0]
                 rect = heart[1]
                 screen.blit(img, rect)
+
+            kmText.blit()
 
             #detecting player collisions with objects
             for obstacle in collide_list:
