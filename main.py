@@ -1248,6 +1248,14 @@ while RunVar == True:
                 screen
             )
             TurtleText1.blit()
+            TurtleText2 = TextClass(
+                "The Leather-Back Sea Turtle use ocean currents as \"Highways\" in order to migrate faster.",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 100, 320),
+                screen
+            )
+            TurtleText2.blit()
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
