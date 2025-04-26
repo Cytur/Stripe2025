@@ -37,14 +37,14 @@ class Deer():
 
     def move(self, direction):
         if direction == "RIGHT":
-            print(self.xcor)
+
             self.xcor += self.speed
-            print(self.xcor)
+
             self.cur_frames = self.frames
 
         if direction == "LEFT":
             self.xcor -= self.speed
-            print("movead")
+
             self.cur_frames = self.framesRev
 
         self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))

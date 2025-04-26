@@ -186,6 +186,7 @@ end_time_eggs_move = 5000
 end_time_trash_spawn = 5000
 end_time_shark_spawn = 8000
 end_time_killerwhale_spawn = 8000
+end_time_hunter = 0
 
 
 #Functions for Obstacles
@@ -200,6 +201,7 @@ killerwhale_img = pygame.transform.scale(pygame.image.load("KillerWhaleAsset/kil
 trash_img = pygame.transform.scale(pygame.image.load("TrashAsset/Trash.png"), (20, 18))
 bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (10, 30))
 bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
+hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(6)]
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -242,7 +244,8 @@ def make_trash():
 def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True, [bottle_img], "Plastic bottle")
     
-
+def make_hunter():
+    return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True, hunter_imgs, "Wolf")
 
 
 #Vars for player jumping
@@ -270,7 +273,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "TitleScreen"
+GameState = "Deer Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -820,6 +823,13 @@ while RunVar == True:
 
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
+            instructText = TextClass(
+                "Dodge the bullets! The hunters have found you!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
             kmText = TextClass(
                 f"{km_count} hours till safe",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
@@ -844,6 +854,12 @@ while RunVar == True:
                 end_time_bullet_spawn = pygame.time.get_ticks() + 1200
                 obstacle_list.append(bullet)
                 collide_list.append(bullet)
+
+            if current_time > end_time_hunter:
+                hunter = make_hunter()
+                obstacle_list.append(hunter)
+                end_time_hunter = 2222222
+            
 
             if current_time > end_time_km_update:
                 km_count += 1
@@ -872,6 +888,10 @@ while RunVar == True:
                     
             deer.blit(screen)
             screen.blit(current_player.current_frame, current_player.Rect)
+
+            if current_time < end_time_text:
+                instructText.blit()
+                end_time_text += 10000
 
             for heart in lives.lives:
                 img = heart[0]
@@ -1016,11 +1036,11 @@ while RunVar == True:
             if GameState == "Deer Level 2":
                 if keys[pygame.K_d]:
                     if current_player.xcor < 730:
-                        print("rioht")
+                      
                         current_player.move("RIGHT")
 
                 if keys[pygame.K_a]:
-                    print("sad")
+                  
                     if current_player.ycor > 15:
                         current_player.move("LEFT")
         except:
@@ -1033,7 +1053,7 @@ while RunVar == True:
                     GameState = EndScreenNextStage
                 elif GameState == "DeerLevel":
                     isJumping = True
-                    print("jumped")
+ 
         except:
             pass
 
