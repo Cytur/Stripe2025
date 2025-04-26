@@ -173,7 +173,7 @@ end_time_bubble_spawn = 0
 end_time_wolf_spawn = 1000
 end_time_wolf_animation = 0
 end_time_tree_spawn = 1000
-end_time_text = 0
+end_time_text = 8000
 end_time_snow_spawn = 0
 end_time_bNPC_move = 0
 end_time_tNPC_move = 0
@@ -182,7 +182,7 @@ end_time_rain_spawn = 0
 time_pass = 0
 end_time_hawk_spawn = 0
 end_time_hawk_animation = 0
-end_time_bullet_spawn = 0
+end_time_bullet_spawn = 5000
 end_time_eggs_move = 5000
 end_time_trash_spawn = 5000
 end_time_shark_spawn = 8000
@@ -279,7 +279,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     km_count = 0
     GameState = "EndScreen"
 
-GameState = "DeerLevel"
+GameState = "Deer Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -356,7 +356,7 @@ while RunVar == True:
         case "BirdLevel":
             current_player = bird
             routelen = 6000
-            lives.load_hearts(3)
+            lives.load_hearts(2)
             screen.fill(DesignClass.Colors["FORESTGREEN"])
 
             instructText = TextClass(
@@ -731,7 +731,7 @@ while RunVar == True:
         case "Bird Level 2":
             current_player = bird
             routelen = 7000
-            lives.load_hearts(3)
+            lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
             instructText = TextClass(
