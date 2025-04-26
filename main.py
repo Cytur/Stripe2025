@@ -172,6 +172,9 @@ end_time_snow_spawn = 0
 end_time_bNPC_move = 0
 end_time_km_update = 0
 end_time_rain_spawn = 0
+time_pass = 0
+end_time_hawk_spawn = 0
+end_time_hawk_animation = 0
 
 
 #Functions for Obstacles
@@ -180,6 +183,7 @@ wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
 tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
 snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.png"), (2, 2))
 rain_img = pygame.transform.scale(pygame.image.load("RainAsset/Raindrop.png"), (10, 10))
+hawk_imgs = [pygame.image.load(f"HawkAsset/bird{x+1}.png") for x in range(3)]
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -200,6 +204,9 @@ def make_snow():
 
 def make_rain():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [rain_img], "Rain")
+
+def make_hawk():
+    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True, hawk_imgs, "Hawk")
     
 
 
@@ -462,6 +469,7 @@ while RunVar == True:
             current_player = deer
             routelen = 250
             lives.load_hearts(2)
+            time_pass += 1
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
@@ -577,8 +585,14 @@ while RunVar == True:
 
             if current_time > end_time_snow_spawn:
                 snow = make_snow()
-                end_time_snow_spawn = pygame.time.get_ticks() + 120
+                end_time_snow_spawn = pygame.time.get_ticks() + 60 + time_pass/180
                 obstacle_list.append(snow)
+
+            if current_time > end_time_hawk_spawn:
+                hawk = make_hawk()
+                end_time_hawk_spawn = pygame.time.get_ticks() + 800
+                obstacle_list.append(hawk)
+                collide_list.append(hawk)
 
             if current_time > end_time_bNPC_move:
                 birdNPC.move("RIGHT")
@@ -589,10 +603,11 @@ while RunVar == True:
                 end_time_km_update += 1
 
             if km_count > routelen:
-                EndLevel("You Won, Try Other Animals Too!", DesignClass["GREEN"], "Level Won", "TitleScreen")
+                EndLevel("You Won, Try Other Animals Too!", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
 
             for obstacle in obstacle_list:
                 obstacle.move()
+                obstacle.update_frame()
 
 
             if current_time > end_time_player_animation:
