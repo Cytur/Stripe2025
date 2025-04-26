@@ -188,6 +188,7 @@ end_time_trash_spawn = 5000
 end_time_shark_spawn = 8000
 end_time_killerwhale_spawn = 8000
 end_time_hunter = 0
+end_time_bug_spawn = 1000
 
 
 #Functions for Obstacles
@@ -204,6 +205,8 @@ bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.
 bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
 fish_img = pygame.transform.scale(pygame.image.load("GoldfishAsset/goldfish.png"), (50, 35))
 hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(6)]
+bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
+bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -251,6 +254,10 @@ fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 def make_hunter():
     return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True, hunter_imgs, "Wolf")
 
+def make_bug():
+    bugList = [bug1_img, bug2_img]
+    return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True, [bugList[random.randint(0, 1)]], "Bug")
+
 
 #Vars for player jumping
 isJumping = False
@@ -278,8 +285,11 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     km_count = 0
     GameState = "EndScreen"
+    
+isCompletedBonus = False
+bugsCaughtAmount = 0
 
-GameState = "Deer Level 2"
+GameState = "Bird Bonus"
 RunVar = True
 
 while RunVar == True:
@@ -728,10 +738,100 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "Bird Level 2":
+        case "Bird Bonus":
             current_player = bird
             routelen = 7000
             lives.load_hearts(2)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+
+            instructText = TextClass(
+                "Bonus level: Catch 20 bugs for +1 heart!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+            
+            
+            
+            #Set up backround
+            if current_time > end_time_cloud_spawn:
+                cloud = make_cloud(bottom_bound=300)
+                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                obstacle_list.append(cloud)
+
+            if current_time > end_time_km_update:
+                km_count += 3
+                end_time_km_update += 1
+
+            if bugsCaughtAmount >= 20:
+                isCompletedBonus = True
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
+
+
+            if current_time > end_time_player_animation:
+                birdNPC.animation_update()
+                bird.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+                
+            if current_time > end_time_bug_spawn:
+                bug = make_bug()
+                
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            if birdNPC.xcor < 1000:
+                screen.blit(birdNPC.current_frame, birdNPC.Rect)
+
+            screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            for heart in lives.lives:
+                img = heart[0]
+                rect = heart[1]
+                screen.blit(img, rect)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    print(obstacle.xcor, obstacle.ycor)
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        isCompletedBonus = False
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+
+        case "Bird Level 2":
+            current_player = bird
+            routelen = 7000
+            if isCompletedBonus == True:
+                lives.load_hearts(3)
+            else:
+                lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
             instructText = TextClass(
