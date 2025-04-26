@@ -122,7 +122,6 @@ end_time_tree_spawn = 1000
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
 tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
-#wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
@@ -400,10 +399,16 @@ while RunVar == True:
 
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
-            
+
+            UpDownText = TextClass(
+                "Up/Down (Bird & Turtle)",
+                pygame.font.Font(DesignClass.Fonts["Poppins"]),
+                DesignClass.Colors["BLACK"],
+                (100, 72),
+                screen
+            )
             Key_W = pygame.transform.scale(pygame.image.load("KeyboardAsset/W.png"), (40,40))
             screen.blit(Key_W, Key_W.get_rect(center = (50, 50)))
-
             Key_S = pygame.transform.scale(pygame.image.load("KeyboardAsset/S.png"), (40,40))
             screen.blit(Key_S, Key_S.get_rect(center = (50, 95)))
             
@@ -465,6 +470,7 @@ while RunVar == True:
         keys = pygame.key.get_pressed()
         try:
             if keys[pygame.K_w]:
+                #Height limit
                 if current_player.ycor > 10:
                     current_player.move("UP")
             if keys[pygame.K_s]:
