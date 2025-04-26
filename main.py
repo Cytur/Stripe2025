@@ -43,15 +43,21 @@ def ResetGame():
     collide_list = []
 
     # Reset all timers
+    end_time_player_animation = 0
     end_time_cloud_spawn = 0
     end_time_bubble_spawn = 0
     end_time_wolf_spawn = 1000
+    end_time_wolf_animation = 0
     end_time_tree_spawn = 1000
+    end_time_text = 0
     end_time_snow_spawn = 0
-    end_time_player_animation = 0
     end_time_bNPC_move = 0
     end_time_km_update = 0
     end_time_rain_spawn = 0
+    time_pass = 0
+    end_time_hawk_spawn = 0
+    end_time_hawk_animation = 0
+    end_time_bullet_spawn = 0
 
     # Reset jump variables
     isJumping = False
@@ -97,7 +103,7 @@ for num in range(6):
 #Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames, 64)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
-turtle = BirdTurtle(50, 450, turt_frames, 96)
+turtle = BirdTurtle(50, 50, turt_frames, 96)
 deer = Deer(50, 400)
 lives = Lives()
 
@@ -175,9 +181,7 @@ end_time_rain_spawn = 0
 time_pass = 0
 end_time_hawk_spawn = 0
 end_time_hawk_animation = 0
-end_time_eggs_move = 3000
-end_time_trash_spawn = 5000
-end_time_shark_spawn = 10000
+end_time_bullet_spawn = 0
 
 
 #Functions for Obstacles
@@ -191,6 +195,7 @@ shark_img = pygame.transform.scale(pygame.image.load("SharkAsset/shark.png"), (3
 killerwhale_img = pygame.transform.scale(pygame.image.load("KillerWhaleAsset/killerwhale.png"), (32, 18))
 trash_img = pygame.transform.scale(pygame.image.load("TrashAsset/Trash.png"), (20, 18))
 bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (20, 120))
+bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -217,6 +222,9 @@ def make_rain_straight():
 
 def make_hawk():
     return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True, hawk_imgs, "Hawk")
+    
+def make_bullet():
+    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2,True, [bullet_img], "Hunter")
 
 def make_shark():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), True, [shark_img], "Shark")
@@ -514,94 +522,10 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "Turtle Level 2":
-            current_player = turtle
-            routelen = 2000
-            lives.load_hearts(2)
-
-            screen.fill(DesignClass.Colors["OCEANBLUE"])
-
-            pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
-
-            instructText = TextClass(
-                "Get to the end and lay your eggs! Beware: Killer Sharks",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 125),
-                screen
-            )
-            kmText = TextClass(
-                f"{km_count}km",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
-                DesignClass.Colors["BLACK"],
-                (100, 25),
-                screen
-            )
-
-            # Set up backround 
-            if current_time > end_time_bubble_spawn:
-                bubble = make_bubble()
-                obstacle_list.append(bubble)
-                end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
-
-            if current_time > end_time_trash_spawn:
-                trash = make_trash()
-                obstacle_list.append(trash)
-                end_time_trash_spawn = pygame.time.get_ticks() + 7000
-                obstacle_list.append(trash)
-                collide_list.append(trash)
-
-            if current_time > end_time_shark_spawn:
-                shark = make_shark()
-                obstacle_list.append(shark)
-                end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
-                obstacle_list.append(shark)
-                collide_list.append(shark)
-
-            if km_count < 300:
-                instructText.blit()
-
-            for obstacle in obstacle_list:
-                obstacle.move()
-
-
-            if current_time > end_time_player_animation:
-                current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 60
-
-            if current_time > end_time_km_update:
-                km_count += 1
-                end_time_km_update += 1
-
-
-            #Blit all the objects
-            for obstacle in obstacle_list:
-                obstacle.move()
-                if obstacle.xcor < -200:
-                    del obstacle
-                else:
-                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-
-            screen.blit(current_player.current_frame, current_player.Rect)
-
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
-
-            kmText.blit()
-
-            #detecting player collisions with objects
-            for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    pygame.time.delay(100)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
         case "DeerLevel":
             current_player = deer
+            deer.xcor = 50
             routelen = 250
             lives.load_hearts(2)
             time_pass += 1
@@ -796,7 +720,7 @@ while RunVar == True:
             lives.load_hearts(3)
             time_pass += 1
 
-            screen.fill(DesignClass.Colors["SKYBLUE"])
+            screen.fill([170,206,250])
 
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
@@ -819,6 +743,12 @@ while RunVar == True:
                 end_time_rain_spawn = pygame.time.get_ticks() + 15
                 obstacle_list.append(rain)
 
+            if current_time > end_time_bullet_spawn:
+                bullet = make_bullet()
+                end_time_bullet_spawn = pygame.time.get_ticks() + 1200
+                obstacle_list.append(bullet)
+                collide_list.append(bullet)
+
             if current_time > end_time_km_update:
                 km_count += 1
                 end_time_km_update += 5000
@@ -833,7 +763,7 @@ while RunVar == True:
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass["GREEN"], "Level Won", "TitleScreen")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
 
 
             #Blit all the objects
@@ -987,15 +917,16 @@ while RunVar == True:
                 if current_player.ycor < 500:
                     current_player.move("DOWN")
 
-            if keys[pygame.K_d]:
-                if current_player.xcor < 730:
-                    print("rioht")
-                    current_player.move("RIGHT")
+            if GameState == "Deer Level 2":
+                if keys[pygame.K_d]:
+                    if current_player.xcor < 730:
+                        print("rioht")
+                        current_player.move("RIGHT")
 
-            if keys[pygame.K_a]:
-                print("sad")
-                if current_player.ycor > 15:
-                    current_player.move("LEFT")
+                if keys[pygame.K_a]:
+                    print("sad")
+                    if current_player.ycor > 15:
+                        current_player.move("LEFT")
         except:
             pass
         
