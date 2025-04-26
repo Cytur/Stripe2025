@@ -202,6 +202,7 @@ end_time_shark_spawn = 8000
 end_time_killerwhale_spawn = 8000
 end_time_hunter = 0
 end_time_bug_spawn = 1000
+end_time_trap_spawn = 0
 
 
 #Functions for Obstacles
@@ -221,6 +222,8 @@ hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(
 bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
 arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
+trap1 = pygame.image.load("BearTrapAsset/trap1.png")
+
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -275,6 +278,9 @@ def make_hunter():
 def make_bug():
     bugList = [bug1_img, bug2_img]
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True,False, [bugList[random.randint(0, 1)]], "Bug")
+
+def make_trap():
+    return ObstacleClass(1100, 450, 4, 0, 32, 32, True, False, [trap1], "BearTrap")
 
 
 #Vars for player jumping
@@ -749,10 +755,16 @@ while RunVar == True:
 
             if current_time > end_time_wolf_spawn:
                 wolf = make_wolf()
-                print("wolf spawned")
+                # print("wolf spawned")
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 7000 #random.randint(7000,21000)
+                end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
+
+            if current_time > end_time_trap_spawn:
+                trap = make_trap()
+                obstacle_list.append(trap)
+                collide_list.append(trap)
+                end_time_trap_spawn = pygame.time.get_ticks() + random.randint(13000, 15000)
 
             if current_time > end_time_rain_spawn:
                 rain = make_rain_diagonal()
@@ -809,7 +821,8 @@ while RunVar == True:
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
-                    pygame.time.delay(100)
+                    screen.blit(obstacle.image, obstacle.Rect)
+                    pygame.time.delay(200)
                     collide_list.remove(obstacle)
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")

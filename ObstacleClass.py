@@ -20,7 +20,6 @@ class ObstacleClass():
             self.images.append(self.image)
         self.frame_num = 0
         self.Rect = pygame.Rect(startx, starty, self.width, self.height)
-        
 
 
     def move(self):
