@@ -321,7 +321,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], f"Died to {obstacle.descriptor}", "TitleScreen")
 
 
         case "TurtleLevel":
@@ -369,7 +369,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], f"Died to {obstacle.descriptor}", "TitleScreen")
 
 
         case "DeerLevel":
@@ -437,7 +437,7 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Died to something", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], f"Died to {obstacle.descriptor}", "TitleScreen")
 
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
