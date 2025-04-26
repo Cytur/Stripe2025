@@ -12,6 +12,7 @@ from CollectibleClass import collectibleClass
 buttonlist = []
 collect_list = []
 km_count = 0
+specialTransition = False
 
         
 def ChangeGameState(newGameState):
@@ -74,8 +75,10 @@ def ResetGame():
 
 def SpecialLevelEnter():
     global GameState
+    global specialTransition
+    # print("spec change")
     if current_player.ycor < 840:
-        current_player.move("DOWN")
+        specialTransition = True
     else:
         GameState = "TitleScreen"
 
@@ -217,6 +220,7 @@ fish_img = pygame.transform.scale(pygame.image.load("GoldfishAsset/goldfish.png"
 hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(6)]
 bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
+arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -260,7 +264,8 @@ def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
-    return collectibleClass()
+    print("adsasd")
+    return collectibleClass(SpecialLevelEnter, 1000, 450, 15, 0, arrow_imgs[0].get_width()/16, arrow_imgs[0].get_height()/16, arrow_imgs)
 
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
@@ -379,6 +384,8 @@ while RunVar == True:
         case "BirdLevel":
             current_player = bird
             routelen = 6000
+            speciallenTop = 600
+            speciallenBot = 500
             if isCompletedBonus == True:
                 lives.load_hearts(3)
             else:
@@ -425,6 +432,12 @@ while RunVar == True:
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Bird Level 2")
 
+            if km_count > speciallenBot and km_count < speciallenTop:
+                arrow = make_arrow()
+                km_count = 601
+                collect_list.append(arrow)
+                obstacle_list.append(arrow)
+
             for obstacle in obstacle_list:
                 obstacle.move()
 
@@ -444,6 +457,12 @@ while RunVar == True:
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            if specialTransition:
+                current_player.move("DOWN")
+                print(current_player.ycor)
+                if 600 < current_player.ycor:
+                    GameState == "Bird Bonus"
 
             if birdNPC.xcor < 1000:
                 screen.blit(birdNPC.current_frame, birdNPC.Rect)
@@ -470,6 +489,11 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
+
+            for obstacle in collect_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    pygame.time.delay(200)
+                    obstacle.command()
 
         case "TurtleLevel":
             current_player = turtle
