@@ -28,7 +28,7 @@ def ResetGame():
     global GameState, buttonlist, end_time_text, km_count
     global obstacle_list, collide_list
     global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn
-    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation
+    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn
     global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
     global current_player
@@ -229,7 +229,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenNextStage = NextStage
     GameState = "EndScreen"
 
-GameState = "Bird Level 2"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
@@ -286,6 +286,16 @@ while RunVar == True:
 
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
+
+            titleText = TextClass(
+                "Animal Journey",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 75),
+                screen
+            )
+            titleText.blit()
+
             buttonlist.append(turtle_info.playbutton)
             buttonlist.append(bird_info.playbutton)
             buttonlist.append(deer_info.playbutton)
@@ -334,7 +344,7 @@ while RunVar == True:
 
             if current_time > end_time_km_update:
                 km_count += 3
-                end_time_km_update += 1
+                end_time_km_update = pygame.time.get_ticks() + 1
 
             if km_count > routelen:
                 EndLevel("You Won", DesignClass["GREEN"], "Level Won", "Bird Level 2")
