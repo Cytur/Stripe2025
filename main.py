@@ -361,6 +361,34 @@ while RunVar == True:
             )
             buttonlist.append(controlsButton)
             controlsButton.draw()
+            
+            infoButton = ButtonClass(
+                TextClass(
+                    "Game Info",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
+                    DesignClass.Colors["BLACK"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 400),
+                    screen
+                ),
+                pygame.Rect(DesignClass.SCREEN_WIDTH_CENTER - 75, 400 - 25, 150, 50),
+                0,
+                DesignClass.Colors["GREEN"],
+                screen,
+                ChangeGameState,
+                "InfoPage"
+            )
+            buttonlist.append(infoButton)
+            infoButton.draw()
+            
+            
+            creditsText = TextClass(
+                "Created By: Abdullah & Vivaan",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 20),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 550),
+                screen
+            )
+            creditsText.blit()
 
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
@@ -431,6 +459,8 @@ while RunVar == True:
 
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Bird Level 2")
+                km_count = 6001
+                
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -543,6 +573,8 @@ while RunVar == True:
                 end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
                 obstacle_list.append(shark)
                 collide_list.append(shark)
+                
+            end_time_eggs_move = pygame.time.get_ticks() + 3000
 
             if current_time < end_time_eggs_move:
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
@@ -601,7 +633,7 @@ while RunVar == True:
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
             instructText = TextClass(
-                "Get to the end and lay your eggs! Beware: Killer Sharks",
+                "Get to the end and lay your eggs! Beware: Killer Whales",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -817,6 +849,7 @@ while RunVar == True:
                 isCompletedBonus = True
                 lives.lives = []
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
+                km_count = 601
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -873,7 +906,7 @@ while RunVar == True:
 
         case "Bird Level 2":
             current_player = bird
-            routelen = 7000
+            routelen = 13000
             if isCompletedBonus == True:
                 lives.load_hearts(3)
             else:
@@ -924,7 +957,7 @@ while RunVar == True:
                 end_time_km_update += 1
 
             if km_count > routelen:
-                EndLevel("You Won, Try Other Animals Too!", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
+                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -1087,28 +1120,41 @@ while RunVar == True:
             screen.blit(Key_W, Key_W.get_rect(center = (50, 50)))
             Key_S = pygame.transform.scale(pygame.image.load("KeyboardAsset/S.png"), (40,40))
             screen.blit(Key_S, Key_S.get_rect(center = (95, 50)))
+            
+            LeftRightText = TextClass(
+                "Left/Right (Deer Lvl 2)",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (320, 150),
+                screen
+            )
+            LeftRightText.blit()
+            Key_A = pygame.transform.scale(pygame.image.load("KeyboardAsset/A.png"), (40,40))
+            screen.blit(Key_A, Key_A.get_rect(center = (50, 150)))
+            Key_D = pygame.transform.scale(pygame.image.load("KeyboardAsset/D.png"), (40,40))
+            screen.blit(Key_D, Key_D.get_rect(center = (95, 150)))
 
             JumpText = TextClass(
                 "Jump (Deer)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (250, 150),
+                (250, 250),
                 screen
             )
             JumpText.blit()
             Key_Space = pygame.transform.scale(pygame.image.load("KeyboardAsset/SPACE.png"), (100,40))
-            screen.blit(Key_Space, Key_Space.get_rect(center = (80, 150)))
+            screen.blit(Key_Space, Key_Space.get_rect(center = (80, 250)))
 
             EscText = TextClass(
                 "Shortcut to main menu",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (270, 240),
+                (270, 340),
                 screen
             )
             EscText.blit()
             Key_Esc = pygame.transform.scale(pygame.image.load("KeyboardAsset/ESC.png"), (40,40))
-            screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 240)))
+            screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 340)))
 
             BackButton = ButtonClass(
                 TextClass(
@@ -1128,7 +1174,34 @@ while RunVar == True:
             buttonlist.append(BackButton)
             BackButton.draw()
             
-
+        case "InfoPage":
+            screen.fill(DesignClass.Colors["WHITE"])
+            
+            InfoTitle = TextClass(
+                "Game Info",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 50),
+                screen
+            )
+            InfoTitle.blit()
+            
+            BirdTitle = TextClass(
+                "Red-Winged Blackbird",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 200, 150),
+                screen
+            )
+            BirdTitle.blit()
+            BirdText1 = TextClass(
+                "The Red-Winged Blackbird aims to find a suitable habitat for winter time. They typically fly in flocks.",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 30, 190),
+                screen
+            )
+            BirdText1.blit()
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])
