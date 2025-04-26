@@ -114,13 +114,15 @@ cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAs
 end_time_player_animation = 0
 end_time_cloud_spawn = 0
 end_time_bubble_spawn = 0
-end_time_wolf_spawn = 0
+end_time_wolf_spawn = 1000
 end_time_wolf_animation = 0
+end_time_tree_spawn = 1000
 
 #Functions for Obstacles
 cloud_img = pygame.image.load(random.choice(cloud_img_list))
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
+tree_img = pygame.image.load("TreeAsset/tree.png")
 #wolf_imgs = [pygame.image.load("white.png")]
 
 def make_cloud(bottom_bound: int = 600):
@@ -131,6 +133,9 @@ def make_bubble():
 
 def make_wolf():
     return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs)
+
+def make_tree():
+    return ObstacleClass(1000, random.randint(200, 600), 10, 0, tree_img.get_width(), cloud_img.get_height(), True, [tree_img])
 
 
 
@@ -233,6 +238,12 @@ while RunVar == True:
                 cloud = make_cloud()
                 end_time_cloud_spawn = pygame.time.get_ticks() + 300
                 obstacle_list.append(cloud)
+
+            if current_time > end_time_tree_spawn:
+                tree = make_tree()
+                end_time_tree_spawn = pygame.time.get_ticks() + 1000
+                obstacle_list.append(tree)
+                collide_list.append(tree)
 
             for obstacle in obstacle_list:
                 obstacle.move()

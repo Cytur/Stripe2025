@@ -7,7 +7,7 @@ class BirdTurtle():
         self.speed = 10
         self.xcor = xcor
         self.ycor = ycor
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (288, 288))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (280, 280))
 
         self.frames = frame_list
         self.frame_count = 0
