@@ -4,8 +4,9 @@ collide_list = []
 
 #Enemies or obstacles which will move in a straight path
 class ObstacleClass():
-    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, collision: bool, frames: list, descriptor: str):
+    def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, collision: bool, kill: bool, frames: list, descriptor: str):
         self.collision = collision
+        self.kill = kill
         self.xcor = startx
         self.ycor = starty
         self.speedx = speedx

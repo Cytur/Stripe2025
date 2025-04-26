@@ -221,43 +221,43 @@ bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10
 
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
-    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, [cloud_img], "Cloud")
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, False, [cloud_img], "Cloud")
 
 def make_bubble():
-    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, [bubble_img], "Bubble")
+    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, False, [bubble_img], "Bubble")
 
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, wolf_imgs, "Wolf")
+    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, True, wolf_imgs, "Wolf")
 
 def make_tree():
-    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, [tree_img], "Tree")
+    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, True, [tree_img], "Tree")
 
 def make_snow():
-    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [snow_img], "Snow")
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False,False, [snow_img], "Snow")
 
 def make_rain_diagonal():
-    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False, [rain_img], "Rain")
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False,False, [rain_img], "Rain")
 
 def make_rain_straight():
-    return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, False, [rain_img], "Rain")
+    return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, False,False, [rain_img], "Rain")
 
 def make_hawk():
-    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True, hawk_imgs, "Hawk")
+    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True,True, hawk_imgs, "Hawk")
     
 def make_bullet():
-    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2,True, [bullet_img], "Hunter")
+    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2,True,True, [bullet_img], "Hunter")
 
 def make_shark():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), True, [shark_img], "Shark")
+    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), True,True, [shark_img], "Shark")
 
 def make_killerwhale():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), True, [killerwhale_img], "Killer Whale")
+    return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), True,True, [killerwhale_img], "Killer Whale")
 
 def make_trash():
-    return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), True, [trash_img], "Trash")
+    return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), True,True, [trash_img], "Trash")
 
 def make_bottle():
-    return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True, [bottle_img], "Plastic bottle")
+    return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
     return collectibleClass()
@@ -265,11 +265,11 @@ def make_arrow():
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
 def make_hunter():
-    return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True, hunter_imgs, "Wolf")
+    return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True,True, hunter_imgs, "Wolf")
 
 def make_bug():
     bugList = [bug1_img, bug2_img]
-    return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True, [bugList[random.randint(0, 1)]], "Bug")
+    return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True,False, [bugList[random.randint(0, 1)]], "Bug")
 
 
 #Vars for player jumping
@@ -379,7 +379,10 @@ while RunVar == True:
         case "BirdLevel":
             current_player = bird
             routelen = 6000
-            lives.load_hearts(2)
+            if isCompletedBonus == True:
+                lives.load_hearts(3)
+            else:
+                lives.load_hearts(2)
             screen.fill(DesignClass.Colors["FORESTGREEN"])
 
             instructText = TextClass(
@@ -753,7 +756,7 @@ while RunVar == True:
 
         case "Bird Bonus":
             current_player = bird
-            routelen = 7000
+            routelen = 99999
             lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
@@ -765,11 +768,11 @@ while RunVar == True:
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
-            kmText = TextClass(
-                f"{km_count}km",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+            bugsText = TextClass(
+                f"{bugsCaughtAmount} Bug(s) Caught",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
                 DesignClass.Colors["BLACK"],
-                (100, 25),
+                (200, 25),
                 screen
             )
             
@@ -781,12 +784,9 @@ while RunVar == True:
                 end_time_cloud_spawn = pygame.time.get_ticks() + 700
                 obstacle_list.append(cloud)
 
-            if current_time > end_time_km_update:
-                km_count += 3
-                end_time_km_update += 1
-
             if bugsCaughtAmount >= 20:
                 isCompletedBonus = True
+                lives.lives = []
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
 
             for obstacle in obstacle_list:
@@ -795,12 +795,14 @@ while RunVar == True:
 
 
             if current_time > end_time_player_animation:
-                birdNPC.animation_update()
                 bird.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 50
                 
             if current_time > end_time_bug_spawn:
                 bug = make_bug()
+                collide_list.append(bug)
+                obstacle_list.append(bug)
+                end_time_bug_spawn = pygame.time.get_ticks() + 3000
                 
 
 
@@ -812,9 +814,6 @@ while RunVar == True:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
-            if birdNPC.xcor < 1000:
-                screen.blit(birdNPC.current_frame, birdNPC.Rect)
-
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
@@ -825,18 +824,23 @@ while RunVar == True:
 
             if current_time < end_time_text:
                 instructText.blit()
-            kmText.blit()
+            bugsText.blit()
 
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    print(obstacle.xcor, obstacle.ycor)
-                    pygame.time.delay(100)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        isCompletedBonus = False
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+                    if obstacle.descriptor == "Bug": 
+                        bugsCaughtAmount += 1
+                        obstacle_list.pop(obstacle_list.index(obstacle))
+                        collide_list.pop(collide_list.index(obstacle))
+                    else:
+                        dead = lives.remove_life()
+                        print(obstacle.xcor, obstacle.ycor)
+                        pygame.time.delay(100)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            isCompletedBonus = False
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
 
         case "Bird Level 2":
             current_player = bird
