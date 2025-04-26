@@ -394,7 +394,7 @@ while RunVar == True:
                 print("wolf spawned")
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000,21000)
+                end_time_wolf_spawn = pygame.time.get_ticks() + 7000 #random.randint(7000,21000)
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -579,7 +579,11 @@ while RunVar == True:
         #Returning to main menu during gameplay
         try:
             if keys[pygame.K_ESCAPE]:
-                ChangeGameState("TitleScreen")
+                GameState = "TitleScreen"
+
+                buttonlist = []
+                collide_list = []
+                obstacle_list = []
         except:
             pass
             
