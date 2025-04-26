@@ -7,8 +7,10 @@ from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
 from livesclass import Lives
+from CollectibleClass import collectibleClass
 
 buttonlist = []
+collect_list = []
 km_count = 0
 
         
@@ -41,6 +43,7 @@ def ResetGame():
     # reset objects
     obstacle_list = []
     collide_list = []
+    collect_list = []
 
     # Reset all timers
     end_time_player_animation = 0
@@ -68,6 +71,13 @@ def ResetGame():
     lives.lives = []
     
     GameState = "TitleScreen"
+
+def SpecialLevelEnter():
+    global GameState
+    if current_player.ycor < 840:
+        current_player.move("DOWN")
+    else:
+        GameState = "TitleScreen"
 
 pygame.init()
 pygame.display.set_caption("Animal Journey")
@@ -249,6 +259,9 @@ def make_trash():
 def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True, [bottle_img], "Plastic bottle")
     
+def make_arrow():
+    return collectibleClass()
+
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
 def make_hunter():
