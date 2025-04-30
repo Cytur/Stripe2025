@@ -196,7 +196,7 @@ time_pass = 0
 end_time_hawk_spawn = 0
 end_time_hawk_animation = 0
 end_time_bullet_spawn = 5000
-end_time_eggs_move = 7000
+end_time_eggs_move = 3000
 end_time_trash_spawn = 5000
 end_time_shark_spawn = 8000
 end_time_killerwhale_spawn = 8000
@@ -396,6 +396,10 @@ while RunVar == True:
             )
             creditsText.blit()
 
+
+
+            end_time_eggs_move = pygame.time.get_ticks() + 3000
+
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
 
@@ -579,8 +583,6 @@ while RunVar == True:
                 end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
                 obstacle_list.append(shark)
                 collide_list.append(shark)
-                
-            end_time_eggs_move = pygame.time.get_ticks() + 3000
 
             if current_time < end_time_eggs_move:
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
