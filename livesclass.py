@@ -29,3 +29,9 @@ class Lives():
         if len(self.lives) == 0:
             self.lives_num = lives_num
             self.lives = [(self.heart_img, pygame.Rect((50 + x*50, 50), (64, 64))) for x in range(lives_num)]
+
+    def blit(self, screen):
+        for heart in self.lives:
+            img = heart[0]
+            rect = heart[1]
+            screen.blit(img, rect)

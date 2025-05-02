@@ -514,10 +514,7 @@ while RunVar == True:
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             if current_time < end_time_text:
                 instructText.blit()
@@ -616,10 +613,7 @@ while RunVar == True:
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             kmText.blit()
 
@@ -714,10 +708,7 @@ while RunVar == True:
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             kmText.blit()
 
@@ -813,10 +804,7 @@ while RunVar == True:
 
             screen.blit(current_player.current_frame, current_player.Rect)
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             kmText.blit()
 
@@ -895,10 +883,7 @@ while RunVar == True:
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             if current_time < end_time_text:
                 instructText.blit()
@@ -1000,10 +985,7 @@ while RunVar == True:
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             if current_time < end_time_text:
                 instructText.blit()
@@ -1103,10 +1085,7 @@ while RunVar == True:
                 instructText.blit()
                 end_time_text += 10000
 
-            for heart in lives.lives:
-                img = heart[0]
-                rect = heart[1]
-                screen.blit(img, rect)
+            lives.blit(screen)
 
             kmText.blit()
 
