@@ -424,10 +424,11 @@ while RunVar == True:
             routelen = 6000
             speciallenTop = 600
             speciallenBot = 500
+            lives.load_hearts(2)
             if isCompletedBonus == True:
-                lives.load_hearts(3)
-            else:
-                lives.load_hearts(2)
+                lives.add_hearts()
+
+
             screen.fill(DesignClass.Colors["FORESTGREEN"])
 
             instructText = TextClass(
