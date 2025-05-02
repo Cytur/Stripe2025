@@ -775,7 +775,7 @@ while RunVar == True:
 
             if current_time > end_time_km_update:
                 km_count += 1
-                end_time_km_update += 200
+                end_time_km_update += 250
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -1020,6 +1020,7 @@ while RunVar == True:
 
         case "Deer Level 2":
             current_player = deer
+            current_player.ycor = 400
             routelen = 24
             lives.load_hearts(3)
             time_pass += 1
@@ -1066,7 +1067,7 @@ while RunVar == True:
             if current_time > end_time_hunter:
                 hunter = make_hunter()
                 obstacle_list.append(hunter)
-                end_time_hunter = 2222222
+                end_time_hunter = 222222222
             
 
             if current_time > end_time_km_update:
