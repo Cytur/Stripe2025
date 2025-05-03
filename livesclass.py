@@ -20,8 +20,9 @@ class Lives():
             pass
 
 
-    def add_hearts(self):
-        self.lives_num += 1
+    def add_hearts(self, heartsToAdd):
+        self.lives_num += heartsToAdd
+        self.lives = [] #To reset the lives
         self.load_hearts(self.lives_num)
 
 

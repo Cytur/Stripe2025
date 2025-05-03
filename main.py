@@ -425,8 +425,6 @@ while RunVar == True:
             speciallenTop = 600
             speciallenBot = 500
             lives.load_hearts(2)
-            if isCompletedBonus == True:
-                lives.add_hearts()
 
 
             screen.fill(DesignClass.Colors["FORESTGREEN"])
@@ -469,7 +467,7 @@ while RunVar == True:
                 end_time_km_update = pygame.time.get_ticks() + 1
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Bird Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Bird Level 2")
                 km_count = 6001
                 
 
@@ -592,7 +590,7 @@ while RunVar == True:
                 instructText.blit()
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Turtle Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Turtle Level 2")
 
             if current_time > end_time_player_animation:
                 current_player.animation_update()
@@ -767,7 +765,7 @@ while RunVar == True:
 
             if current_time > end_time_km_update:
                 km_count += 1
-                end_time_km_update += 250
+                end_time_km_update = pygame.time.get_ticks() + 250
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -779,7 +777,7 @@ while RunVar == True:
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "Deer Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Deer Level 2")
 
             #Jumping
             if isJumping == True:
@@ -849,10 +847,11 @@ while RunVar == True:
                 end_time_cloud_spawn = pygame.time.get_ticks() + 700
                 obstacle_list.append(cloud)
 
-            if bugsCaughtAmount >= 20:
+            if bugsCaughtAmount >= 3: #should be 20
                 isCompletedBonus = True
-                lives.lives = []
+                #lives.lives = []
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
+                lives.add_hearts(1)
                 km_count = 601
 
             for obstacle in obstacle_list:
