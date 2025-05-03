@@ -847,9 +847,8 @@ while RunVar == True:
                 end_time_cloud_spawn = pygame.time.get_ticks() + 700
                 obstacle_list.append(cloud)
 
-            if bugsCaughtAmount >= 3: #should be 20
+            if bugsCaughtAmount >= 20:
                 isCompletedBonus = True
-                #lives.lives = []
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
                 lives.add_hearts(1)
                 km_count = 601
