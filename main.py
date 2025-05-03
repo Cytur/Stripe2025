@@ -35,11 +35,13 @@ def ResetGame():
     global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
     global current_player
+    global bugsCaughtAmount
 
     buttonlist = []
     end_time_text = pygame.time.get_ticks() + 10000
     birdNPC.xcor = -100
     km_count = 0
+    bugsCaughtAmount = 0
 
     # reset objects
     obstacle_list = []
@@ -313,7 +315,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
 isCompletedBonus = False
 bugsCaughtAmount = 0
 
-GameState = "TitleScreen"
+GameState = "Deer Level 2"
 RunVar = True
 
 while RunVar == True:
@@ -503,6 +505,13 @@ while RunVar == True:
                 if 600 < current_player.ycor:
                     print("state chagne")
                     ChangeGameState("Bird Bonus")
+                    
+                    collideIndex = 0
+                    for collide in collide_list:
+                        if collide.descriptor == "Tree":
+                            collide_list.pop(collideIndex)
+                        collideIndex += 1
+                        
                     current_player.ycor = 60
                     current_player.move("UP")
 
@@ -856,6 +865,12 @@ while RunVar == True:
             for obstacle in obstacle_list:
                 obstacle.move()
                 obstacle.update_frame()
+                
+            collideIndex = 0
+            for collide in collide_list:
+                if collide.descriptor == "Tree":
+                    collide_list.pop(collideIndex)
+                collideIndex += 1
 
 
             if current_time > end_time_player_animation:
@@ -1037,13 +1052,13 @@ while RunVar == True:
                 obstacle_list.append(rain)
 
             if current_time > end_time_bullet_spawn:
-                if end_time_bullet_spawn == 0:
+                if end_time_bullet_spawn < 5000:
                     end_time_bullet_spawn = pygame.time.get_ticks() + 5000
-                    pass
-                bullet = make_bullet()
-                end_time_bullet_spawn = pygame.time.get_ticks() + 1300
-                obstacle_list.append(bullet)
-                collide_list.append(bullet)
+                else:
+                    bullet = make_bullet()
+                    end_time_bullet_spawn = pygame.time.get_ticks() + 1300
+                    obstacle_list.append(bullet)
+                    collide_list.append(bullet)
 
             if current_time > end_time_hunter:
                 hunter = make_hunter()
