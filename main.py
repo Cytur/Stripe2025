@@ -94,6 +94,7 @@ screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_H
 #Animal Frame Lists
 bird_frames = []
 turt_frames = []
+friendly_bird_frames = []
 
 for num in range(8):
     frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
@@ -106,6 +107,12 @@ for num in range(6):
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
+    
+for num in range(8):
+    frame = pygame.image.load(f"FriendlyBirdAsset/BirdFlying{num+1}.png")
+    frame = pygame.transform.scale(frame, size= (64, 64))
+    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
+    bird_frames.append(frame)
 
 # for num in range([NUMBER_OF_FRAMES]):
 #    frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
@@ -118,6 +125,9 @@ for num in range(6):
 #Animal Obj s
 bird = BirdTurtle(50, 50, bird_frames, 64)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
+birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 64)
+birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 64)
+birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 64)
 turtle = BirdTurtle(50, 400, turt_frames, 96)
 deer = Deer(50, 400)
 lives = Lives()
@@ -225,6 +235,7 @@ bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10
 bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
 arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
 trap1 = pygame.image.load("BearTrapAsset/trap1.png")
+highway_img = pygame.transform.scale(pygame.image.load("HighwayAsset/Highway.png"), (40, 6))
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -284,6 +295,9 @@ def make_bug():
 def make_trap():
     return ObstacleClass(1100, 450, 4, 0, 32, 32, True, False, [trap1], "BearTrap")
 
+def make_highway(ycor):
+    return ObstacleClass(1000, ycor, 5, 0, 40, 6, False, False, [highway_img], "Highway")
+
 
 #Vars for player jumping
 isJumping = False
@@ -315,7 +329,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
 isCompletedBonus = False
 bugsCaughtAmount = 0
 
-GameState = "Deer Level 2"
+GameState = "InfoPage"
 RunVar = True
 
 while RunVar == True:
@@ -1125,10 +1139,10 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["WHITE"])
 
             UpDownText = TextClass(
-                "Up/Down (Bird & Turtle)",
+                "Up/Down (Bird & Turtle Only)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (330, 50),
+                (350, 50),
                 screen
             )
             UpDownText.blit()
@@ -1138,39 +1152,50 @@ while RunVar == True:
             screen.blit(Key_S, Key_S.get_rect(center = (95, 50)))
             
             LeftRightText = TextClass(
-                "Left/Right (Deer Lvl 2)",
+                "Left/Right (Deer Lvl 2 Only)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (320, 150),
+                (340, 130),
                 screen
             )
             LeftRightText.blit()
             Key_A = pygame.transform.scale(pygame.image.load("KeyboardAsset/A.png"), (40,40))
-            screen.blit(Key_A, Key_A.get_rect(center = (50, 150)))
+            screen.blit(Key_A, Key_A.get_rect(center = (50, 130)))
             Key_D = pygame.transform.scale(pygame.image.load("KeyboardAsset/D.png"), (40,40))
-            screen.blit(Key_D, Key_D.get_rect(center = (95, 150)))
+            screen.blit(Key_D, Key_D.get_rect(center = (95, 130)))
 
             JumpText = TextClass(
-                "Jump (Deer)",
+                "Jump (Deer Lvl 1 Only)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (250, 250),
+                (310, 210),
                 screen
             )
             JumpText.blit()
             Key_Space = pygame.transform.scale(pygame.image.load("KeyboardAsset/SPACE.png"), (100,40))
-            screen.blit(Key_Space, Key_Space.get_rect(center = (80, 250)))
+            screen.blit(Key_Space, Key_Space.get_rect(center = (80, 210)))
+            
+            AbilityText = TextClass(
+                "Bird Flock Ability (Bird Only)",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (290, 290),
+                screen
+            )
+            AbilityText.blit()
+            Key_Q = pygame.transform.scale(pygame.image.load("KeyboardAsset/Q.png"), (40,40))
+            screen.blit(Key_Q, Key_Q.get_rect(center = (50, 290)))
 
             EscText = TextClass(
                 "Shortcut to main menu",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (270, 340),
+                (270, 370),
                 screen
             )
             EscText.blit()
             Key_Esc = pygame.transform.scale(pygame.image.load("KeyboardAsset/ESC.png"), (40,40))
-            screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 340)))
+            screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 370)))
 
             BackButton = ButtonClass(
                 TextClass(
@@ -1195,7 +1220,7 @@ while RunVar == True:
             
             InfoTitle = TextClass(
                 "Game Info",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 50),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 50),
                 screen
@@ -1206,7 +1231,7 @@ while RunVar == True:
                 "Red-Winged Blackbird",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 200, 150),
+                (DesignClass.SCREEN_WIDTH_CENTER - 200, 135),
                 screen
             )
             BirdTitle.blit()
@@ -1214,7 +1239,7 @@ while RunVar == True:
                 "The Red-Winged Blackbird aims to find a suitable habitat for winter time. They typically fly in flocks.",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 30, 190),
+                (DesignClass.SCREEN_WIDTH_CENTER - 30, 160),
                 screen
             )
             BirdText1.blit()
@@ -1222,7 +1247,7 @@ while RunVar == True:
                 "Your goal is to migrate south. Avoid trees and predators to migrate successfully!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 85, 210),
+                (DesignClass.SCREEN_WIDTH_CENTER - 85, 180),
                 screen
             )
             BirdText2.blit()
@@ -1230,16 +1255,24 @@ while RunVar == True:
                 "Hint: Find a bonus level for 1 extra heart!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 120, 230),
+                (DesignClass.SCREEN_WIDTH_CENTER - 120, 200),
                 screen
             )
             BirdText3.blit()
+            BirdText4 = TextClass(
+                "Unique Ability: Press Q to use \"Flock\" ability and spawn friendly birds that can shield you!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 60, 220),
+                screen
+            )
+            BirdText4.blit()
 
             TurtleTitle = TextClass(
                 "Leather-Back Sea Turtle",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 200, 260),
+                (DesignClass.SCREEN_WIDTH_CENTER - 190, 265),
                 screen
             )
             TurtleTitle.blit()
@@ -1247,7 +1280,7 @@ while RunVar == True:
                 "The Leather-Back Sea Turtle is one of the largest turtles in the world. It typically travels from colder to warmer waters.",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 30, 300),
+                (DesignClass.SCREEN_WIDTH_CENTER + 20, 290),
                 screen
             )
             TurtleText1.blit()
@@ -1255,16 +1288,24 @@ while RunVar == True:
                 "The Leather-Back Sea Turtle use ocean currents as \"Highways\" in order to migrate faster.",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 100, 320),
+                (DesignClass.SCREEN_WIDTH_CENTER - 50, 310),
                 screen
             )
             TurtleText2.blit()
+            TurtleText3 = TextClass(
+                "Unique Ability: Use Ocean Currents as Highways to increase speed!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 110, 330),
+                screen
+            )
+            TurtleText3.blit()
             
             DeerTitle = TextClass(
                 "White-Tailed Deer",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 240, 370),
+                (DesignClass.SCREEN_WIDTH_CENTER - 230, 375),
                 screen
             )
             DeerTitle.blit()
@@ -1272,18 +1313,26 @@ while RunVar == True:
                 "The white-tailed deer is abundant throughout Central America.",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 160, 410),
+                (DesignClass.SCREEN_WIDTH_CENTER - 110, 400),
                 screen
             )
             DeerText1.blit()
             DeerText2 = TextClass(
-                "Your goal is to migrate to marshes. Avoid wolves and hunters!",
+                "Unique Ability: Deers have super senses and give an alert when an enemy is nearby!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
                 DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER - 160, 430),
+                (DesignClass.SCREEN_WIDTH_CENTER - 60, 420),
                 screen
             )
             DeerText2.blit()
+            DeerText3 = TextClass(
+                "Your goal is to migrate to the Brazilian marshes. Avoid wolves and hunters!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 10),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER - 80, 440),
+                screen
+            )
+            DeerText3.blit()
             
             
             BackButton = ButtonClass(
@@ -1364,8 +1413,12 @@ while RunVar == True:
                 if current_player.ycor > 10:
                     current_player.move("UP")
             if keys[pygame.K_s]:
+                #Height limit
                 if current_player.ycor < 500:
                     current_player.move("DOWN")
+            if keys[pygame.K_q]:
+                #unique ability
+                pass
 
             if GameState == "Deer Level 2":
                 if keys[pygame.K_d]:
