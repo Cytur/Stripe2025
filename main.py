@@ -94,6 +94,7 @@ screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_H
 #Animal Frame Lists
 bird_frames = []
 turt_frames = []
+deer_frames = []
 
 for num in range(8):
     frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
@@ -106,6 +107,11 @@ for num in range(6):
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
+
+for img in range(5):
+            frame = pygame.image.load(f'DeerAsset/deer{img+1}.png')
+            frame = pygame.transform.scale(frame, (28*4, 100))
+            deer_frames.append(frame)
 
 # for num in range([NUMBER_OF_FRAMES]):
 #    frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
@@ -120,6 +126,7 @@ bird = BirdTurtle(50, 50, bird_frames, 64)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
 turtle = BirdTurtle(50, 400, turt_frames, 96)
 deer = Deer(50, 400)
+bonusDeer = BirdTurtle(50, 400, deer_frames, 60)
 lives = Lives()
 
 
@@ -210,6 +217,7 @@ end_time_trap_spawn = 0
 #Functions for Obstacles
 bubble_img = pygame.image.load("BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
+revwolf_imgs = [pygame.transform.flip(pygame.image.load(f"WolfAsset/wolf{x+1}.png") , True, False) for x in range(6)]
 tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
 snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.png"), (2, 2))
 rain_img = pygame.transform.scale(pygame.image.load("RainAsset/Raindrop.png"), (10, 10))
@@ -224,7 +232,8 @@ hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(
 bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
 arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
-trap1 = pygame.image.load("BearTrapAsset/trap1.png")
+trap_img = pygame.image.load("BearTrapAsset/trap1.png")
+hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (110, 60))
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -269,7 +278,6 @@ def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
-    print("adsasd")
     return collectibleClass(SpecialLevelEnter, 1000, 450, 15, 0, arrow_imgs[0].get_width()/16, arrow_imgs[0].get_height()/16, arrow_imgs)
 
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
@@ -282,7 +290,13 @@ def make_bug():
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True,False, [bugList[random.randint(0, 1)]], "Bug")
 
 def make_trap():
-    return ObstacleClass(1100, 450, 4, 0, 32, 32, True, False, [trap1], "BearTrap")
+    return ObstacleClass(1100, 450, 4, 0, 32, 32, True, False, [trap_img], "BearTrap")
+
+def make_wolfBonus():
+    return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), True, True, revwolf_imgs, "Wolf")
+
+def make_hole():
+    return ObstacleClass(900, 500, 15, 0, hole_img[0].get_width(), hole_img[0].get_height(), True, False, hole_img, "Hole")
 
 
 #Vars for player jumping
@@ -315,7 +329,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
 isCompletedBonus = False
 bugsCaughtAmount = 0
 
-GameState = "Deer Level 2"
+GameState = "DeerBonus"
 RunVar = True
 
 while RunVar == True:
@@ -792,6 +806,22 @@ while RunVar == True:
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Deer Level 2")
 
+            if specialTransition:
+                current_player.move("DOWN")
+                print(current_player.ycor)
+                if 600 < current_player.ycor:
+                    print("state chagne")
+                    ChangeGameState("Bird Bonus")
+                    
+                    collideIndex = 0
+                    for collide in collide_list:
+                        if collide.descriptor == "Tree":
+                            collide_list.pop(collideIndex)
+                        collideIndex += 1
+                        
+                    current_player.ycor = 60
+                    current_player.move("UP")
+
             #Jumping
             if isJumping == True:
                 deer.current_frame = deer.frames[4]
@@ -1118,7 +1148,97 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
+        case "DeerBonus":
+            current_player = bonusDeer
+            km_count = 0
+            current_player.xcor = 500
+            specialTransition = False
+            current_player.rect_update()
+            routelen = 30
+            lives.load_hearts(2)
+            screen.fill(DesignClass.Colors["GRASSGREEN"])
 
+            instructText = TextClass(
+                "Watch out for wolves running behind you!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            kmText = TextClass(
+                f"{km_count} km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (200, 25),
+                screen
+            )   
+            
+            #Set up backround
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 1000
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
+                
+            collideIndex = 0
+            for collide in collide_list:
+                if collide.descriptor == "Tree":
+                    collide_list.pop(collideIndex)
+                collideIndex += 1
+
+
+            if current_time > end_time_player_animation:
+                current_player.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+                
+            if current_time > end_time_wolf_spawn:
+                wolf = make_wolfBonus()
+                collide_list.append(wolf)
+                obstacle_list.append(wolf)
+                end_time_wolf_spawn = pygame.time.get_ticks() + 1000
+                
+            if current_time > end_time_tree_spawn:
+                tree = make_tree()
+                collide_list.append(tree)
+                obstacle_list.append(tree)
+                end_time_tree_spawn = pygame.time.get_ticks() + 300
+
+            if km_count >= routelen:
+                isCompletedBonus = True
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "Deer Level")
+                lives.add_hearts(1)
+                km_count = 80
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            screen.blit(current_player.current_frame, current_player.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            lives.blit(screen)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    print(obstacle.xcor, obstacle.ycor)
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        isCompletedBonus = False
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "Deer Level")
 
         
         case "ControlsPage":
