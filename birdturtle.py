@@ -38,3 +38,6 @@ class BirdTurtle():
         self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))
 
         direction = ""
+
+    def rect_update(self):
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))

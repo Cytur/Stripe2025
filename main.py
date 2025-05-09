@@ -423,6 +423,7 @@ while RunVar == True:
 
         case "BirdLevel":
             current_player = bird
+            current_player.rect_update()
             routelen = 6000
             speciallenTop = 600
             speciallenBot = 500
@@ -546,6 +547,7 @@ while RunVar == True:
         case "TurtleLevel":
             current_player = turtle
             routelen = 2000
+            current_player.rect_update()
             lives.load_hearts(2)
 
             screen.fill(DesignClass.Colors["OCEANBLUE"])
@@ -636,6 +638,7 @@ while RunVar == True:
         case "Turtle Level 2":
             current_player = turtle
             routelen = 2000
+            current_player.rect_update()
             lives.load_hearts(2)
 
             screen.fill(DesignClass.Colors["OCEANBLUE"])
@@ -732,6 +735,7 @@ while RunVar == True:
         case "DeerLevel":
             current_player = deer
             deer.xcor = 50
+            current_player.rect_update()
             routelen = 250
             lives.load_hearts(2)
             time_pass += 1
@@ -828,6 +832,7 @@ while RunVar == True:
         case "Bird Bonus":
             specialTransition = False
             current_player = bird
+            current_player.rect_update()
             routelen = 99999
             lives.load_hearts(2)
             screen.fill(DesignClass.Colors["SKYBLUE"])
@@ -921,6 +926,7 @@ while RunVar == True:
         case "Bird Level 2":
             current_player = bird
             routelen = 13000
+            current_player.rect_update()
             if isCompletedBonus == True:
                 lives.load_hearts(3)
             else:
@@ -1016,6 +1022,7 @@ while RunVar == True:
 
         case "Deer Level 2":
             current_player = deer
+            current_player.rect_update()
             current_player.ycor = 400
             routelen = 24
             lives.load_hearts(3)

@@ -53,4 +53,7 @@ class Deer():
 
     def blit(self, screen):
         screen.blit(self.current_frame, self.Rect)
+
+    def rect_update(self):
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
         
