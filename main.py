@@ -771,6 +771,13 @@ while RunVar == True:
                 (100, 25),
                 screen
             )
+            sText = TextClass(
+                f"S to enter hole",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (185, 150),
+                screen
+            )
 
             # Set up backround 
             if current_time > end_time_cloud_spawn:
@@ -799,11 +806,14 @@ while RunVar == True:
                 km_count += 1
                 end_time_km_update = pygame.time.get_ticks() + 250\
                 
-            if km_count == 10:
+            if km_count == 123:
                 hole = make_hole()
                 obstacle_list.append(hole)
                 collide_list.append(hole)
                 km_count = 124
+
+            if km_count > 123 and km_count < 130:
+                sText.blit()
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
