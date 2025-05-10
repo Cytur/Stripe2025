@@ -47,6 +47,9 @@ class Deer():
 
             self.cur_frames = self.framesRev
 
+        if direction == "DOWN":
+            self.ycor += self.speed
+
         self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
 
         direction = ""

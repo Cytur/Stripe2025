@@ -7,7 +7,6 @@ from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
 from livesclass import Lives
-from CollectibleClass import collectibleClass
 
 buttonlist = []
 collect_list = []
@@ -46,7 +45,6 @@ def ResetGame():
     # reset objects
     obstacle_list = []
     collide_list = []
-    collect_list = []
 
     # Reset all timers
     end_time_player_animation = 0
@@ -78,7 +76,6 @@ def ResetGame():
 def SpecialLevelEnter():
     global GameState
     global specialTransition
-    # print("spec change")
     if current_player.ycor < 840:
         specialTransition = True
     else:
@@ -241,9 +238,10 @@ fish_img = pygame.transform.scale(pygame.image.load("GoldfishAsset/goldfish.png"
 hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(6)]
 bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
+bugList = [bug1_img, bug2_img]
 arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
 trap_img = pygame.image.load("BearTrapAsset/trap1.png")
-hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (110, 60))
+hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (27.5, 15))
 highway_img = pygame.transform.scale(pygame.image.load("HighwayAsset/Highway.png"), (40, 6))
 
 #wolf_imgs = [pygame.image.load("white.png")]
@@ -289,7 +287,7 @@ def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
-    return collectibleClass(SpecialLevelEnter, 1000, 450, 15, 0, arrow_imgs[0].get_width()/16, arrow_imgs[0].get_height()/16, arrow_imgs)
+    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/16, arrow_imgs[0].get_height()/16, True, True, arrow_imgs, "Arrow")
 
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
@@ -297,7 +295,6 @@ def make_hunter():
     return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True,True, hunter_imgs, "Wolf")
 
 def make_bug():
-    bugList = [bug1_img, bug2_img]
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True,False, [bugList[random.randint(0, 1)]], "Bug")
 
 def make_trap():
@@ -307,7 +304,7 @@ def make_wolfBonus():
     return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), True, True, revwolf_imgs, "Wolf")
 
 def make_hole():
-    return ObstacleClass(900, 500, 15, 0, hole_img[0].get_width(), hole_img[0].get_height(), True, False, hole_img, "Hole")
+    return ObstacleClass(900, 500, 5, 0, hole_img.get_width(), hole_img.get_height(), False, False, [hole_img], "Hole")
 
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 5, 0, 40, 6, False, False, [highway_img], "Highway")
@@ -506,8 +503,8 @@ while RunVar == True:
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
                 km_count = 601
-                collect_list.append(arrow)
                 obstacle_list.append(arrow)
+                collide_list.append(arrow)
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -531,9 +528,7 @@ while RunVar == True:
 
             if specialTransition:
                 current_player.move("DOWN")
-                print(current_player.ycor)
                 if 600 < current_player.ycor:
-                    print("state chagne")
                     ChangeGameState("Bird Bonus")
                     
                     collideIndex = 0
@@ -560,18 +555,14 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    print(obstacle.xcor, obstacle.ycor)
-                    pygame.time.delay(100)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
-
-
-            for obstacle in collect_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
-                    pygame.time.delay(200)
-                    obstacle.command()
+                    if obstacle.descriptor == "Arrow":
+                        SpecialLevelEnter()
+                    else:
+                        dead = lives.remove_life()
+                        pygame.time.delay(100)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
         case "TurtleLevel":
             current_player = turtle
@@ -789,7 +780,6 @@ while RunVar == True:
 
             if current_time > end_time_wolf_spawn:
                 wolf = make_wolf()
-                # print("wolf spawned")
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
                 end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
@@ -807,7 +797,13 @@ while RunVar == True:
 
             if current_time > end_time_km_update:
                 km_count += 1
-                end_time_km_update = pygame.time.get_ticks() + 250
+                end_time_km_update = pygame.time.get_ticks() + 250\
+                
+            if km_count == 10:
+                hole = make_hole()
+                obstacle_list.append(hole)
+                collide_list.append(hole)
+                km_count = 124
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
@@ -823,19 +819,16 @@ while RunVar == True:
 
             if specialTransition:
                 current_player.move("DOWN")
-                print(current_player.ycor)
-                if 600 < current_player.ycor:
-                    print("state chagne")
-                    ChangeGameState("Bird Bonus")
+                if 700 < current_player.ycor:
+                    ChangeGameState("DeerBonus")
                     
                     collideIndex = 0
                     for collide in collide_list:
-                        if collide.descriptor == "Tree":
+                        if collide.descriptor == "Wolf" or collide.descriptor == "BearTrap":
                             collide_list.pop(collideIndex)
                         collideIndex += 1
                         
                     current_player.ycor = 60
-                    current_player.move("UP")
 
             #Jumping
             if isJumping == True:
@@ -867,12 +860,15 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    screen.blit(obstacle.image, obstacle.Rect)
-                    pygame.time.delay(200)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                    if obstacle.descriptor == "Hole":
+                            SpecialLevelEnter()
+                    else:
+                        dead = lives.remove_life()
+                        screen.blit(obstacle.image, obstacle.Rect)
+                        pygame.time.delay(200)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
         case "Bird Bonus":
             specialTransition = False
@@ -961,7 +957,6 @@ while RunVar == True:
                         collide_list.pop(collide_list.index(obstacle))
                     else:
                         dead = lives.remove_life()
-                        print(obstacle.xcor, obstacle.ycor)
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
@@ -1059,7 +1054,6 @@ while RunVar == True:
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
-                    print(obstacle.xcor, obstacle.ycor)
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
@@ -1212,7 +1206,7 @@ while RunVar == True:
                 wolf = make_wolfBonus()
                 collide_list.append(wolf)
                 obstacle_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 1000
+                end_time_wolf_spawn = pygame.time.get_ticks() + 500
                 
             if current_time > end_time_tree_spawn:
                 tree = make_tree()
@@ -1248,7 +1242,6 @@ while RunVar == True:
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
                     dead = lives.remove_life()
-                    print(obstacle.xcor, obstacle.ycor)
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
@@ -1524,7 +1517,7 @@ while RunVar == True:
             for button in buttonlist:
                 if button.rectangleRender.collidepoint(mousepos):
                     button.command(button.param)
-                    #print("button clicked")
+
 
         #Detecting key presses
         keys = pygame.key.get_pressed()
@@ -1535,7 +1528,13 @@ while RunVar == True:
                     current_player.move("UP")
             if keys[pygame.K_s]:
                 #Height limit
-                if current_player.ycor < 500:
+                if current_player == deer:
+                    try:
+                        if hole.xcor - 30 < deer.xcor and hole.xcor + 30 > deer.xcor:
+                            SpecialLevelEnter()
+                    except:
+                        pass
+                elif current_player.ycor < 500:
                     current_player.move("DOWN")
             if keys[pygame.K_q]:
                 #unique ability
