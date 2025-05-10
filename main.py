@@ -113,7 +113,7 @@ for num in range(8):
     frame = pygame.image.load(f"FriendlyBirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 64))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-    bird_frames.append(frame)
+    friendly_bird_frames.append(frame)
 
 for img in range(5):
             frame = pygame.image.load(f'DeerAsset/deer{img+1}.png')
