@@ -1548,7 +1548,7 @@ while RunVar == True:
                 #Height limit
                 if current_player == deer:
                     try:
-                        if hole.xcor - 30 < deer.xcor and hole.xcor + 30 > deer.xcor:
+                        if hole.xcor - 50 < deer.xcor and hole.xcor + 50 > deer.xcor:
                             SpecialLevelEnter()
                     except:
                         pass
