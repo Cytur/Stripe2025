@@ -53,15 +53,23 @@ def ResetGame():
     end_time_wolf_spawn = 1000
     end_time_wolf_animation = 0
     end_time_tree_spawn = 1000
-    end_time_text = 0
+    end_time_text = 8000
     end_time_snow_spawn = 0
     end_time_bNPC_move = 0
+    end_time_tNPC_move = 0
     end_time_km_update = 0
     end_time_rain_spawn = 0
     time_pass = 0
     end_time_hawk_spawn = 0
     end_time_hawk_animation = 0
-    end_time_bullet_spawn = 0
+    end_time_bullet_spawn = 5000
+    end_time_eggs_move = 3000
+    end_time_trash_spawn = 5000
+    end_time_shark_spawn = 8000
+    end_time_killerwhale_spawn = 8000
+    end_time_hunter = 0
+    end_time_bug_spawn = 1000
+    end_time_trap_spawn = 0
 
     # Reset jump variables
     isJumping = False
@@ -1216,13 +1224,13 @@ while RunVar == True:
                 wolf = make_wolfBonus()
                 collide_list.append(wolf)
                 obstacle_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 500
+                end_time_wolf_spawn = pygame.time.get_ticks() + 700
                 
-            if current_time > end_time_tree_spawn:
-                tree = make_tree()
-                collide_list.append(tree)
-                obstacle_list.append(tree)
-                end_time_tree_spawn = pygame.time.get_ticks() + 300
+            # if current_time > end_time_tree_spawn:
+            #     tree = make_tree()
+            #     collide_list.append(tree)
+            #     obstacle_list.append(tree)
+            #     end_time_tree_spawn = pygame.time.get_ticks() + 300
 
             if km_count >= routelen:
                 isCompletedBonus = True
