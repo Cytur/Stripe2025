@@ -1566,7 +1566,7 @@ while RunVar == True:
 
                 if keys[pygame.K_a]:
                   
-                    if current_player.ycor > 15:
+                    if current_player.xcor > 15:
                         current_player.move("LEFT")
         except:
             pass
