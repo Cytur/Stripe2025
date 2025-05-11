@@ -134,9 +134,9 @@ for img in range(5):
 
 
 #Animal Obj s
-bird = BirdTurtle(50, 50, bird_frames, 64)
-birdNPC = BirdTurtle(-100, 300, bird_frames, 64)
-birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 64)
+bird = BirdTurtle(50, 50, bird_frames, 16)
+birdNPC = BirdTurtle(-100, 300, bird_frames, 16)
+birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 16)
 birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 64)
 birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 64)
 turtle = BirdTurtle(50, 400, turt_frames, 96)
@@ -349,7 +349,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
 isCompletedBonus = False
 bugsCaughtAmount = 0
 
-GameState = "TitleScreen"
+GameState = "Deer Level 2"
 RunVar = True
 
 while RunVar == True:
