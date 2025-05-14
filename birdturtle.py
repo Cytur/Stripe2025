@@ -12,13 +12,16 @@ class BirdTurtle():
 
         self.frames = frame_list
         self.frame_count = 0
+        self.cur_frames = self.frames
         self.current_frame = self.frames[self.frame_count]
+
+        self.framesRev = [pygame.transform.flip(x, True, False) for x in self.frames]
 
     def animation_update(self):
         self.frame_count += 1
         if self.frame_count == len(self.frames):
             self.frame_count = 0
-        self.current_frame = self.frames[self.frame_count]
+        self.current_frame = self.cur_frames[self.frame_count]
 
 
     def move(self, direction):
@@ -30,9 +33,15 @@ class BirdTurtle():
 
         #FOR NPCs
         if direction == "RIGHT":
+
             self.xcor += self.speed
+
+            self.cur_frames = self.frames
+
         if direction == "LEFT":
             self.xcor -= self.speed
+
+            self.cur_frames = self.framesRev
 
 
         self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))

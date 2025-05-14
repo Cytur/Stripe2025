@@ -253,6 +253,7 @@ trap_img = pygame.image.load("BearTrapAsset/trap1.png")
 hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (27.5, 15))
 highway_img = pygame.transform.scale(pygame.image.load("HighwayAsset/Highway.png"), (40, 6))
 net_img = pygame.transform.scale(pygame.image.load("NetAsset/Net.png"), (64, 32))
+pellet_img = pygame.image.load("KelpAsset/Kelp.png")
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -322,6 +323,11 @@ def make_highway(ycor):
 def make_net():
     return  ObstacleClass(1000, 60, 10, 0, 64, 32, True, False, [net_img], "Net")
 
+def make_pellet():
+    return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, True, False, [pellet_img], "Pellet")
+
+def make_bonus_pollution():
+    return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), True,True, [trash_img], "Pollution")
 
 
 #Vars for player jumping
@@ -355,7 +361,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleLevel"
+GameState = "TurtleBonus"
 RunVar = True
 
 while RunVar == True:
@@ -580,6 +586,7 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
+            current_player.xcor = 50
             routelen = 2000
             current_player.rect_update()
             lives.load_hearts(2)
@@ -698,14 +705,14 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             instructText = TextClass(
-                "Bonus level: Catch 20 food pellets and avoid pebbles for +1 heart!",
+                "Bonus level: Catch 20 bits of kelp for +1 heart!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
             pelletsText = TextClass(
-                f"{bugsCaughtAmount} Pellet(s) Caught",
+                f"{pelletsCaughtAmount} Pellet(s) Caught",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
                 DesignClass.Colors["BLACK"],
                 (200, 25),
@@ -732,13 +739,16 @@ while RunVar == True:
 
 
             if current_time > end_time_player_animation:
-                bird.animation_update()
+                current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 50
                 
             if current_time > end_time_pellet_spawn:
-                bug = make_bug()
-                collide_list.append(bug)
-                obstacle_list.append(bug)
+                kelp = make_pellet()
+                collide_list.append(kelp)
+                obstacle_list.append(kelp)
+                pollution = make_bonus_pollution()
+                collide_list.append(pollution)
+                obstacle_list.append(pollution)
                 end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 
 
@@ -751,7 +761,7 @@ while RunVar == True:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
-            screen.blit(bird.current_frame, bird.Rect)
+            screen.blit(current_player.current_frame, current_player.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
             lives.blit(screen)
@@ -773,7 +783,7 @@ while RunVar == True:
                         collide_list.remove(obstacle)
                         if dead:
                             isCompletedBonus = False
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
 
         case "TurtleLevel2":
             current_player = turtle
@@ -1236,10 +1246,11 @@ while RunVar == True:
                     obstacle_list.append(bullet)
                     collide_list.append(bullet)
 
-            if current_time > end_time_hunter:
-                hunter = make_hunter()
-                obstacle_list.append(hunter)
-                end_time_hunter = 222222222
+            if end_time_hunter != None:
+                if current_time > end_time_hunter:
+                    hunter = make_hunter()
+                    obstacle_list.append(hunter)
+                    end_time_hunter = None
             
 
             if current_time > end_time_km_update:
@@ -1670,7 +1681,7 @@ while RunVar == True:
                 #unique ability
                 pass
 
-            if GameState == "DeerLevel2":
+            if GameState == "DeerLevel2" or GameState == "TurtleBonus":
                 if keys[pygame.K_d]:
                     if current_player.xcor < 730:
                       
@@ -1679,17 +1690,6 @@ while RunVar == True:
                 if keys[pygame.K_a]:
                   
                     if current_player.xcor > 15:
-                        current_player.move("LEFT")
-
-            elif GameState == "TurtleBonus":
-                if keys[pygame.K_d]:
-                    if current_player.xcor < 600:
-                      
-                        current_player.move("RIGHT")
-
-                if keys[pygame.K_a]:
-                  
-                    if current_player.xcor > 200:
                         current_player.move("LEFT")
         except:
             pass
