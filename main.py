@@ -227,6 +227,7 @@ end_time_killerwhale_spawn = 8000
 end_time_hunter = 0
 end_time_bug_spawn = 1000
 end_time_trap_spawn = 0
+end_time_pellet_spawn = 3000
 
 
 #Functions for Obstacles
@@ -251,6 +252,7 @@ arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
 trap_img = pygame.image.load("BearTrapAsset/trap1.png")
 hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (27.5, 15))
 highway_img = pygame.transform.scale(pygame.image.load("HighwayAsset/Highway.png"), (40, 6))
+net_img = pygame.transform.scale(pygame.image.load("NetAsset/Net.png"), (64, 32))
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -317,6 +319,9 @@ def make_hole():
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 5, 0, 40, 6, False, False, [highway_img], "Highway")
 
+def make_net():
+    return  ObstacleClass(1000, 60, 10, 0, 64, 32, True, False, [net_img], "Net")
+
 
 
 #Vars for player jumping
@@ -348,8 +353,9 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     
 isCompletedBonus = False
 bugsCaughtAmount = 0
+pelletsCaughtAmount = 0
 
-GameState = "Deer Level 2"
+GameState = "TurtleLevel"
 RunVar = True
 
 while RunVar == True:
@@ -504,7 +510,7 @@ while RunVar == True:
                 end_time_km_update = pygame.time.get_ticks() + 1
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Bird Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
                 km_count = 6001
                 
 
@@ -537,7 +543,7 @@ while RunVar == True:
             if specialTransition:
                 current_player.move("DOWN")
                 if 600 < current_player.ycor:
-                    ChangeGameState("Bird Bonus")
+                    ChangeGameState("BirdBonus")
                     
                     collideIndex = 0
                     for collide in collide_list:
@@ -628,8 +634,14 @@ while RunVar == True:
             if km_count < 300:
                 instructText.blit()
 
+            if km_count >= 567 and km_count <= 570:
+                net = make_net()
+                obstacle_list.append(net)
+                collide_list.append(net)
+                km_count = 571
+
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Turtle Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2")
 
             if current_time > end_time_player_animation:
                 current_player.animation_update()
@@ -638,6 +650,18 @@ while RunVar == True:
             if current_time > end_time_km_update:
                 km_count += 1
                 end_time_km_update += 1
+
+            if specialTransition:
+                current_player.move("UP")
+                net.ycor -= 10
+                net.update_frame()
+                if -100 > current_player.ycor:
+
+                    print("sss")
+                    ChangeGameState("TurtleBonus")
+                        
+                    current_player.ycor = 70
+
 
 
             #Blit all the objects
@@ -657,13 +681,101 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    pygame.time.delay(100)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                    if obstacle.descriptor == "Net":
+                        SpecialLevelEnter()
+                    else:
+                        dead = lives.remove_life()
+                        pygame.time.delay(100)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+        case "TurtleBonus":
+            specialTransition = False
+            current_player = turtle
+            current_player.rect_update()
+            routelen = 99999
+            lives.load_hearts(2)
+            screen.fill(DesignClass.Colors["OCEANBLUE"])
 
-        case "Turtle Level 2":
+            instructText = TextClass(
+                "Bonus level: Catch 20 food pellets and avoid pebbles for +1 heart!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            pelletsText = TextClass(
+                f"{bugsCaughtAmount} Pellet(s) Caught",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
+                DesignClass.Colors["BLACK"],
+                (200, 25),
+                screen
+            )
+            
+        
+            #Set up backround
+            if pelletsCaughtAmount >= 20:
+                isCompletedBonus = True
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel")
+                lives.add_hearts(1)
+                km_count = 574
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
+                
+            collideIndex = 0
+            for collide in collide_list:
+                if collide.descriptor == "Tree":
+                    collide_list.pop(collideIndex)
+                collideIndex += 1
+
+
+            if current_time > end_time_player_animation:
+                bird.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+                
+            if current_time > end_time_pellet_spawn:
+                bug = make_bug()
+                collide_list.append(bug)
+                obstacle_list.append(bug)
+                end_time_pellet_spawn = pygame.time.get_ticks() + 3000
+                
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            lives.blit(screen)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            pelletsText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    if obstacle.descriptor == "Pellet": 
+                        pelletsCaughtAmount += 1
+                        obstacle_list.pop(obstacle_list.index(obstacle))
+                        collide_list.pop(collide_list.index(obstacle))
+                    else:
+                        dead = lives.remove_life()
+                        pygame.time.delay(100)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            isCompletedBonus = False
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+
+        case "TurtleLevel2":
             current_player = turtle
             routelen = 2000
             current_player.rect_update()
@@ -833,7 +945,7 @@ while RunVar == True:
                 end_time_player_animation = pygame.time.get_ticks() + 60
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "Deer Level 2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2")
 
             if specialTransition:
                 current_player.move("DOWN")
@@ -888,7 +1000,7 @@ while RunVar == True:
                         if dead:
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "Bird Bonus":
+        case "BirdBonus":
             specialTransition = False
             current_player = bird
             current_player.rect_update()
@@ -981,7 +1093,7 @@ while RunVar == True:
                             isCompletedBonus = False
                             EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
 
-        case "Bird Level 2":
+        case "BirdLevel2":
             current_player = bird
             routelen = 13000
             current_player.rect_update()
@@ -1077,7 +1189,7 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "Deer Level 2":
+        case "DeerLevel2":
             current_player = deer
             current_player.rect_update()
             current_player.ycor = 400
@@ -1234,7 +1346,7 @@ while RunVar == True:
 
             if km_count >= routelen:
                 isCompletedBonus = True
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "Deer Level")
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
                 lives.add_hearts(1)
                 km_count = 80
 
@@ -1264,7 +1376,7 @@ while RunVar == True:
                     collide_list.remove(obstacle)
                     if dead:
                         isCompletedBonus = False
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "Deer Level")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
 
         
         case "ControlsPage":
@@ -1558,7 +1670,7 @@ while RunVar == True:
                 #unique ability
                 pass
 
-            if GameState == "Deer Level 2":
+            if GameState == "DeerLevel2":
                 if keys[pygame.K_d]:
                     if current_player.xcor < 730:
                       
@@ -1567,6 +1679,17 @@ while RunVar == True:
                 if keys[pygame.K_a]:
                   
                     if current_player.xcor > 15:
+                        current_player.move("LEFT")
+
+            elif GameState == "TurtleBonus":
+                if keys[pygame.K_d]:
+                    if current_player.xcor < 600:
+                      
+                        current_player.move("RIGHT")
+
+                if keys[pygame.K_a]:
+                  
+                    if current_player.xcor > 200:
                         current_player.move("LEFT")
         except:
             pass

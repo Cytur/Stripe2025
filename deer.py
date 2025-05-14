@@ -50,6 +50,9 @@ class Deer():
         if direction == "DOWN":
             self.ycor += self.speed
 
+        if direction == "UP":
+            self.ycor -= self.speed
+
         self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
 
         direction = ""
