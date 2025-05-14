@@ -584,6 +584,197 @@ while RunVar == True:
                         if dead:
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
+
+        case "BirdBonus":
+            specialTransition = False
+            current_player = bird
+            current_player.rect_update()
+            routelen = 99999
+            lives.load_hearts(2)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+
+            instructText = TextClass(
+                "Bonus level: Catch 20 bugs for +1 heart!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            bugsText = TextClass(
+                f"{bugsCaughtAmount} Bug(s) Caught",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
+                DesignClass.Colors["BLACK"],
+                (200, 25),
+                screen
+            )
+            
+            
+            
+            #Set up backround
+            if current_time > end_time_cloud_spawn:
+                cloud = make_cloud(bottom_bound=300)
+                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                obstacle_list.append(cloud)
+
+            if bugsCaughtAmount >= 20:
+                isCompletedBonus = True
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
+                lives.add_hearts(1)
+                km_count = 601
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
+                
+            collideIndex = 0
+            for collide in collide_list:
+                if collide.descriptor == "Tree":
+                    collide_list.pop(collideIndex)
+                collideIndex += 1
+
+
+            if current_time > end_time_player_animation:
+                bird.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+                
+            if current_time > end_time_bug_spawn:
+                bug = make_bug()
+                collide_list.append(bug)
+                obstacle_list.append(bug)
+                end_time_bug_spawn = pygame.time.get_ticks() + 3000
+                
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            lives.blit(screen)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            bugsText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    if obstacle.descriptor == "Bug": 
+                        bugsCaughtAmount += 1
+                        obstacle_list.pop(obstacle_list.index(obstacle))
+                        collide_list.pop(collide_list.index(obstacle))
+                    else:
+                        dead = lives.remove_life()
+                        pygame.time.delay(100)
+                        collide_list.remove(obstacle)
+                        if dead:
+                            isCompletedBonus = False
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+
+        case "BirdLevel2":
+            current_player = bird
+            routelen = 13000
+            current_player.rect_update()
+            if isCompletedBonus == True:
+                lives.load_hearts(3)
+            else:
+                lives.load_hearts(2)
+            screen.fill(DesignClass.Colors["SKYBLUE"])
+
+            instructText = TextClass(
+                "You're catching up! Watch out for eagles!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["BLACK"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            kmText = TextClass(
+                f"{km_count}km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
+                DesignClass.Colors["BLACK"],
+                (100, 25),
+                screen
+            )
+            
+            
+            
+            #Set up backround
+            if current_time > end_time_cloud_spawn:
+                cloud = make_cloud()
+                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                obstacle_list.append(cloud)
+
+
+            if current_time > end_time_snow_spawn:
+                snow = make_snow()
+                end_time_snow_spawn = pygame.time.get_ticks() + 60 + time_pass/180
+                obstacle_list.append(snow)
+
+            if current_time > end_time_hawk_spawn:
+                hawk = make_hawk()
+                end_time_hawk_spawn = pygame.time.get_ticks() + 800
+                obstacle_list.append(hawk)
+                collide_list.append(hawk)
+
+            if current_time > end_time_bNPC_move:
+                birdNPC.move("RIGHT")
+                end_time_bNPC_move += 80
+
+            if current_time > end_time_km_update:
+                km_count += 3
+                end_time_km_update += 1
+
+            if km_count > routelen:
+                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
+
+            for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
+
+
+            if current_time > end_time_player_animation:
+                birdNPC.animation_update()
+                bird.animation_update()
+                end_time_player_animation = pygame.time.get_ticks() + 50
+
+
+            #Blit all the objects
+            for obstacle in obstacle_list:
+                if obstacle.xcor < -200:
+                    obstacle_list.remove(obstacle)
+                else:
+                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
+
+            if birdNPC.xcor < 1000:
+                screen.blit(birdNPC.current_frame, birdNPC.Rect)
+
+            screen.blit(bird.current_frame, bird.Rect)
+            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
+
+            lives.blit(screen)
+
+            if current_time < end_time_text:
+                instructText.blit()
+            kmText.blit()
+
+            #detecting player collisions with objects
+            for obstacle in collide_list:
+                if current_player.Rect.colliderect(obstacle.Rect):
+                    dead = lives.remove_life()
+                    pygame.time.delay(100)
+                    collide_list.remove(obstacle)
+                    if dead:
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+
+
         case "TurtleLevel":
             current_player = turtle
             current_player.xcor = 50
@@ -1010,43 +1201,35 @@ while RunVar == True:
                         if dead:
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "BirdBonus":
+        case "DeerBonus":
+            current_player = bonusDeer
+            km_count = 0
+            current_player.xcor = 500
             specialTransition = False
-            current_player = bird
             current_player.rect_update()
-            routelen = 99999
+            routelen = 30
             lives.load_hearts(2)
-            screen.fill(DesignClass.Colors["SKYBLUE"])
-            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
+            screen.fill(DesignClass.Colors["GRASSGREEN"])
 
             instructText = TextClass(
-                "Bonus level: Catch 20 bugs for +1 heart!",
+                "Watch out for wolves running behind you!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
-            bugsText = TextClass(
-                f"{bugsCaughtAmount} Bug(s) Caught",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
+            kmText = TextClass(
+                f"{km_count} km",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
                 DesignClass.Colors["BLACK"],
                 (200, 25),
                 screen
-            )
-            
-            
+            )   
             
             #Set up backround
-            if current_time > end_time_cloud_spawn:
-                cloud = make_cloud(bottom_bound=300)
-                end_time_cloud_spawn = pygame.time.get_ticks() + 700
-                obstacle_list.append(cloud)
-
-            if bugsCaughtAmount >= 20:
-                isCompletedBonus = True
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
-                lives.add_hearts(1)
-                km_count = 601
+            if current_time > end_time_km_update:
+                km_count += 1
+                end_time_km_update += 1000
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -1060,15 +1243,26 @@ while RunVar == True:
 
 
             if current_time > end_time_player_animation:
-                bird.animation_update()
+                current_player.animation_update()
                 end_time_player_animation = pygame.time.get_ticks() + 50
                 
-            if current_time > end_time_bug_spawn:
-                bug = make_bug()
-                collide_list.append(bug)
-                obstacle_list.append(bug)
-                end_time_bug_spawn = pygame.time.get_ticks() + 3000
+            if current_time > end_time_wolf_spawn:
+                wolf = make_wolfBonus()
+                collide_list.append(wolf)
+                obstacle_list.append(wolf)
+                end_time_wolf_spawn = pygame.time.get_ticks() + 700
                 
+            # if current_time > end_time_tree_spawn:
+            #     tree = make_tree()
+            #     collide_list.append(tree)
+            #     obstacle_list.append(tree)
+            #     end_time_tree_spawn = pygame.time.get_ticks() + 300
+
+            if km_count >= routelen:
+                isCompletedBonus = True
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
+                lives.add_hearts(1)
+                km_count = 80
 
 
             #Blit all the objects
@@ -1079,109 +1273,7 @@ while RunVar == True:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
-            screen.blit(bird.current_frame, bird.Rect)
-            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
-
-            lives.blit(screen)
-
-            if current_time < end_time_text:
-                instructText.blit()
-            bugsText.blit()
-
-            #detecting player collisions with objects
-            for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
-                    if obstacle.descriptor == "Bug": 
-                        bugsCaughtAmount += 1
-                        obstacle_list.pop(obstacle_list.index(obstacle))
-                        collide_list.pop(collide_list.index(obstacle))
-                    else:
-                        dead = lives.remove_life()
-                        pygame.time.delay(100)
-                        collide_list.remove(obstacle)
-                        if dead:
-                            isCompletedBonus = False
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
-
-        case "BirdLevel2":
-            current_player = bird
-            routelen = 13000
-            current_player.rect_update()
-            if isCompletedBonus == True:
-                lives.load_hearts(3)
-            else:
-                lives.load_hearts(2)
-            screen.fill(DesignClass.Colors["SKYBLUE"])
-
-            instructText = TextClass(
-                "You're catching up! Watch out for eagles!",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 125),
-                screen
-            )
-            kmText = TextClass(
-                f"{km_count}km",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
-                DesignClass.Colors["BLACK"],
-                (100, 25),
-                screen
-            )
-            
-            
-            
-            #Set up backround
-            if current_time > end_time_cloud_spawn:
-                cloud = make_cloud()
-                end_time_cloud_spawn = pygame.time.get_ticks() + 700
-                obstacle_list.append(cloud)
-
-
-            if current_time > end_time_snow_spawn:
-                snow = make_snow()
-                end_time_snow_spawn = pygame.time.get_ticks() + 60 + time_pass/180
-                obstacle_list.append(snow)
-
-            if current_time > end_time_hawk_spawn:
-                hawk = make_hawk()
-                end_time_hawk_spawn = pygame.time.get_ticks() + 800
-                obstacle_list.append(hawk)
-                collide_list.append(hawk)
-
-            if current_time > end_time_bNPC_move:
-                birdNPC.move("RIGHT")
-                end_time_bNPC_move += 80
-
-            if current_time > end_time_km_update:
-                km_count += 3
-                end_time_km_update += 1
-
-            if km_count > routelen:
-                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
-
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
-
-
-            if current_time > end_time_player_animation:
-                birdNPC.animation_update()
-                bird.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
-
-
-            #Blit all the objects
-            for obstacle in obstacle_list:
-                if obstacle.xcor < -200:
-                    obstacle_list.remove(obstacle)
-                else:
-                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
-
-            if birdNPC.xcor < 1000:
-                screen.blit(birdNPC.current_frame, birdNPC.Rect)
-
-            screen.blit(bird.current_frame, bird.Rect)
+            screen.blit(current_player.current_frame, current_player.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
             lives.blit(screen)
@@ -1197,8 +1289,10 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        isCompletedBonus = False
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
 
+        
         case "DeerLevel2":
             current_player = deer
             current_player.rect_update()
@@ -1298,97 +1392,7 @@ while RunVar == True:
                     if dead:
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
 
-        case "DeerBonus":
-            current_player = bonusDeer
-            km_count = 0
-            current_player.xcor = 500
-            specialTransition = False
-            current_player.rect_update()
-            routelen = 30
-            lives.load_hearts(2)
-            screen.fill(DesignClass.Colors["GRASSGREEN"])
-
-            instructText = TextClass(
-                "Watch out for wolves running behind you!",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
-                (DesignClass.SCREEN_WIDTH_CENTER, 125),
-                screen
-            )
-            kmText = TextClass(
-                f"{km_count} km",
-                pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
-                DesignClass.Colors["BLACK"],
-                (200, 25),
-                screen
-            )   
-            
-            #Set up backround
-            if current_time > end_time_km_update:
-                km_count += 1
-                end_time_km_update += 1000
-
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
-                
-            collideIndex = 0
-            for collide in collide_list:
-                if collide.descriptor == "Tree":
-                    collide_list.pop(collideIndex)
-                collideIndex += 1
-
-
-            if current_time > end_time_player_animation:
-                current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
-                
-            if current_time > end_time_wolf_spawn:
-                wolf = make_wolfBonus()
-                collide_list.append(wolf)
-                obstacle_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 700
-                
-            # if current_time > end_time_tree_spawn:
-            #     tree = make_tree()
-            #     collide_list.append(tree)
-            #     obstacle_list.append(tree)
-            #     end_time_tree_spawn = pygame.time.get_ticks() + 300
-
-            if km_count >= routelen:
-                isCompletedBonus = True
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
-                lives.add_hearts(1)
-                km_count = 80
-
-
-            #Blit all the objects
-            for obstacle in obstacle_list:
-                if obstacle.xcor < -200:
-                    obstacle_list.remove(obstacle)
-                else:
-                    screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
-
-            screen.blit(current_player.current_frame, current_player.Rect)
-            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
-
-            lives.blit(screen)
-
-            if current_time < end_time_text:
-                instructText.blit()
-            kmText.blit()
-
-            #detecting player collisions with objects
-            for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
-                    dead = lives.remove_life()
-                    pygame.time.delay(100)
-                    collide_list.remove(obstacle)
-                    if dead:
-                        isCompletedBonus = False
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
-
+        
         
         case "ControlsPage":
             screen.fill(DesignClass.Colors["WHITE"])
