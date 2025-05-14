@@ -7,6 +7,7 @@ from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from deer import Deer
 from livesclass import Lives
+from sound import SoundClass
 
 buttonlist = []
 collect_list = []
@@ -231,29 +232,29 @@ end_time_pellet_spawn = 3000
 
 
 #Functions for Obstacles
-bubble_img = pygame.image.load("BubbleAsset/bubble.png")
-wolf_imgs = [pygame.image.load(f"WolfAsset/wolf{x+1}.png") for x in range(6)]
-revwolf_imgs = [pygame.transform.flip(pygame.image.load(f"WolfAsset/wolf{x+1}.png") , True, False) for x in range(6)]
-tree_img = pygame.transform.scale2x(pygame.image.load("TreeAsset/tree.png"))
-snow_img = pygame.transform.scale(pygame.image.load("SnowflakeAsset/snowflakes.png"), (2, 2))
-rain_img = pygame.transform.scale(pygame.image.load("RainAsset/Raindrop.png"), (10, 10))
-hawk_imgs = [pygame.image.load(f"HawkAsset/bird{x+1}.png") for x in range(3)]
-shark_img = pygame.transform.scale(pygame.image.load("SharkAsset/shark.png"), (32, 18))
-killerwhale_img = pygame.transform.scale(pygame.image.load("KillerWhaleAsset/killerwhale.png"), (32, 18))
-trash_img = pygame.transform.scale(pygame.image.load("TrashAsset/Trash.png"), (20, 18))
-bottle_img = pygame.transform.scale(pygame.image.load("TrashAsset/PlasticBottle.png"), (10, 30))
-bullet_img = pygame.image.load("BulletAsset/Snipe1.png")
-fish_img = pygame.transform.scale(pygame.image.load("GoldfishAsset/goldfish.png"), (50, 35))
-hunter_imgs = [pygame.image.load(f"HunterAsset/hunter{x+1}.png") for x in range(6)]
-bug1_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug1.png"), (10,10))
-bug2_img = pygame.transform.scale(pygame.image.load("BugAsset/Bug2.png"), (10,10))
+bubble_img = pygame.image.load("ImageAssets/BubbleAsset/bubble.png")
+wolf_imgs = [pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") for x in range(6)]
+revwolf_imgs = [pygame.transform.flip(pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") , True, False) for x in range(6)]
+tree_img = pygame.transform.scale2x(pygame.image.load("ImageAssets/TreeAsset/tree.png"))
+snow_img = pygame.transform.scale(pygame.image.load("ImageAssets/SnowflakeAsset/snowflakes.png"), (2, 2))
+rain_img = pygame.transform.scale(pygame.image.load("ImageAssets/RainAsset/Raindrop.png"), (10, 10))
+hawk_imgs = [pygame.image.load(f"ImageAssets/HawkAsset/bird{x+1}.png") for x in range(3)]
+shark_img = pygame.transform.scale(pygame.image.load("ImageAssets/SharkAsset/shark.png"), (32, 18))
+killerwhale_img = pygame.transform.scale(pygame.image.load("ImageAssets/KillerWhaleAsset/killerwhale.png"), (32, 18))
+trash_img = pygame.transform.scale(pygame.image.load("ImageAssets/TrashAsset/Trash.png"), (20, 18))
+bottle_img = pygame.transform.scale(pygame.image.load("ImageAssets/TrashAsset/PlasticBottle.png"), (10, 30))
+bullet_img = pygame.image.load("ImageAssets/BulletAsset/Snipe1.png")
+fish_img = pygame.transform.scale(pygame.image.load("ImageAssets/GoldfishAsset/goldfish.png"), (50, 35))
+hunter_imgs = [pygame.image.load(f"ImageAssets/HunterAsset/hunter{x+1}.png") for x in range(6)]
+bug1_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug1.png"), (10,10))
+bug2_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug2.png"), (10,10))
 bugList = [bug1_img, bug2_img]
-arrow_imgs = [pygame.image.load(f"ArrowAsset/file{x+1}.png") for x in range(17)]
-trap_img = pygame.image.load("BearTrapAsset/trap1.png")
-hole_img = pygame.transform.scale(pygame.image.load("HoleAsset/Hole.png"), (27.5, 15))
-highway_img = pygame.transform.scale(pygame.image.load("HighwayAsset/Highway.png"), (40, 6))
-net_img = pygame.transform.scale(pygame.image.load("NetAsset/Net.png"), (64, 32))
-pellet_img = pygame.image.load("KelpAsset/Kelp.png")
+arrow_imgs = [pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png") for x in range(17)]
+trap_img = pygame.image.load("ImageAssets/BearTrapAsset/trap1.png")
+hole_img = pygame.transform.scale(pygame.image.load("ImageAssets/HoleAsset/Hole.png"), (27.5, 15))
+highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset/Highway.png"), (40, 6))
+net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 32))
+pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
