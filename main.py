@@ -31,7 +31,9 @@ def ResetGame():
     global GameState, buttonlist, end_time_text, km_count
     global obstacle_list, collide_list
     global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn, end_time_wolf_animation, time_pass, end_time_hawk_animation, end_time_hawk_spawn, end_time_bullet_spawn
-    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn
+    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn, end_time_tNPC_move, end_time_eggs_move
+    global end_time_trash_spawn, end_time_killerwhale_spawn, end_time_bug_spawn, end_time_hunter
+    global end_time_shark_spawn, end_time_trap_spawn
     global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
     global current_player
@@ -104,25 +106,25 @@ deer_frames = []
 friendly_bird_frames = []
 
 for num in range(8):
-    frame = pygame.image.load(f"BirdAsset/BirdFlying{num+1}.png")
+    frame = pygame.image.load(f"ImageAssets/BirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 64))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     bird_frames.append(frame)
 
 for num in range(6):
-    frame = pygame.image.load(f"TurtleAsset/24bit-seaturtle{num+1}.png")
+    frame = pygame.image.load(f"ImageAssets/TurtleAsset/24bit-seaturtle{num+1}.png")
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
     
 for num in range(8):
-    frame = pygame.image.load(f"FriendlyBirdAsset/BirdFlying{num+1}.png")
+    frame = pygame.image.load(f"ImageAssets/FriendlyBirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 64))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
 
 for img in range(5):
-            frame = pygame.image.load(f'DeerAsset/deer{img+1}.png')
+            frame = pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
             frame = pygame.transform.scale(frame, (28*4, 100))
             deer_frames.append(frame)
 
