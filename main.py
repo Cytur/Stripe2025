@@ -33,7 +33,7 @@ def ResetGame():
     global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn, end_time_wolf_animation, time_pass, end_time_hawk_animation, end_time_hawk_spawn, end_time_bullet_spawn
     global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn, end_time_tNPC_move, end_time_eggs_move
     global end_time_trash_spawn, end_time_killerwhale_spawn, end_time_bug_spawn, end_time_hunter
-    global end_time_shark_spawn, end_time_trap_spawn
+    global end_time_shark_spawn, end_time_trap_spawn, end_time_eagle_spawn
     global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
     global current_player
@@ -73,6 +73,7 @@ def ResetGame():
     end_time_hunter = 0
     end_time_bug_spawn = 1000
     end_time_trap_spawn = 0
+    end_time_eagle_spawn = random.radnint(6000, 13000)
 
     # Reset jump variables
     isJumping = False
@@ -137,11 +138,11 @@ for img in range(5):
 
 
 #Animal Obj s
-bird = BirdTurtle(50, 50, bird_frames, 16)
+bird = BirdTurtle(50, 50, bird_frames, 20)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 16)
-birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 16)
-birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 64)
-birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 64)
+birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20)
+birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20)
+birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20)
 turtle = BirdTurtle(50, 400, turt_frames, 96)
 deer = Deer(50, 400)
 bonusDeer = BirdTurtle(50, 400, deer_frames, 60)
@@ -202,7 +203,7 @@ deer_info = InfoCard(
 
 #Obstacle Related Lists
 obstacle_list = []
-cloud_img_list = ["CloudAsset/Cloud 10.png", "CloudAsset/Cloud 11.png", "CloudAsset/Cloud 12.png"]
+cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset/Cloud 11.png", "ImageAssets/CloudAsset/Cloud 12.png"]
 
 
 
@@ -231,6 +232,8 @@ end_time_hunter = 0
 end_time_bug_spawn = 1000
 end_time_trap_spawn = 0
 end_time_pellet_spawn = 3000
+end_time_eagle_spawn =  random.randint(6000, 13000)
+
 
 
 #Functions for Obstacles
@@ -251,12 +254,13 @@ hunter_imgs = [pygame.image.load(f"ImageAssets/HunterAsset/hunter{x+1}.png") for
 bug1_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug2.png"), (10,10))
 bugList = [bug1_img, bug2_img]
-arrow_imgs = [pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png") for x in range(17)]
+arrow_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png"), (pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png").get_width()/4, pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png").get_height()/4)) for x in range(17)]
 trap_img = pygame.image.load("ImageAssets/BearTrapAsset/trap1.png")
 hole_img = pygame.transform.scale(pygame.image.load("ImageAssets/HoleAsset/Hole.png"), (27.5, 15))
 highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset/Highway.png"), (40, 6))
 net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 32))
 pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
+eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -301,7 +305,7 @@ def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
-    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/16, arrow_imgs[0].get_height()/16, True, True, arrow_imgs, "Arrow")
+    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, True, True, arrow_imgs, "Arrow")
 
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
@@ -331,6 +335,9 @@ def make_pellet():
 
 def make_bonus_pollution():
     return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), True,True, [trash_img], "Pollution")
+
+def make_eagle():
+    return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), True,True, [eagle_img], "Eagle")
 
 
 #Vars for player jumping
@@ -364,7 +371,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleBonus"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
@@ -577,7 +584,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Arrow":
                         SpecialLevelEnter()
                     else:
@@ -626,6 +633,12 @@ while RunVar == True:
                 lives.add_hearts(1)
                 km_count = 601
 
+            if current_time > end_time_eagle_spawn:
+                eagle = make_eagle()
+                obstacle_list.append(eagle)
+                collide_list.append(eagle)
+                end_time_eagle_spawn += random.randint(6000, 13000)
+
             for obstacle in obstacle_list:
                 obstacle.move()
                 obstacle.update_frame()
@@ -668,7 +681,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Bug": 
                         bugsCaughtAmount += 1
                         obstacle_list.pop(obstacle_list.index(obstacle))
@@ -770,7 +783,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
@@ -789,7 +802,7 @@ while RunVar == True:
 
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
-            eggs = pygame.transform.scale(pygame.image.load("TurtleExtraAsset/cracked-egg.png"), (86, 56))
+            eggs = pygame.transform.scale(pygame.image.load("ImageAssets/TurtleExtraAsset/cracked-egg.png"), (86, 56))
 
             instructText = TextClass(
                 "Embark on your journey, avoid trash and sharks!",
@@ -858,7 +871,6 @@ while RunVar == True:
                 net.update_frame()
                 if -100 > current_player.ycor:
 
-                    print("sss")
                     ChangeGameState("TurtleBonus")
                         
                     current_player.ycor = 70
@@ -881,7 +893,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Net":
                         SpecialLevelEnter()
                     else:
@@ -893,6 +905,7 @@ while RunVar == True:
         case "TurtleBonus":
             specialTransition = False
             current_player = turtle
+            current_player.ycor = 400
             current_player.rect_update()
             routelen = 99999
             lives.load_hearts(2)
@@ -966,7 +979,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Pellet": 
                         pelletsCaughtAmount += 1
                         obstacle_list.pop(obstacle_list.index(obstacle))
@@ -1068,7 +1081,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
@@ -1193,7 +1206,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Hole":
                             SpecialLevelEnter()
                     else:
@@ -1206,7 +1219,6 @@ while RunVar == True:
 
         case "DeerBonus":
             current_player = bonusDeer
-            km_count = 0
             current_player.xcor = 500
             specialTransition = False
             current_player.rect_update()
@@ -1287,7 +1299,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
@@ -1388,7 +1400,7 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                if current_player.Rect.colliderect(obstacle.Rect):
+                if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     dead = lives.remove_life()
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
@@ -1408,9 +1420,9 @@ while RunVar == True:
                 screen
             )
             UpDownText.blit()
-            Key_W = pygame.transform.scale(pygame.image.load("KeyboardAsset/W.png"), (40,40))
+            Key_W = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/W.png"), (40,40))
             screen.blit(Key_W, Key_W.get_rect(center = (50, 50)))
-            Key_S = pygame.transform.scale(pygame.image.load("KeyboardAsset/S.png"), (40,40))
+            Key_S = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/S.png"), (40,40))
             screen.blit(Key_S, Key_S.get_rect(center = (95, 50)))
             
             LeftRightText = TextClass(
@@ -1421,9 +1433,9 @@ while RunVar == True:
                 screen
             )
             LeftRightText.blit()
-            Key_A = pygame.transform.scale(pygame.image.load("KeyboardAsset/A.png"), (40,40))
+            Key_A = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/A.png"), (40,40))
             screen.blit(Key_A, Key_A.get_rect(center = (50, 130)))
-            Key_D = pygame.transform.scale(pygame.image.load("KeyboardAsset/D.png"), (40,40))
+            Key_D = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/D.png"), (40,40))
             screen.blit(Key_D, Key_D.get_rect(center = (95, 130)))
 
             JumpText = TextClass(
@@ -1434,7 +1446,7 @@ while RunVar == True:
                 screen
             )
             JumpText.blit()
-            Key_Space = pygame.transform.scale(pygame.image.load("KeyboardAsset/SPACE.png"), (100,40))
+            Key_Space = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/SPACE.png"), (100,40))
             screen.blit(Key_Space, Key_Space.get_rect(center = (80, 210)))
             
             AbilityText = TextClass(
@@ -1445,7 +1457,7 @@ while RunVar == True:
                 screen
             )
             AbilityText.blit()
-            Key_Q = pygame.transform.scale(pygame.image.load("KeyboardAsset/Q.png"), (40,40))
+            Key_Q = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/Q.png"), (40,40))
             screen.blit(Key_Q, Key_Q.get_rect(center = (50, 290)))
 
             EscText = TextClass(
@@ -1456,7 +1468,7 @@ while RunVar == True:
                 screen
             )
             EscText.blit()
-            Key_Esc = pygame.transform.scale(pygame.image.load("KeyboardAsset/ESC.png"), (40,40))
+            Key_Esc = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/ESC.png"), (40,40))
             screen.blit(Key_Esc, Key_Esc.get_rect(center = (50, 370)))
 
             BackButton = ButtonClass(
@@ -1672,8 +1684,9 @@ while RunVar == True:
         try:
             if keys[pygame.K_w]:
                 #Height limit
-                if current_player.ycor > 10:
-                    current_player.move("UP")
+                if GameState != "DeerLevel":
+                    if current_player.ycor > 10:
+                        current_player.move("UP")
             if keys[pygame.K_s]:
                 #Height limit
                 if current_player == deer:
@@ -1716,6 +1729,7 @@ while RunVar == True:
         #Returning to main menu during gameplay
         try:
             if keys[pygame.K_ESCAPE]:
+                GameState = "TitleScreen"
                 ResetGame()
         except:
             pass

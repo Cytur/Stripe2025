@@ -27,9 +27,11 @@ class BirdTurtle():
     def move(self, direction):
         if direction == "UP":
             self.ycor -= self.speed
+            self.cur_frames = self.frames
 
         if direction == "DOWN":
             self.ycor += self.speed
+            self.cur_frames = self.frames
 
         #FOR NPCs
         if direction == "RIGHT":

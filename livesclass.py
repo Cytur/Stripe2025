@@ -4,7 +4,7 @@ import pygame
 
 class Lives():
     def __init__(self):
-        self.heart_img = pygame.transform.scale(pygame.image.load("HeartAsset/Heart.png"), (100, 100))
+        self.heart_img = pygame.transform.scale(pygame.image.load("ImageAssets/HeartAsset/Heart.png"), (100, 100))
         self.lives = []
         self.lost_lives = []
         self.lives_num = 0
