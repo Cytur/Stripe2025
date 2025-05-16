@@ -5,6 +5,7 @@ from birdturtle import BirdTurtle
 from ObstacleClass import ObstacleClass, collide_list
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
+from ObjectTimersClass import ObjectTimersClass
 from deer import Deer
 from livesclass import Lives
 from sound import SoundClass
@@ -28,19 +29,15 @@ def ChangeGameState(newGameState):
     km_count = 0
 
 def ResetGame():
-    global GameState, buttonlist, end_time_text, km_count
+    global GameState, buttonlist
     global obstacle_list, collide_list
-    global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn, end_time_wolf_animation, time_pass, end_time_hawk_animation, end_time_hawk_spawn, end_time_bullet_spawn
-    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn, end_time_tNPC_move, end_time_eggs_move
-    global end_time_trash_spawn, end_time_killerwhale_spawn, end_time_bug_spawn, end_time_hunter
-    global end_time_shark_spawn, end_time_trap_spawn, end_time_eagle_spawn
-    global end_time_bNPC_move, end_time_km_update
     global isJumping, vert_acceleration
     global current_player
     global bugsCaughtAmount
 
     buttonlist = []
     end_time_text = pygame.time.get_ticks() + 10000
+    #ObjectTimers.
     birdNPC.xcor = -100
     km_count = 0
     bugsCaughtAmount = 0
@@ -50,30 +47,7 @@ def ResetGame():
     collide_list = []
 
     # Reset all timers
-    end_time_player_animation = 0
-    end_time_cloud_spawn = 0
-    end_time_bubble_spawn = 0
-    end_time_wolf_spawn = 1000
-    end_time_wolf_animation = 0
-    end_time_tree_spawn = 1000
-    end_time_text = 8000
-    end_time_snow_spawn = 0
-    end_time_bNPC_move = 0
-    end_time_tNPC_move = 0
-    end_time_km_update = 0
-    end_time_rain_spawn = 0
-    time_pass = 0
-    end_time_hawk_spawn = 0
-    end_time_hawk_animation = 0
-    end_time_bullet_spawn = 5000
-    end_time_eggs_move = 3000
-    end_time_trash_spawn = 5000
-    end_time_shark_spawn = 8000
-    end_time_killerwhale_spawn = 8000
-    end_time_hunter = 0
-    end_time_bug_spawn = 1000
-    end_time_trap_spawn = 0
-    end_time_eagle_spawn = random.radnint(6000, 13000)
+    ObjectTimers.setAllDefault()
 
     # Reset jump variables
     isJumping = False
@@ -208,6 +182,34 @@ cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset
 
 
 #Wait Animation Section
+ObjectTimers = ObjectTimersClass()
+ObjectTimers.addObject("Player_Animation", 0)
+ObjectTimers.addObject("Cloud_Spawn", 0)
+ObjectTimers.addObject("Bubble_Spawn", 0)
+ObjectTimers.addObject("Wolf_Spawn", 1000)
+ObjectTimers.addObject("Wolf_Animation", 0)
+ObjectTimers.addObject("Tree_Spawn", 1000)
+ObjectTimers.addObject("Text", 8000)
+ObjectTimers.addObject("Snow_Spawn", 0)
+ObjectTimers.addObject("bNPC_Move", 0)
+ObjectTimers.addObject("tNPC_Move", 0)
+ObjectTimers.addObject("KM_Update", 0)
+ObjectTimers.addObject("Rain_Spawn", 0)
+ObjectTimers.addObject("Time_Pass", 0)
+ObjectTimers.addObject("Hawk_Spawn", 0)
+ObjectTimers.addObject("Hawk_Animation", 0)
+ObjectTimers.addObject("Bullet_Spawn", 5000)
+ObjectTimers.addObject("Eggs_Move", 3000)
+ObjectTimers.addObject("Trash_Spawn", 5000)
+ObjectTimers.addObject("Shark_Spawn", 8000)
+ObjectTimers.addObject("Killerwhale_Spawn", 8000)
+ObjectTimers.addObject("Hunter", 0)
+ObjectTimers.addObject("Bug_Spawn", 1000)
+ObjectTimers.addObject("Trap_Spawn", 0)
+ObjectTimers.addObject("Pellet_Spawn", 3000)
+ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
+ObjectTimers.addObject("Highway_Change", 10000)
+'''
 end_time_player_animation = 0
 end_time_cloud_spawn = 0
 end_time_bubble_spawn = 0
@@ -233,6 +235,8 @@ end_time_bug_spawn = 1000
 end_time_trap_spawn = 0
 end_time_pellet_spawn = 3000
 end_time_eagle_spawn =  random.randint(6000, 13000)
+end_time_highway_change = 10000
+'''
 
 
 
@@ -264,6 +268,7 @@ eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("Ima
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
+# Functions for game objects
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
     return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, False, [cloud_img], "Cloud")
@@ -838,6 +843,9 @@ while RunVar == True:
                 end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
                 obstacle_list.append(shark)
                 collide_list.append(shark)
+                
+            if current_time > end_time_highway_change:
+                pass
 
             if current_time < end_time_eggs_move:
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
