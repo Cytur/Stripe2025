@@ -11,4 +11,8 @@ class SoundClass:
 
     def play(*sounds):
         for sound in sounds:
-            
+            pass
+
+
+sound = SoundClass()
+sound.sound_dict['Win'].play()
