@@ -6,13 +6,17 @@ class SoundClass:
     def __init__(self):
         # self.win = mixer.Sound("SOUNDPATH.wav")
         self.sound_dict = {
-            "Win": mixer.Sound("SoundFiles/Win.mp3")
+            "Win": mixer.Sound("SoundFiles/Win.wav")
         }
+        self.music = mixer.music.load("SoundFiles/Music.mp3")
 
-    def play(*sounds):
+    def play(self, *sounds):
         for sound in sounds:
-            pass
+            try:
+                self.sound_dict[f"{sound}"].play()
+            except:
+                pass
 
+    def play_backround_music(self):
+        self.music.play()
 
-sound = SoundClass()
-sound.sound_dict['Win'].play()

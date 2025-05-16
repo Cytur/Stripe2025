@@ -151,6 +151,7 @@ turtle = BirdTurtle(50, 400, turt_frames, 96)
 deer = Deer(50, 400)
 bonusDeer = BirdTurtle(50, 400, deer_frames, 60)
 lives = Lives()
+Sound = SoundClass()
 
 
 #Info Cards
@@ -239,6 +240,8 @@ ObjectTimers.addObject("Trap_Spawn", 0)
 ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
+ObjectTimers.addObject("Jellyfish_Spawn", 1400)
+ObjectTimers.addObject("Music_Restart", 326000)
 '''
 end_time_player_animation = 0
 end_time_cloud_spawn = 0
@@ -410,11 +413,14 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleLevel2"
+GameState = "TitleScreen"
 RunVar = True
 
 while RunVar == True:
     current_time = pygame.time.get_ticks()
+
+    if current_time > ObjectTimers.getCurrentValue("Music_Restart"):
+        Sound.play_backround_music()
 
     match GameState:
         case "TitleScreen":
