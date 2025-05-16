@@ -19,30 +19,24 @@ specialTransition = False
 def ChangeGameState(newGameState):
     global GameState
     global buttonlist
-    global end_time_text
     global km_count
 
     GameState = newGameState
     buttonlist = []
-    end_time_text = current_time + 10000
+    ObjectTimers.addTime("Text", current_time)
     birdNPC.xcor = -100
     km_count = 0
 
 def ResetGame():
     global GameState, buttonlist
     global obstacle_list, collide_list
-    global end_time_cloud_spawn, end_time_bubble_spawn, end_time_wolf_spawn, end_time_wolf_animation, time_pass, end_time_hawk_animation, end_time_hawk_spawn, end_time_bullet_spawn
-    global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn, end_time_tNPC_move, end_time_eggs_move
-    global end_time_trash_spawn, end_time_killerwhale_spawn, end_time_bug_spawn, end_time_hunter
-    global end_time_shark_spawn, end_time_trap_spawn, end_time_eagle_spawn
-    global end_time_bNPC_move, end_time_km_update, end_time_jellyfish_spawn
+    global km_count
     global isJumping, vert_acceleration
     global current_player
     global bugsCaughtAmount
 
     buttonlist = []
-    end_time_text = pygame.time.get_ticks() + 10000
-    #ObjectTimers.
+    ObjectTimers.addTime("Text", current_time)
     birdNPC.xcor = -100
     km_count = 0
     bugsCaughtAmount = 0
@@ -53,31 +47,6 @@ def ResetGame():
 
     # Reset all timers
     ObjectTimers.setAllDefault()
-    end_time_player_animation = 0
-    end_time_cloud_spawn = 0
-    end_time_bubble_spawn = 0
-    end_time_wolf_spawn = 1000
-    end_time_wolf_animation = 0
-    end_time_tree_spawn = 1000
-    end_time_text = 8000
-    end_time_snow_spawn = 0
-    end_time_bNPC_move = 0
-    end_time_tNPC_move = 0
-    end_time_km_update = 0
-    end_time_rain_spawn = 0
-    time_pass = 0
-    end_time_hawk_spawn = 0
-    end_time_hawk_animation = 0
-    end_time_bullet_spawn = 5000
-    end_time_eggs_move = 3000
-    end_time_trash_spawn = 5000
-    end_time_shark_spawn = 8000
-    end_time_killerwhale_spawn = 8000
-    end_time_hunter = 0
-    end_time_bug_spawn = 1000
-    end_time_trap_spawn = 0
-    end_time_eagle_spawn = random.randint(6000, 13000)
-    end_time_jellyfish_spawn = 14000
 
     # Reset jump variables
     isJumping = False
@@ -239,36 +208,7 @@ ObjectTimers.addObject("Trap_Spawn", 0)
 ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
-'''
-end_time_player_animation = 0
-end_time_cloud_spawn = 0
-end_time_bubble_spawn = 0
-end_time_wolf_spawn = 1000
-end_time_wolf_animation = 0
-end_time_tree_spawn = 1000
-end_time_text = 8000
-end_time_snow_spawn = 0
-end_time_bNPC_move = 0
-end_time_tNPC_move = 0
-end_time_km_update = 0
-end_time_rain_spawn = 0
-time_pass = 0
-end_time_hawk_spawn = 0
-end_time_hawk_animation = 0
-end_time_bullet_spawn = 5000
-end_time_eggs_move = 3000
-end_time_trash_spawn = 5000
-end_time_shark_spawn = 8000
-end_time_killerwhale_spawn = 8000
-end_time_hunter = 0
-end_time_bug_spawn = 1000
-end_time_trap_spawn = 0
-end_time_pellet_spawn = 3000
-end_time_eagle_spawn =  random.randint(6000, 13000)
-end_time_highway_change = 10000
-end_time_jellyfish_spawn = 14000
-'''
-
+ObjectTimers.addObject("Jellyfish_Spawn", 14000)
 
 
 #Functions for Obstacles
@@ -494,8 +434,7 @@ while RunVar == True:
             creditsText.blit()
 
 
-
-            end_time_eggs_move = pygame.time.get_ticks() + 3000
+            ObjectTimers.addTime(current_time)
 
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
@@ -545,13 +484,13 @@ while RunVar == True:
             
             
             #Set up backround
-            if current_time > end_time_tree_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Tree_Spawn"):
                 tree = make_tree()
-                end_time_tree_spawn = pygame.time.get_ticks() + 1000
+                ObjectTimers.addTime("Tree_Spawn", current_time)
                 obstacle_list.append(tree)
                 collide_list.append(tree)
 
-            if current_time > end_time_snow_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Snow_Spawn"):
                 snow = make_snow()
                 end_time_snow_spawn = pygame.time.get_ticks() + 40
                 obstacle_list.append(snow)
