@@ -211,7 +211,35 @@ ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
 ObjectTimers.addObject("Music_Restart", 326000)
-
+'''
+end_time_player_animation = 0
+end_time_cloud_spawn = 0
+end_time_bubble_spawn = 0
+end_time_wolf_spawn = 1000
+end_time_wolf_animation = 0
+end_time_tree_spawn = 1000
+end_time_text = 8000
+end_time_snow_spawn = 0
+end_time_bNPC_move = 0
+end_time_tNPC_move = 0
+end_time_km_update = 0
+end_time_rain_spawn = 0
+time_pass = 0
+end_time_hawk_spawn = 0
+end_time_hawk_animation = 0
+end_time_bullet_spawn = 5000
+end_time_eggs_move = 3000
+end_time_trash_spawn = 5000
+end_time_shark_spawn = 8000
+end_time_killerwhale_spawn = 8000
+end_time_hunter = 0
+end_time_bug_spawn = 1000
+end_time_trap_spawn = 0
+end_time_pellet_spawn = 3000
+end_time_eagle_spawn =  random.randint(6000, 13000)
+end_time_highway_change = 10000
+end_time_jellyfish_spawn = 14000
+'''
 
 
 
