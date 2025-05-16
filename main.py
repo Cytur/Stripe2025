@@ -34,7 +34,7 @@ def ResetGame():
     global end_time_tree_spawn, end_time_snow_spawn, end_time_player_animation, end_time_rain_spawn, end_time_tNPC_move, end_time_eggs_move
     global end_time_trash_spawn, end_time_killerwhale_spawn, end_time_bug_spawn, end_time_hunter
     global end_time_shark_spawn, end_time_trap_spawn, end_time_eagle_spawn
-    global end_time_bNPC_move, end_time_km_update
+    global end_time_bNPC_move, end_time_km_update, end_time_jellyfish_spawn
     global isJumping, vert_acceleration
     global current_player
     global bugsCaughtAmount
@@ -73,7 +73,8 @@ def ResetGame():
     end_time_hunter = 0
     end_time_bug_spawn = 1000
     end_time_trap_spawn = 0
-    end_time_eagle_spawn = random.radnint(6000, 13000)
+    end_time_eagle_spawn = random.randint(6000, 13000)
+    end_time_jellyfish_spawn = 14000
 
     # Reset jump variables
     isJumping = False
@@ -233,7 +234,7 @@ end_time_bug_spawn = 1000
 end_time_trap_spawn = 0
 end_time_pellet_spawn = 3000
 end_time_eagle_spawn =  random.randint(6000, 13000)
-
+end_time_jellyfish_spawn = 14000
 
 
 #Functions for Obstacles
@@ -249,7 +250,7 @@ killerwhale_img = pygame.transform.scale(pygame.image.load("ImageAssets/KillerWh
 trash_img = pygame.transform.scale(pygame.image.load("ImageAssets/TrashAsset/Trash.png"), (20, 18))
 bottle_img = pygame.transform.scale(pygame.image.load("ImageAssets/TrashAsset/PlasticBottle.png"), (10, 30))
 bullet_img = pygame.image.load("ImageAssets/BulletAsset/Snipe1.png")
-fish_img = pygame.transform.scale(pygame.image.load("ImageAssets/GoldfishAsset/goldfish.png"), (50, 35))
+fish_img = pygame.transform.flip(pygame.transform.scale(pygame.image.load("ImageAssets/GoldfishAsset/goldfish.png"), (50, 35)), True, False)
 hunter_imgs = [pygame.image.load(f"ImageAssets/HunterAsset/hunter{x+1}.png") for x in range(6)]
 bug1_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug1.png"), (10,10))
 bug2_img = pygame.transform.scale(pygame.image.load("ImageAssets/BugAsset/Bug2.png"), (10,10))
@@ -261,6 +262,7 @@ highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset
 net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 32))
 pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
+jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/JellyfishAsset/jellyfish{x+1}.png"), (24, 24)) for x in range(6)]
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -339,6 +341,8 @@ def make_bonus_pollution():
 def make_eagle():
     return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), True,True, [eagle_img], "Eagle")
 
+def make_jellyfish():
+    return ObstacleClass(random.randint(500, 700), 600, 5, 2, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), True,True, jellyfish_imgs, "Jellyfish")
 
 #Vars for player jumping
 isJumping = False
@@ -371,7 +375,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TitleScreen"
+GameState = "TurtleLevel2"
 RunVar = True
 
 while RunVar == True:
@@ -1032,8 +1036,14 @@ while RunVar == True:
                 bottle = make_bottle()
                 obstacle_list.append(bottle)
                 end_time_trash_spawn = pygame.time.get_ticks() + 7000
-                obstacle_list.append(bottle)
+                # obstacle_list.append(bottle)
                 collide_list.append(bottle)
+
+            if current_time > end_time_jellyfish_spawn:
+                jellyfish = make_jellyfish()
+                obstacle_list.append(jellyfish)
+                end_time_jellyfish_spawn = pygame.time.get_ticks() + 7000
+                collide_list.append(jellyfish)
 
             if current_time > end_time_killerwhale_spawn:
                 killerwhale = make_killerwhale()
