@@ -1,7 +1,6 @@
 class ObjectTimersClass:
     def __init__(self):
         self.ObjectsDictionary = {}
-        return self.ObjectsDictionary
     
     def addObject(self, objectName, timeValue):
         self.ObjectsDictionary["Name"] = objectName
