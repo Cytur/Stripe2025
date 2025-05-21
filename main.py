@@ -211,35 +211,7 @@ ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
 ObjectTimers.addObject("Music_Restart", 326000)
-'''
-end_time_player_animation = 0
-end_time_cloud_spawn = 0
-end_time_bubble_spawn = 0
-end_time_wolf_spawn = 1000
-end_time_wolf_animation = 0
-end_time_tree_spawn = 1000
-end_time_text = 8000
-end_time_snow_spawn = 0
-end_time_bNPC_move = 0
-end_time_tNPC_move = 0
-end_time_km_update = 0
-end_time_rain_spawn = 0
-time_pass = 0
-end_time_hawk_spawn = 0
-end_time_hawk_animation = 0
-end_time_bullet_spawn = 5000
-end_time_eggs_move = 3000
-end_time_trash_spawn = 5000
-end_time_shark_spawn = 8000
-end_time_killerwhale_spawn = 8000
-end_time_hunter = 0
-end_time_bug_spawn = 1000
-end_time_trap_spawn = 0
-end_time_pellet_spawn = 3000
-end_time_eagle_spawn =  random.randint(6000, 13000)
-end_time_highway_change = 10000
-end_time_jellyfish_spawn = 14000
-'''
+
 
 
 
@@ -469,7 +441,7 @@ while RunVar == True:
             creditsText.blit()
 
 
-            ObjectTimers.addTime(current_time)
+            ObjectTimers.addTime("Eggs_Move", current_time)
 
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
@@ -521,22 +493,23 @@ while RunVar == True:
             #Set up backround
             if current_time > ObjectTimers.getCurrentValue("Tree_Spawn"):
                 tree = make_tree()
-                ObjectTimers.addTime("Tree_Spawn", current_time)
+                ObjectTimers.addTime("Tree_Spawn", current_time + 1000)
                 obstacle_list.append(tree)
                 collide_list.append(tree)
 
             if current_time > ObjectTimers.getCurrentValue("Snow_Spawn"):
                 snow = make_snow()
-                end_time_snow_spawn = pygame.time.get_ticks() + 40
+                #end_time_snow_spawn = pygame.time.get_ticks() + 40
+                ObjectTimers.addTime("Snow_Spawn", current_time + 40)
                 obstacle_list.append(snow)
 
-            if current_time > end_time_bNPC_move:
+            if current_time > ObjectTimers.getCurrentValue("bNPC_Move"):
                 birdNPC.move("RIGHT")
-                end_time_bNPC_move += 80
+                ObjectTimers.addTime("bNPC_Move", 80)
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 3
-                end_time_km_update = pygame.time.get_ticks() + 1
+                ObjectTimers.addTime("KM_Update", 1)
 
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
@@ -554,11 +527,11 @@ while RunVar == True:
 
             
                 
-
-            if current_time > end_time_player_animation:
+            print(ObjectTimers.getCurrentValue("Player_Animation"))
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
                 bird.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                ObjectTimers.addTime("Player_Animation", current_time + 50)
 
 
             #Blit all the objects
@@ -591,7 +564,7 @@ while RunVar == True:
 
             lives.blit(screen)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             kmText.blit()
 
@@ -635,9 +608,10 @@ while RunVar == True:
             
             
             #Set up backround
-            if current_time > end_time_cloud_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Cloud_Spawn"):
                 cloud = make_cloud(bottom_bound=300)
-                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                #end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                ObjectTimers.addTime("Cloud_Spawn", current_time + 700)
                 obstacle_list.append(cloud)
 
             if bugsCaughtAmount >= 20:
@@ -646,11 +620,12 @@ while RunVar == True:
                 lives.add_hearts(1)
                 km_count = 601
 
-            if current_time > end_time_eagle_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
                 eagle = make_eagle()
                 obstacle_list.append(eagle)
                 collide_list.append(eagle)
-                end_time_eagle_spawn += random.randint(6000, 13000)
+                #end_time_eagle_spawn += random.randint(6000, 13000)
+                ObjectTimers.addTime("Eagle_Spawn", current_time + random.randint(6000, 13000))
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -663,15 +638,17 @@ while RunVar == True:
                 collideIndex += 1
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 bird.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                #end_time_player_animation = pygame.time.get_ticks() + 50
+                ObjectTimers.addTime("Player_Animation", current_time + 50)
                 
-            if current_time > end_time_bug_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Bug_Spawn"):
                 bug = make_bug()
                 collide_list.append(bug)
                 obstacle_list.append(bug)
-                end_time_bug_spawn = pygame.time.get_ticks() + 3000
+                #end_time_bug_spawn = pygame.time.get_ticks() + 3000
+                ObjectTimers.addTime("Bug_Spawn", current_time + 3000)
                 
 
 
@@ -688,7 +665,7 @@ while RunVar == True:
 
             lives.blit(screen)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             bugsText.blit()
 
@@ -701,7 +678,7 @@ while RunVar == True:
                         collide_list.pop(collide_list.index(obstacle))
                     else:
                         dead = lives.remove_life()
-                        pygame.time.delay(100)
+                        #pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
                             isCompletedBonus = False
@@ -735,26 +712,30 @@ while RunVar == True:
             
             
             #Set up backround
-            if current_time > end_time_cloud_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Cloud_Spawn"):
                 cloud = make_cloud()
-                end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                #end_time_cloud_spawn = pygame.time.get_ticks() + 700
+                ObjectTimers.addTime("Cloud_Spawn", current_time + 700)
                 obstacle_list.append(cloud)
 
 
-            if current_time > end_time_snow_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Snow_Spawn"):
                 snow = make_snow()
-                end_time_snow_spawn = pygame.time.get_ticks() + 60 + time_pass/180
+                #end_time_snow_spawn = pygame.time.get_ticks() + 60 + ObjectTimers.getCurrentValue("Time_Pass")/180
+                ObjectTimers.addTime("Snow_Spawn", current_time + 60 + ObjectTimers.getCurrentValue("Time_Pass")/180)
                 obstacle_list.append(snow)
 
-            if current_time > end_time_hawk_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Hawk_Spawn"):
                 hawk = make_hawk()
-                end_time_hawk_spawn = pygame.time.get_ticks() + 800
+                #end_time_hawk_spawn = pygame.time.get_ticks() + 800
+                ObjectTimers.addTime("Hawk_Spawn", current_time + 800)
                 obstacle_list.append(hawk)
                 collide_list.append(hawk)
 
-            if current_time > end_time_bNPC_move:
+            if current_time > ObjectTimers.getCurrentValue("bNPC_Move"):
                 birdNPC.move("RIGHT")
-                end_time_bNPC_move += 80
+                #end_time_bNPC_move += 80
+                ObjectTimers.addTime("bNPC_Move", 80)
 
             if current_time > end_time_km_update:
                 km_count += 3
@@ -768,10 +749,11 @@ while RunVar == True:
                 obstacle.update_frame()
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
                 bird.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                #end_time_player_animation = pygame.time.get_ticks() + 50
+                ObjectTimers.addTime("Player_Animation", current_time + 50)
 
 
             #Blit all the objects
@@ -790,7 +772,7 @@ while RunVar == True:
 
             lives.blit(screen)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             kmText.blit()
 
@@ -833,29 +815,32 @@ while RunVar == True:
             )
 
             # Set up backround 
-            if current_time > end_time_bubble_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Bubble_Spawn"):
                 bubble = make_bubble()
                 obstacle_list.append(bubble)
-                end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
+                #end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
+                ObjectTimers.addTime("Bubble_Spawn", current_time + random.randint(350, 450))
 
-            if current_time > end_time_trash_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Trash_Spawn"):
                 trash = make_trash()
                 obstacle_list.append(trash)
-                end_time_trash_spawn = pygame.time.get_ticks() + 7000
+                #end_time_trash_spawn = pygame.time.get_ticks() + 7000
+                ObjectTimers.addTime("Trash_Spawn", current_time + 7000)
                 obstacle_list.append(trash)
                 collide_list.append(trash)
 
-            if current_time > end_time_shark_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Shark_Spawn"):
                 shark = make_shark()
                 obstacle_list.append(shark)
-                end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
+                #end_time_shark_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
+                ObjectTimers.addTime("Shark_Spawn", current_time + random.randint(3000,8000))
                 obstacle_list.append(shark)
                 collide_list.append(shark)
                 
-            if current_time > end_time_highway_change:
+            if current_time > ObjectTimers.getCurrentValue("Highway_Change"):
                 pass
 
-            if current_time < end_time_eggs_move:
+            if current_time < ObjectTimers.getCurrentValue("Eggs_Move"):
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
 
             for obstacle in obstacle_list:
@@ -873,13 +858,15 @@ while RunVar == True:
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2")
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 60
+                #end_time_player_animation = pygame.time.get_ticks() + 60
+                ObjectTimers.addTime("Player_Animation", current_time + 60)
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
-                end_time_km_update += 1
+                #end_time_km_update += 1
+                ObjectTimers.addTime("KM_Update", 1)
 
             if specialTransition:
                 current_player.move("UP")
@@ -961,18 +948,20 @@ while RunVar == True:
                 collideIndex += 1
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animaton"):
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                #end_time_player_animation = pygame.time.get_ticks() + 50
+                ObjectTimers.addTime("Player_Animation", current_time + 50)
                 
-            if current_time > end_time_pellet_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
                 kelp = make_pellet()
                 collide_list.append(kelp)
                 obstacle_list.append(kelp)
                 pollution = make_bonus_pollution()
                 collide_list.append(pollution)
                 obstacle_list.append(pollution)
-                end_time_pellet_spawn = pygame.time.get_ticks() + 3000
+                #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
+                ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
                 
 
 
@@ -989,7 +978,7 @@ while RunVar == True:
 
             lives.blit(screen)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             pelletsText.blit()
 
@@ -1034,33 +1023,38 @@ while RunVar == True:
             )
 
             # Set up backround 
-            if current_time > end_time_bubble_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Bubble_Spawn"):
                 bubble = make_bubble()
                 obstacle_list.append(bubble)
-                end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
+                #end_time_bubble_spawn = pygame.time.get_ticks() + random.randint(350, 450)
+                ObjectTimers.addTime("Bubble_Spawn", current_time + random.randint(350, 450))
 
-            if current_time > end_time_tNPC_move:
+            if current_time > ObjectTimers.getCurrentValue("tNPC_Move"):
                 fishNPC.speed = 5
                 fishNPC.move("LEFT")
-                end_time_tNPC_move += 80
+                #end_time_tNPC_move += 80
+                ObjectTimers.addTime("tNPC_Move", 80)
 
-            if current_time > end_time_trash_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Trash_Spawn"):
                 bottle = make_bottle()
                 obstacle_list.append(bottle)
-                end_time_trash_spawn = pygame.time.get_ticks() + 7000
+                #end_time_trash_spawn = pygame.time.get_ticks() + 7000
+                ObjectTimers.addTime("Trash_Spawn", current_time + 7000)
                 # obstacle_list.append(bottle)
                 collide_list.append(bottle)
 
-            if current_time > end_time_jellyfish_spawn:
+            if current_time >ObjectTimers.getCurrentValue("Jellyfish_Spawn"):
                 jellyfish = make_jellyfish()
                 obstacle_list.append(jellyfish)
-                end_time_jellyfish_spawn = pygame.time.get_ticks() + 7000
+                #end_time_jellyfish_spawn = pygame.time.get_ticks() + 7000
+                ObjectTimers.addTime("Jellyfish_Spawn", current_time + 7000)
                 collide_list.append(jellyfish)
 
-            if current_time > end_time_killerwhale_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Killerwhale_Spawn"):
                 killerwhale = make_killerwhale()
                 obstacle_list.append(killerwhale)
-                end_time_killerwhale_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
+                #end_time_killerwhale_spawn = pygame.time.get_ticks() + random.randint(3000,8000)
+                ObjectTimers.addTime("Killerwhale_Spawn", current_time + random.randint(3000,8000))
                 obstacle_list.append(killerwhale)
                 collide_list.append(killerwhale)
 
@@ -1074,14 +1068,16 @@ while RunVar == True:
                 obstacle.move()
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 fishNPC.animation_update()
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 60
+                #end_time_player_animation = pygame.time.get_ticks() + 60
+                ObjectTimers.addTime("Player_Animation", current_time + 60)
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers("KM_Update"):
                 km_count += 1
-                end_time_km_update += 1
+                #end_time_km_update += 1
+                ObjectTimers.addTime("KM_Update", 1)
 
 
             #Blit all the objects
@@ -1117,7 +1113,7 @@ while RunVar == True:
             current_player.rect_update()
             routelen = 250
             lives.load_hearts(2)
-            time_pass += 1
+            ObjectTimers.addTime("Time_Pass", 1)
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
@@ -1139,31 +1135,36 @@ while RunVar == True:
             )
 
             # Set up backround 
-            if current_time > end_time_cloud_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Cloud_Spawn"):
                 cloud = make_cloud(300)
                 obstacle_list.append(cloud)
-                end_time_cloud_spawn = pygame.time.get_ticks() + 600
+                #end_time_cloud_spawn = pygame.time.get_ticks() + 600
+                ObjectTimers.addTime("Cloud_Spawn", current_time + 600)
 
-            if current_time > end_time_wolf_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Wolf_Spawn"):
                 wolf = make_wolf()
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
+                #end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
+                ObjectTimers.addTime("Wolf_Spawn", current_time + random.randint(7000, 12000))
 
-            if current_time > end_time_trap_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Trap_Spawn"):
                 trap = make_trap()
                 obstacle_list.append(trap)
                 collide_list.append(trap)
-                end_time_trap_spawn = pygame.time.get_ticks() + random.randint(13000, 15000)
+                #end_time_trap_spawn = pygame.time.get_ticks() + random.randint(13000, 15000)
+                ObjectTimers.addTime("Trap_Spawn", current_time + random.randint(13000, 15000))
 
-            if current_time > end_time_rain_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Rain_Spawn"):
                 rain = make_rain_diagonal()
-                end_time_rain_spawn = pygame.time.get_ticks() + 15
+                #end_time_rain_spawn = pygame.time.get_ticks() + 15
+                ObjectTimers.addTime("Rain_Spawn", current_time + 15)
                 obstacle_list.append(rain)
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
-                end_time_km_update = pygame.time.get_ticks() + 250\
+                #end_time_km_update = pygame.time.get_ticks() + 250\
+                ObjectTimers.addTime("KM_Update", current_time + 250)
                 
             if km_count == 123:
                 hole = make_hole()
@@ -1179,9 +1180,10 @@ while RunVar == True:
                 obstacle.move()
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 60
+                #end_time_player_animation = pygame.time.get_ticks() + 60
+                ObjectTimers.addTime("Player_Animation", current_time + 60)
 
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2")
@@ -1264,9 +1266,10 @@ while RunVar == True:
             )   
             
             #Set up backround
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
-                end_time_km_update += 1000
+                #end_time_km_update += 1000
+                ObjectTimers.addTime("KM_Update", 1000)
 
             for obstacle in obstacle_list:
                 obstacle.move()
@@ -1279,21 +1282,24 @@ while RunVar == True:
                 collideIndex += 1
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 50
+                #end_time_player_animation = pygame.time.get_ticks() + 50
+                ObjectTimers.addTime("Player_Animation", current_time + 50)
                 
-            if current_time > end_time_wolf_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Wolf_Spawn"):
                 wolf = make_wolfBonus()
                 collide_list.append(wolf)
                 obstacle_list.append(wolf)
-                end_time_wolf_spawn = pygame.time.get_ticks() + 700
+                #end_time_wolf_spawn = pygame.time.get_ticks() + 700
+                ObjectTimers.addTime("Wolf_Spawn", current_time + 700)
                 
-            # if current_time > end_time_tree_spawn:
+            # if current_time > ObjectTimers.getCurrentValue("Tree_Spawn"):
             #     tree = make_tree()
             #     collide_list.append(tree)
             #     obstacle_list.append(tree)
-            #     end_time_tree_spawn = pygame.time.get_ticks() + 300
+            #     #end_time_tree_spawn = pygame.time.get_ticks() + 300
+            #     ObjectTimers.addTime("Tree_Spawn", current_time + 300)
 
             if km_count >= routelen:
                 isCompletedBonus = True
@@ -1315,7 +1321,7 @@ while RunVar == True:
 
             lives.blit(screen)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             kmText.blit()
 
@@ -1336,7 +1342,7 @@ while RunVar == True:
             current_player.ycor = 400
             routelen = 24
             lives.load_hearts(3)
-            time_pass += 1
+            ObjectTimers.addTime("Time_Pass", 1)
 
             screen.fill([170,206,250])
 
@@ -1358,44 +1364,51 @@ while RunVar == True:
             )
 
             # Set up backround 
-            if current_time > end_time_cloud_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Cloud_Spawn"):
                 cloud = make_cloud(300)
                 obstacle_list.append(cloud)
-                end_time_cloud_spawn = pygame.time.get_ticks() + 600
+                #end_time_cloud_spawn = pygame.time.get_ticks() + 600
+                ObjectTimers.addTime("Cloud_Spawn", current_time + 600)
 
-            if current_time > end_time_rain_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Rain_Spawn"):
                 rain = make_rain_straight()
-                end_time_rain_spawn = pygame.time.get_ticks() + 15
+                #end_time_rain_spawn = pygame.time.get_ticks() + 15
+                ObjectTimers.addTime("Rain_Spawn", current_time + 15)
                 obstacle_list.append(rain)
 
-            if current_time > end_time_bullet_spawn:
+            if current_time > ObjectTimers.getCurrentValue("Bullet_Spawn"):
                 if end_time_bullet_spawn < 5000:
-                    end_time_bullet_spawn = pygame.time.get_ticks() + 5000
+                    #end_time_bullet_spawn = pygame.time.get_ticks() + 5000
+                    ObjectTimers.addTime("Bullet_Spawn", current_time + 5000)
                 else:
                     bullet = make_bullet()
-                    end_time_bullet_spawn = pygame.time.get_ticks() + 1300
+                    #end_time_bullet_spawn = pygame.time.get_ticks() + 1300
+                    ObjectTimers.addTime("Bullet_Spawn", current_time + 1300)
                     obstacle_list.append(bullet)
                     collide_list.append(bullet)
 
-            if end_time_hunter != None:
-                if current_time > end_time_hunter:
+            if ObjectTimers.getCurrentValue("Hunter") != None:
+                if current_time > ObjectTimers.getCurrentValue("Hunter"):
                     hunter = make_hunter()
                     obstacle_list.append(hunter)
-                    end_time_hunter = None
+                    #end_time_hunter = None
+                    ObjectTimers.removeObject("Hunter")
             
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
-                end_time_km_update += 5000
+                #end_time_km_update += 5000
+                ObjectTimers.addTime("KM_Update", 5000)
 
             for obstacle in obstacle_list:
                 obstacle.update_frame()
                 obstacle.move()
 
 
-            if current_time > end_time_player_animation:
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
-                end_time_player_animation = pygame.time.get_ticks() + 60
+                #end_time_player_animation = pygame.time.get_ticks() + 60
+                ObjectTimers.addTime("Player_Animation", current_time + 60)
 
             if km_count > routelen:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
@@ -1412,9 +1425,10 @@ while RunVar == True:
             deer.blit(screen)
             screen.blit(current_player.current_frame, current_player.Rect)
 
-            if current_time < end_time_text:
+            if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
-                end_time_text += 10000
+                #end_time_text += 10000
+                ObjectTimers.addTime("Text", 10000)
 
             lives.blit(screen)
 
