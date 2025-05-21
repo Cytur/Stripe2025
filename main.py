@@ -17,9 +17,38 @@ specialTransition = False
 
         
 def ChangeGameState(newGameState):
-    global GameState
+    global GameState, ObjectTimers
     global buttonlist
     global km_count
+
+    ObjectTimers.addTime("Player_Animation", 0)
+    ObjectTimers.addTime("Cloud_Spawn", 0)
+    ObjectTimers.addTime("Bubble_Spawn", 0)
+    ObjectTimers.addTime("Wolf_Spawn", 1000)
+    ObjectTimers.addTime("Wolf_Animation", 0)
+    ObjectTimers.addTime("Tree_Spawn", 1000)
+    ObjectTimers.addTime("Text", 8000)
+    ObjectTimers.addTime("Snow_Spawn", 0)
+    ObjectTimers.addTime("bNPC_Move", 0)
+    ObjectTimers.addTime("tNPC_Move", 0)
+    ObjectTimers.addTime("KM_Update", 0)
+    ObjectTimers.addTime("Rain_Spawn", 0)
+    ObjectTimers.addTime("Time_Pass", 0)
+    ObjectTimers.addTime("Hawk_Spawn", 0)
+    ObjectTimers.addTime("Hawk_Animation", 0)
+    ObjectTimers.addTime("Bullet_Spawn", 5000)
+    ObjectTimers.addTime("Eggs_Move", 3000)
+    ObjectTimers.addTime("Trash_Spawn", 5000)
+    ObjectTimers.addTime("Shark_Spawn", 8000)
+    ObjectTimers.addTime("Killerwhale_Spawn", 8000)
+    ObjectTimers.addTime("Hunter", 0)
+    ObjectTimers.addTime("Bug_Spawn", 1000)
+    ObjectTimers.addTime("Trap_Spawn", 0)
+    ObjectTimers.addTime("Pellet_Spawn", 3000)
+    ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
+    ObjectTimers.addTime("Highway_Change", 10000)
+    ObjectTimers.addTime("Jellyfish_Spawn", 1400)
+    ObjectTimers.addTime("Music_Restart", 326000)
 
     GameState = newGameState
     buttonlist = []
@@ -61,6 +90,7 @@ def ResetGame():
 def SpecialLevelEnter():
     global GameState
     global specialTransition
+    ObjectTimers.addTime("Text", current_time)
     if current_player.ycor < 840:
         specialTransition = True
     else:
@@ -111,7 +141,8 @@ for img in range(5):
 
 
 #Animal Obj s
-bird = BirdTurtle(50, 50, bird_frames, 20)
+
+bird = BirdTurtle(50, 50, bird_frames, 32)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 16)
 birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20)
 birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20)
@@ -248,78 +279,53 @@ jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/Jellyfi
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
     return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, cloud_img.get_width(), cloud_img.get_height(), False, False, [cloud_img], "Cloud")
-
 def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), bubble_img.get_width()*2, bubble_img.get_height()*2, False, False, [bubble_img], "Bubble")
-
 def make_wolf():
     return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), wolf_imgs[0].get_width() *2, wolf_imgs[0].get_height()*2, True, True, wolf_imgs, "Wolf")
-
 def make_tree():
     return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), 32, tree_img.get_height() * 2, True, True, [tree_img], "Tree")
-
 def make_snow():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, 6, 6, False,False, [snow_img], "Snow")
-
 def make_rain_diagonal():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, 6, 6, False,False, [rain_img], "Rain")
-
 def make_rain_straight():
     return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, 6, 6, False,False, [rain_img], "Rain")
-
 def make_hawk():
-    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), hawk_imgs[0].get_width() * 2, hawk_imgs[0].get_height() * 2, True,True, hawk_imgs, "Hawk")
-    
+    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), hawk_imgs[0].get_width() * 2, hawk_imgs[0].get_height() * 2, True,True, hawk_imgs, "Hawk")  
 def make_bullet():
     return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2, bullet_img.get_width(), bullet_img.get_height(),True,True, [bullet_img], "Hunter")
-
 def make_shark():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height() * 2, shark_img.get_width() * 2, shark_img.get_height(), True,True, [shark_img], "Shark")
-
 def make_killerwhale():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), killerwhale_img.get_width() * 2, killerwhale_img.get_height() * 2, True,True, [killerwhale_img], "Killer Whale")
-
 def make_trash():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Trash")
-
 def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), bottle_img.get_width() * 2, bottle_img.get_height() * 2, True,True, [bottle_img], "Plastic bottle")
-    
 def make_arrow():
-    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, arrow_imgs[0].get_width()/3, arrow_imgs[0].get_height()/2, True, True, arrow_imgs, "Arrow")
-
+    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, arrow_imgs[0].get_width()/2, arrow_imgs[0].get_height(), True, True, arrow_imgs, "Arrow")
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
-
 def make_hunter():
     return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), hunter_imgs[0].get_width() * 2, hunter_imgs[0].get_height() * 2,True,True, hunter_imgs, "Wolf")
-
 def make_bug():
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, 20, 20, True,False, [bugList[random.randint(0, 1)]], "Bug")
-
 def make_trap():
     return ObstacleClass(1100, 450, 4, 0, 32, 32, 64, 64, True, False, [trap_img], "BearTrap")
-
 def make_wolfBonus():
     return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), revwolf_imgs[0].get_width() * 2, revwolf_imgs[0].get_height() * 2, True, True, revwolf_imgs, "Wolf")
-
 def make_hole():
     return ObstacleClass(900, 500, 5, 0, hole_img.get_width(), hole_img.get_height(), hole_img.get_width() * 2, hole_img.get_height() * 2, False, False, [hole_img], "Hole")
-
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 5, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
-
 def make_net():
     return  ObstacleClass(1000, 60, 10, 0, 64, 32, 128, 64, True, False, [net_img], "Net")
-
 def make_pellet():
     return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
-
 def make_bonus_pollution():
     return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Pollution")
-
 def make_eagle():
     return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
-
 def make_jellyfish():
     return ObstacleClass(random.randint(500, 700), 600, 5, 2, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
 
@@ -354,7 +360,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TitleScreen"
+GameState = "DeerBonus"
 RunVar = True
 
 while RunVar == True:
@@ -527,7 +533,6 @@ while RunVar == True:
 
             
                 
-            print(ObjectTimers.getCurrentValue("Player_Animation"))
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
                 bird.animation_update()
@@ -568,10 +573,16 @@ while RunVar == True:
                 instructText.blit()
             kmText.blit()
 
+            try:print(arrow.xcor, arrow.ycor)
+            except: pass
+            print(current_player.xcor, current_player.ycor)
+
             #detecting player collisions with objects
             for obstacle in collide_list:
+                
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Arrow":
+                        print("asaas")
                         SpecialLevelEnter()
                     else:
                         dead = lives.remove_life()
@@ -1192,6 +1203,7 @@ while RunVar == True:
                 current_player.move("DOWN")
                 if 700 < current_player.ycor:
                     ChangeGameState("DeerBonus")
+                    km_count = 0
                     
                     collideIndex = 0
                     for collide in collide_list:
@@ -1269,7 +1281,7 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
                 #end_time_km_update += 1000
-                ObjectTimers.addTime("KM_Update", 1000)
+                ObjectTimers.addTime("KM_Update", current_time + 1000)
 
             for obstacle in obstacle_list:
                 obstacle.move()
