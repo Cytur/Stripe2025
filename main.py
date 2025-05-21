@@ -275,81 +275,81 @@ jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/Jellyfi
 # Functions for game objects
 def make_cloud(bottom_bound: int = 600):
     cloud_img = pygame.image.load(random.choice(cloud_img_list))
-    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, False, False, [cloud_img], "Cloud")
+    return ObstacleClass(1000, random.randint(0, bottom_bound), random.randint(5, 15), 0, cloud_img.get_width()/2, cloud_img.get_height()/2, cloud_img.get_width(), cloud_img.get_height(), False, False, [cloud_img], "Cloud")
 
 def make_bubble():
-    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), False, False, [bubble_img], "Bubble")
+    return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), bubble_img.get_width()*2, bubble_img.get_height()*2, False, False, [bubble_img], "Bubble")
 
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), True, True, wolf_imgs, "Wolf")
+    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), wolf_imgs[0].get_width() *2, wolf_imgs[0].get_height()*2, True, True, wolf_imgs, "Wolf")
 
 def make_tree():
-    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), True, True, [tree_img], "Tree")
+    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), 32, tree_img.get_height() * 2, True, True, [tree_img], "Tree")
 
 def make_snow():
-    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False,False, [snow_img], "Snow")
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, 6, 6, False,False, [snow_img], "Snow")
 
 def make_rain_diagonal():
-    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, False,False, [rain_img], "Rain")
+    return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, 6, 6, False,False, [rain_img], "Rain")
 
 def make_rain_straight():
-    return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, False,False, [rain_img], "Rain")
+    return ObstacleClass(random.randint(0, 1680), -5, 0, -20, 3, 3, 6, 6, False,False, [rain_img], "Rain")
 
 def make_hawk():
-    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), True,True, hawk_imgs, "Hawk")
+    return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), hawk_imgs[0].get_width() * 2, hawk_imgs[0].get_height() * 2, True,True, hawk_imgs, "Hawk")
     
 def make_bullet():
-    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2,True,True, [bullet_img], "Hunter")
+    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2, bullet_img.get_width(), bullet_img.get_height(),True,True, [bullet_img], "Hunter")
 
 def make_shark():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), True,True, [shark_img], "Shark")
+    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height() * 2, shark_img.get_width() * 2, shark_img.get_height(), True,True, [shark_img], "Shark")
 
 def make_killerwhale():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), True,True, [killerwhale_img], "Killer Whale")
+    return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), killerwhale_img.get_width() * 2, killerwhale_img.get_height() * 2, True,True, [killerwhale_img], "Killer Whale")
 
 def make_trash():
-    return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), True,True, [trash_img], "Trash")
+    return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Trash")
 
 def make_bottle():
-    return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), True,True, [bottle_img], "Plastic bottle")
+    return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), bottle_img.get_width() * 2, bottle_img.get_height() * 2, True,True, [bottle_img], "Plastic bottle")
     
 def make_arrow():
-    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, True, True, arrow_imgs, "Arrow")
+    return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, arrow_imgs[0].get_width()/3, arrow_imgs[0].get_height()/2, True, True, arrow_imgs, "Arrow")
 
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
 
 def make_hunter():
-    return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), True,True, hunter_imgs, "Wolf")
+    return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), hunter_imgs[0].get_width() * 2, hunter_imgs[0].get_height() * 2,True,True, hunter_imgs, "Wolf")
 
 def make_bug():
-    return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, True,False, [bugList[random.randint(0, 1)]], "Bug")
+    return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, 20, 20, True,False, [bugList[random.randint(0, 1)]], "Bug")
 
 def make_trap():
-    return ObstacleClass(1100, 450, 4, 0, 32, 32, True, False, [trap_img], "BearTrap")
+    return ObstacleClass(1100, 450, 4, 0, 32, 32, 64, 64, True, False, [trap_img], "BearTrap")
 
 def make_wolfBonus():
-    return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), True, True, revwolf_imgs, "Wolf")
+    return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), revwolf_imgs[0].get_width() * 2, revwolf_imgs[0].get_height() * 2, True, True, revwolf_imgs, "Wolf")
 
 def make_hole():
-    return ObstacleClass(900, 500, 5, 0, hole_img.get_width(), hole_img.get_height(), False, False, [hole_img], "Hole")
+    return ObstacleClass(900, 500, 5, 0, hole_img.get_width(), hole_img.get_height(), hole_img.get_width() * 2, hole_img.get_height() * 2, False, False, [hole_img], "Hole")
 
 def make_highway(ycor):
-    return ObstacleClass(1000, ycor, 5, 0, 40, 6, False, False, [highway_img], "Highway")
+    return ObstacleClass(1000, ycor, 5, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
 
 def make_net():
-    return  ObstacleClass(1000, 60, 10, 0, 64, 32, True, False, [net_img], "Net")
+    return  ObstacleClass(1000, 60, 10, 0, 64, 32, 128, 64, True, False, [net_img], "Net")
 
 def make_pellet():
-    return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, True, False, [pellet_img], "Pellet")
+    return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
 
 def make_bonus_pollution():
-    return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), True,True, [trash_img], "Pollution")
+    return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Pollution")
 
 def make_eagle():
-    return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), True,True, [eagle_img], "Eagle")
+    return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
 
 def make_jellyfish():
-    return ObstacleClass(random.randint(500, 700), 600, 5, 2, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), True,True, jellyfish_imgs, "Jellyfish")
+    return ObstacleClass(random.randint(500, 700), 600, 5, 2, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
 
 #Vars for player jumping
 isJumping = False
