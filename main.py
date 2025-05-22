@@ -452,6 +452,7 @@ while RunVar == True:
 
             ObjectTimers.addTime("Eggs_Move", current_time)
 
+
         case "PlayerChoose":
             screen.fill(DesignClass.Colors["WHITE"])
 
@@ -470,6 +471,7 @@ while RunVar == True:
             turtle_info.show(Screen=screen)
             bird_info.show(Screen=screen)
             deer_info.show(Screen=screen)
+
 
         case "BirdLevel":
             current_player = bird
@@ -588,7 +590,10 @@ while RunVar == True:
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
+                            Sound.play("Lose")
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        else:
+                            Sound.play("Collision")
 
 
         case "BirdBonus":
@@ -692,8 +697,12 @@ while RunVar == True:
                         #pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
+                            Sound.play("Lose")
                             isCompletedBonus = False
                             EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+                        else:
+                            Sound.play("Collision")
+
 
         case "BirdLevel2":
             current_player = bird
@@ -795,7 +804,10 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
+                        Sound.play("Lose")
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                    else:
+                        Sound.play("Collision")
 
 
         case "TurtleLevel":
@@ -917,7 +929,12 @@ while RunVar == True:
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
+                            Sound.play("Lose")
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        else:
+                            Sound.play("Collision")
+
+
         case "TurtleBonus":
             specialTransition = False
             current_player = turtle
@@ -1008,8 +1025,12 @@ while RunVar == True:
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
                         if dead:
+                            Sound.play("Lose")
                             isCompletedBonus = False
                             EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
+                        else:
+                            Sound.play("Collision")
+
 
         case "TurtleLevel2":
             current_player = turtle
@@ -1119,7 +1140,10 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
+                        Sound.play("Lose")
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                    else:
+                            Sound.play("Collision")
 
 
         case "DeerLevel":
@@ -1256,7 +1280,11 @@ while RunVar == True:
                         pygame.time.delay(200)
                         collide_list.remove(obstacle)
                         if dead:
+                            Sound.play("Lose")
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        else:
+                            Sound.play("Collision")
+
 
         case "DeerBonus":
             current_player = bonusDeer
@@ -1350,8 +1378,11 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
+                        Sound.play("Lose")
                         isCompletedBonus = False
                         EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
+                    else:
+                        Sound.play("Collision")
 
         
         case "DeerLevel2":
@@ -1460,8 +1491,10 @@ while RunVar == True:
                     pygame.time.delay(100)
                     collide_list.remove(obstacle)
                     if dead:
+                        Sound.play("Lose")
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
-
+                    else:
+                        Sound.play("Collision")
         
         
         case "ControlsPage":
@@ -1544,6 +1577,7 @@ while RunVar == True:
             buttonlist.append(BackButton)
             BackButton.draw()
             
+
         case "InfoPage":
             screen.fill(DesignClass.Colors["WHITE"])
             
@@ -1681,6 +1715,7 @@ while RunVar == True:
             )
             buttonlist.append(BackButton)
             BackButton.draw()
+
 
         case "EndScreen":
             screen.fill(DesignClass.Colors["WHITE"])

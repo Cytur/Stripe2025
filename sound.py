@@ -7,7 +7,8 @@ class SoundClass:
         # self.win = mixer.Sound("SOUNDPATH.wav")
         self.sound_dict = {
             "Win": mixer.Sound("SoundFiles/Win.wav"),
-            # "Lose": mixer.Sound("Sound")
+            "Collision": mixer.Sound("SoundFiles/Collision.wav"),
+            "Lose" : mixer.Sound("SoundFiles/Lose.wav")
         }
         mixer.music.load("SoundFiles\Music.mp3")
 
