@@ -6,9 +6,10 @@ class SoundClass:
     def __init__(self):
         # self.win = mixer.Sound("SOUNDPATH.wav")
         self.sound_dict = {
-            "Win": mixer.Sound("SoundFiles/Win.wav")
+            "Win": mixer.Sound("SoundFiles/Win.wav"),
+            # "Lose": mixer.Sound("Sound")
         }
-        self.music = mixer.music.load("SoundFiles/Music.mp3")
+        mixer.music.load("SoundFiles\Music.mp3")
 
     def play(self, *sounds):
         for sound in sounds:
@@ -18,5 +19,5 @@ class SoundClass:
                 pass
 
     def play_backround_music(self):
-        self.music.play()
+        pygame.mixer.music.play(-1)
 

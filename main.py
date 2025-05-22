@@ -241,7 +241,7 @@ ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
-ObjectTimers.addObject("Music_Restart", 326000)
+ObjectTimers.addObject("Music_Restart", 0)
 
 
 
@@ -296,7 +296,7 @@ def make_hawk():
 def make_bullet():
     return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2, bullet_img.get_width(), bullet_img.get_height(),True,True, [bullet_img], "Hunter")
 def make_shark():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height() * 2, shark_img.get_width() * 2, shark_img.get_height(), True,True, [shark_img], "Shark")
+    return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), shark_img.get_width() * 2, shark_img.get_height()  * 2, True,True, [shark_img], "Shark")
 def make_killerwhale():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), killerwhale_img.get_width() * 2, killerwhale_img.get_height() * 2, True,True, [killerwhale_img], "Killer Whale")
 def make_trash():
@@ -319,7 +319,7 @@ def make_hole():
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 5, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
 def make_net():
-    return  ObstacleClass(1000, 60, 10, 0, 64, 32, 128, 64, True, False, [net_img], "Net")
+    return  ObstacleClass(1000, 30, 10, 0, 32, 32, 64, 64, True, False, [net_img], "Net")
 def make_pellet():
     return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
 def make_bonus_pollution():
@@ -363,11 +363,14 @@ pelletsCaughtAmount = 0
 GameState = "DeerBonus"
 RunVar = True
 
+Sound.play_backround_music()
+
 while RunVar == True:
     current_time = pygame.time.get_ticks()
 
-    if current_time > ObjectTimers.getCurrentValue("Music_Restart"):
-        Sound.play_backround_music()
+    # if current_time > ObjectTimers.getCurrentValue("Music_Restart"):
+        
+    #     ObjectTimers.addTime("Music_Restart", current_time + 326000)
 
     match GameState:
         case "TitleScreen":
@@ -518,6 +521,7 @@ while RunVar == True:
                 ObjectTimers.addTime("KM_Update", 1)
 
             if km_count > routelen:
+                Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
                 km_count = 6001
                 
@@ -573,16 +577,11 @@ while RunVar == True:
                 instructText.blit()
             kmText.blit()
 
-            try:print(arrow.xcor, arrow.ycor)
-            except: pass
-            print(current_player.xcor, current_player.ycor)
-
             #detecting player collisions with objects
             for obstacle in collide_list:
                 
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Arrow":
-                        print("asaas")
                         SpecialLevelEnter()
                     else:
                         dead = lives.remove_life()
@@ -627,6 +626,7 @@ while RunVar == True:
 
             if bugsCaughtAmount >= 20:
                 isCompletedBonus = True
+                Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
                 lives.add_hearts(1)
                 km_count = 601
@@ -753,6 +753,7 @@ while RunVar == True:
                 end_time_km_update += 1
 
             if km_count > routelen:
+                Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
 
             for obstacle in obstacle_list:
@@ -867,6 +868,7 @@ while RunVar == True:
                 km_count = 571
 
             if km_count > routelen:
+                Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2")
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -944,6 +946,7 @@ while RunVar == True:
             #Set up backround
             if pelletsCaughtAmount >= 20:
                 isCompletedBonus = True
+                Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel")
                 lives.add_hearts(1)
                 km_count = 574
@@ -1073,6 +1076,7 @@ while RunVar == True:
                 instructText.blit()
 
             if km_count > routelen:
+                Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
 
             for obstacle in obstacle_list:
@@ -1085,7 +1089,7 @@ while RunVar == True:
                 #end_time_player_animation = pygame.time.get_ticks() + 60
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
 
-            if current_time > ObjectTimers("KM_Update"):
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
                 #end_time_km_update += 1
                 ObjectTimers.addTime("KM_Update", 1)
@@ -1197,6 +1201,7 @@ while RunVar == True:
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
 
             if km_count > routelen:
+                Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2")
 
             if specialTransition:
@@ -1315,6 +1320,7 @@ while RunVar == True:
 
             if km_count >= routelen:
                 isCompletedBonus = True
+                Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
                 lives.add_hearts(1)
                 km_count = 80
@@ -1423,7 +1429,8 @@ while RunVar == True:
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
 
             if km_count > routelen:
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Level Won", "TitleScreen")
+                Sound.play("Win")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Congratulations, try other animals too!", "TitleScreen")
 
 
             #Blit all the objects
