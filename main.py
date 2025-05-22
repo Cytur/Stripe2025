@@ -360,7 +360,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "DeerBonus"
+GameState = "TurtleBonus"
 RunVar = True
 
 Sound.play_backround_music()
@@ -962,7 +962,7 @@ while RunVar == True:
                 collideIndex += 1
 
 
-            if current_time > ObjectTimers.getCurrentValue("Player_Animaton"):
+            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 50
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
