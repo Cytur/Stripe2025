@@ -1022,6 +1022,10 @@ while RunVar == True:
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 50
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
+
+            if current_time > ObjectTimers.getCurrentValue("Swim_Update"):
+                Sound.play("Swim")
+                ObjectTimers.addTime("Swim_Update", current_time + 700)
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
                 kelp = make_pellet()
@@ -1153,6 +1157,10 @@ while RunVar == True:
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 60
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
+
+            if current_time > ObjectTimers.getCurrentValue("Swim_Update"):
+                Sound.play("Swim")
+                ObjectTimers.addTime("Swim_Update", current_time + 700)
 
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
