@@ -20,6 +20,9 @@ def ChangeGameState(newGameState):
     global GameState, ObjectTimers, current_time
     global buttonlist
     global km_count
+    global highway_ycor
+    global turtle_km_increment
+    global is_on_highway
 
     ObjectTimers.addTime("Player_Animation", current_time + 0)
     ObjectTimers.addTime("Cloud_Spawn", current_time + 0)
@@ -47,7 +50,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
     ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
     ObjectTimers.addTime("Highway_Change", 10000)
-    ObjectTimers.addTime("Highway_Spawn", current_time + 20)
+    ObjectTimers.addTime("Highway_Spawn", current_time + 585)
     ObjectTimers.addTime("Jellyfish_Spawn", 1400)
     ObjectTimers.addTime("Music_Restart", 326000)
 
@@ -56,6 +59,10 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Text", current_time)
     birdNPC.xcor = -100
     km_count = 0
+    
+    highway_ycor = random.randint(150, 400)
+    turtle_km_increment = 1
+    is_on_highway = False
 
 def ResetGame():
     global GameState, buttonlist
@@ -64,6 +71,10 @@ def ResetGame():
     global isJumping, vert_acceleration
     global current_player
     global bugsCaughtAmount
+    global is_on_highway
+    global highway_ycor
+    global turtle_km_increment
+    global is_on_highway
 
     buttonlist = []
     ObjectTimers.addTime("Text", current_time)
@@ -85,6 +96,11 @@ def ResetGame():
 
     #Reset hearts
     lives.lives = []
+    
+    # reset highway variables
+    highway_ycor = random.randint(150, 400)
+    turtle_km_increment = 1
+    is_on_highway = False
     
     GameState = "TitleScreen"
 
@@ -241,7 +257,7 @@ ObjectTimers.addObject("Trap_Spawn", 0)
 ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
-ObjectTimers.addObject("Highway_Spawn", 20)
+ObjectTimers.addObject("Highway_Spawn", 585)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
 ObjectTimers.addObject("Music_Restart", 0)
 
@@ -269,7 +285,7 @@ bugList = [bug1_img, bug2_img]
 arrow_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png"), (pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png").get_width()/4, pygame.image.load(f"ImageAssets/ArrowAsset/file{x+1}.png").get_height()/4)) for x in range(17)]
 trap_img = pygame.image.load("ImageAssets/BearTrapAsset/trap1.png")
 hole_img = pygame.transform.scale(pygame.image.load("ImageAssets/HoleAsset/Hole.png"), (27.5, 15))
-highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset/Highway.png"), (40, 6))
+highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset/Highway.png"), (20, 50))
 net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 32))
 pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
@@ -320,7 +336,7 @@ def make_wolfBonus():
 def make_hole():
     return ObstacleClass(900, 500, 5, 0, hole_img.get_width(), hole_img.get_height(), hole_img.get_width() * 2, hole_img.get_height() * 2, False, False, [hole_img], "Hole")
 def make_highway(ycor):
-    return ObstacleClass(1000, ycor, 5, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
+    return ObstacleClass(1000, ycor, 10, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
 def make_net():
     return  ObstacleClass(1000, 10, 10, 0, 32, 32, 64, 64, True, False, [net_img], "Net")
 def make_pellet():
@@ -342,7 +358,9 @@ vert_acceleration = 12
 gravity_force = 0.5
 
 #Highway vars
-highway_ycor = 400
+highway_ycor = random.randint(150, 400)
+turtle_km_increment = 1
+is_on_highway = False
 
 #End screen args default
 EndScreenTitle = "You Died!"
@@ -881,11 +899,18 @@ while RunVar == True:
                 collide_list.append(shark)
                 
             if current_time > ObjectTimers.getCurrentValue("Highway_Change"):
+                ObjectTimers.addTime("Highway_Change", current_time + 10000)
                 highway_ycor = random.randint(150, 400)
                 
             if current_time > ObjectTimers.getCurrentValue("Highway_Spawn"):
-                ObjectTimers.addTime("Highway_Spawn", current_time + 20)
-                make_highway(highway_ycor)
+                if is_on_highway == False:
+                    ObjectTimers.addTime("Highway_Spawn", current_time + 585)
+                else:
+                    ObjectTimers.addTime("Highway_Spawn", current_time + 334)
+                
+                highway = make_highway(highway_ycor)
+                obstacle_list.append(highway)
+                collide_list.append(highway)
 
             if current_time < ObjectTimers.getCurrentValue("Eggs_Move"):
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
@@ -913,7 +938,7 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
                 #end_time_km_update += 1
-                ObjectTimers.addTime("KM_Update", 1)
+                ObjectTimers.addTime("KM_Update", turtle_km_increment)
 
             if specialTransition:
                 current_player.move("UP")
@@ -954,8 +979,25 @@ while RunVar == True:
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Net":
+                        obstacle_list = []
+                        collect_list = []
                         SpecialLevelEnter()
+                    elif obstacle.descriptor == "Highway":
+                        print("Highway")
+                        
+                        #increase speed of all other objects to make it look like faster speed, and increase km increment
+                        turtle_km_increment = 0.25
+                        for obs in obstacle_list:
+                            obs.speedx = obs.speedxdefault * 1.75
+                            obs.speedy = obs.speedydefault * 1.75
+                            
                     else:
+                        #highway vars back to default
+                        turtle_km_increment = 1
+                        for obs in obstacle_list:
+                            obs.speedx = obs.speedxdefault
+                            obs.speedy = obs.speedydefault
+                        
                         dead = lives.remove_life()
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)

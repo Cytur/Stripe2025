@@ -10,6 +10,8 @@ class ObstacleClass():
         self.kill = kill
         self.xcor = startx
         self.ycor = starty
+        self.speedxdefault = speedx
+        self.speedydefault = speedy
         self.speedx = speedx
         self.speedy = speedy
         self.width = width
