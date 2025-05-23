@@ -8,7 +8,10 @@ class SoundClass:
         self.sound_dict = {
             "Win": mixer.Sound("SoundFiles/Win.wav"),
             "Collision": mixer.Sound("SoundFiles/Collision.wav"),
-            "Lose" : mixer.Sound("SoundFiles/Lose.wav")
+            "Lose" : mixer.Sound("SoundFiles/Lose.wav"),
+            "Flap" : mixer.Sound("SoundFiles/Flap.wav"),
+            "Trot" : mixer.Sound("SoundFiles/Trot.wav"),
+            "Swim" : mixer.Sound("SoundFIles/Swim.wav"),
         }
         mixer.music.load("SoundFiles\Music.mp3")
 

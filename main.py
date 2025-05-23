@@ -242,8 +242,9 @@ ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
 ObjectTimers.addObject("Music_Restart", 0)
-
-
+ObjectTimers.addObject("Flap_Update", 980)
+ObjectTimers.addObject("Trot_Update", 980)
+ObjectTimers.addObject("Swim_Update", 1200)
 
 
 #Functions for Obstacles
@@ -541,6 +542,11 @@ while RunVar == True:
                 birdNPC.animation_update()
                 bird.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
+            
+            
+            if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
+                Sound.play("Flap")
+                ObjectTimers.addTime("Flap_Update", current_time + 450)
 
             
 
@@ -662,6 +668,11 @@ while RunVar == True:
                 bird.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 50
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
+
+                            
+            if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
+                Sound.play("Flap")
+                ObjectTimers.addTime("Flap_Update", current_time + 450)
                 
             if current_time > ObjectTimers.getCurrentValue("Bug_Spawn"):
                 bug = make_bug()
@@ -784,6 +795,11 @@ while RunVar == True:
                 #end_time_player_animation = pygame.time.get_ticks() + 50
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
 
+                            
+            if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
+                Sound.play("Flap")
+                ObjectTimers.addTime("Flap_Update", current_time + 450)
+
 
             if Testing:
                 for obstacle in collide_list:
@@ -900,6 +916,10 @@ while RunVar == True:
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 60
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
+
+            if current_time > ObjectTimers.getCurrentValue("Swim_Update"):
+                Sound.play("Swim")
+                ObjectTimers.addTime("Swim_Update", current_time + 700)
 
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
@@ -1252,6 +1272,10 @@ while RunVar == True:
                 #end_time_player_animation = pygame.time.get_ticks() + 60
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
 
+            if current_time > ObjectTimers.getCurrentValue("Trot_Update"):
+                Sound.play("Trot")
+                ObjectTimers.addTime("Trot_Update", current_time + 500)
+
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2")
@@ -1363,6 +1387,11 @@ while RunVar == True:
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 50
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
+
+                
+            if current_time > ObjectTimers.getCurrentValue("Trot_Update"):
+                Sound.play("Trot")
+                ObjectTimers.addTime("Trot_Update", current_time + 500)
                 
             if current_time > ObjectTimers.getCurrentValue("Wolf_Spawn"):
                 wolf = make_wolfBonus()
@@ -1496,6 +1525,11 @@ while RunVar == True:
                 current_player.animation_update()
                 #end_time_player_animation = pygame.time.get_ticks() + 60
                 ObjectTimers.addTime("Player_Animation", current_time + 60)
+
+                
+            if current_time > ObjectTimers.getCurrentValue("Trot_Update"):
+                Sound.play("Trot")
+                ObjectTimers.addTime("Trot_Update", current_time + 500)
 
             if km_count > routelen:
                 Sound.play("Win")
