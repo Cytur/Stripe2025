@@ -1,4 +1,5 @@
 import pygame
+import DesignClass
 
 class Deer():
     def __init__(self, xcor:int, ycor:int):
@@ -63,3 +64,5 @@ class Deer():
     def rect_update(self):
         self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
         
+    def show_hitbox(self, screen):
+        pygame.draw.rect(screen, DesignClass.Colors["GREEN"], self.Rect)

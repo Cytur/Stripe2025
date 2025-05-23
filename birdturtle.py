@@ -1,14 +1,16 @@
 import pygame
+import DesignClass
 
 #The bird and turtle have similar movement
 
 class BirdTurtle():
-    def __init__(self, xcor:int, ycor:int, frame_list:list, size):
+    def __init__(self, xcor:int, ycor:int, frame_list:list, sizex, sizey):
         self.speed = 20
-        self.size = size
+        self.sizex = sizex
+        self.sizey = sizey
         self.xcor = xcor
         self.ycor = ycor
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.sizex, self.sizey))
 
         self.frames = frame_list
         self.frame_count = 0
@@ -46,9 +48,12 @@ class BirdTurtle():
             self.cur_frames = self.framesRev
 
 
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.sizex, self.sizey))
 
         direction = ""
 
     def rect_update(self):
-        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.size, self.size))
+        self.Rect = pygame.Rect((self.xcor, self.ycor), (self.sizex, self.sizey))
+
+    def show_hitbox(self, screen):
+        pygame.draw.rect(screen, DesignClass.Colors["GREEN"], self.Rect)

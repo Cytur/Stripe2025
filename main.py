@@ -111,7 +111,7 @@ friendly_bird_frames = []
 
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/BirdAsset/BirdFlying{num+1}.png")
-    frame = pygame.transform.scale(frame, size= (64, 64))
+    frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     bird_frames.append(frame)
 
@@ -123,7 +123,7 @@ for num in range(6):
     
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/FriendlyBirdAsset/BirdFlying{num+1}.png")
-    frame = pygame.transform.scale(frame, size= (64, 64))
+    frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
 
@@ -142,14 +142,14 @@ for img in range(5):
 
 #Animal Obj s
 
-bird = BirdTurtle(50, 50, bird_frames, 32)
-birdNPC = BirdTurtle(-100, 300, bird_frames, 16)
-birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20)
-birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20)
-birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20)
-turtle = BirdTurtle(50, 400, turt_frames, 96)
+bird = BirdTurtle(50, 50, bird_frames, 64, 32)
+birdNPC = BirdTurtle(-100, 300, bird_frames, 16, 16)
+birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20, 20)
+birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20, 20)
+birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20, 20)
+turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
 deer = Deer(50, 400)
-bonusDeer = BirdTurtle(50, 400, deer_frames, 60)
+bonusDeer = BirdTurtle(50, 400, deer_frames, 60, 60)
 lives = Lives()
 Sound = SoundClass()
 
@@ -282,9 +282,9 @@ def make_cloud(bottom_bound: int = 600):
 def make_bubble():
     return ObstacleClass(random.randint(0, 840), 650,  4, random.randint(4, 5), bubble_img.get_width(), bubble_img.get_height(), bubble_img.get_width()*2, bubble_img.get_height()*2, False, False, [bubble_img], "Bubble")
 def make_wolf():
-    return ObstacleClass(900, 450, 8, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), wolf_imgs[0].get_width() *2, wolf_imgs[0].get_height()*2, True, True, wolf_imgs, "Wolf")
+    return ObstacleClass(900, 450, 16, 0, wolf_imgs[0].get_width(), wolf_imgs[0].get_height(), wolf_imgs[0].get_width() *2, wolf_imgs[0].get_height()*2, True, True, wolf_imgs, "Wolf")
 def make_tree():
-    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), 32, tree_img.get_height() * 2, True, True, [tree_img], "Tree")
+    return ObstacleClass(1000, random.randint(0, 500), 10, 0, 16, tree_img.get_height(), 32, tree_img.get_height()/2, True, True, [tree_img], "Tree")
 def make_snow():
     return ObstacleClass(random.randint(0, 1680), -5, 20, -20, 3, 3, 6, 6, False,False, [snow_img], "Snow")
 def make_rain_diagonal():
@@ -305,13 +305,13 @@ def make_bottle():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), bottle_img.get_width() * 2, bottle_img.get_height() * 2, True,True, [bottle_img], "Plastic bottle")
 def make_arrow():
     return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, arrow_imgs[0].get_width()/2, arrow_imgs[0].get_height(), True, True, arrow_imgs, "Arrow")
-fishNPC = BirdTurtle(1000, 150, [fish_img], 10)
+fishNPC = BirdTurtle(1000, 150, [fish_img], 10, 10)
 def make_hunter():
     return ObstacleClass(-180, 450, -10, 0, hunter_imgs[0].get_width(), hunter_imgs[0].get_height(), hunter_imgs[0].get_width() * 2, hunter_imgs[0].get_height() * 2,True,True, hunter_imgs, "Wolf")
 def make_bug():
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, 20, 20, True,False, [bugList[random.randint(0, 1)]], "Bug")
 def make_trap():
-    return ObstacleClass(1100, 450, 4, 0, 32, 32, 64, 64, True, False, [trap_img], "BearTrap")
+    return ObstacleClass(1100, 450, 8, 0, 32, 32, 64, 32, True, False, [trap_img], "BearTrap")
 def make_wolfBonus():
     return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), revwolf_imgs[0].get_width() * 2, revwolf_imgs[0].get_height() * 2, True, True, revwolf_imgs, "Wolf")
 def make_hole():
@@ -319,7 +319,7 @@ def make_hole():
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 5, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
 def make_net():
-    return  ObstacleClass(1000, 30, 10, 0, 32, 32, 64, 64, True, False, [net_img], "Net")
+    return  ObstacleClass(1000, 10, 10, 0, 32, 32, 64, 64, True, False, [net_img], "Net")
 def make_pellet():
     return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
 def make_bonus_pollution():
@@ -360,7 +360,8 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleBonus"
+GameState = "BirdLevel"
+Testing = True
 RunVar = True
 
 Sound.play_backround_music()
@@ -534,24 +535,28 @@ while RunVar == True:
                 obstacle_list.append(arrow)
                 collide_list.append(arrow)
 
-            for obstacle in obstacle_list:
-                obstacle.move()
-
-            
+        
                 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
                 bird.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
 
+            
+
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
 
             #Blit all the objects
             for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             if specialTransition:
                 current_player.move("DOWN")
@@ -642,10 +647,6 @@ while RunVar == True:
                 collide_list.append(eagle)
                 #end_time_eagle_spawn += random.randint(6000, 13000)
                 ObjectTimers.addTime("Eagle_Spawn", current_time + random.randint(6000, 13000))
-
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
                 
             collideIndex = 0
             for collide in collide_list:
@@ -666,15 +667,19 @@ while RunVar == True:
                 #end_time_bug_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Bug_Spawn", current_time + 3000)
                 
-
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
 
             #Blit all the objects
             for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             screen.blit(bird.current_frame, bird.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
@@ -765,10 +770,6 @@ while RunVar == True:
                 Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
 
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
-
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
@@ -777,13 +778,19 @@ while RunVar == True:
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             if birdNPC.xcor < 1000:
                 screen.blit(birdNPC.current_frame, birdNPC.Rect)
@@ -867,18 +874,17 @@ while RunVar == True:
             if current_time < ObjectTimers.getCurrentValue("Eggs_Move"):
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
 
-            for obstacle in obstacle_list:
-                obstacle.move()
 
             if km_count < 300:
                 instructText.blit()
 
             if km_count >= 567 and km_count <= 570:
                 net = make_net()
+
                 obstacle_list.append(net)
                 collide_list.append(net)
                 km_count = 571
-
+            
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2")
@@ -905,11 +911,17 @@ while RunVar == True:
 
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
                 obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
-                    del obstacle
+                    obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
 
@@ -918,6 +930,9 @@ while RunVar == True:
             lives.blit(screen)
 
             kmText.blit()
+
+            #DELETE
+            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], turtle.Rect)
 
             #detecting player collisions with objects
             for obstacle in collide_list:
@@ -968,9 +983,6 @@ while RunVar == True:
                 lives.add_hearts(1)
                 km_count = 574
 
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
                 
             collideIndex = 0
             for collide in collide_list:
@@ -996,13 +1008,19 @@ while RunVar == True:
                 
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             screen.blit(current_player.current_frame, current_player.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
@@ -1100,8 +1118,7 @@ while RunVar == True:
                 Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
 
-            for obstacle in obstacle_list:
-                obstacle.move()
+            
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1116,11 +1133,17 @@ while RunVar == True:
                 ObjectTimers.addTime("KM_Update", 1)
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
                 obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
-                    del obstacle
+                    obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
             
@@ -1214,9 +1237,7 @@ while RunVar == True:
             if km_count > 123 and km_count < 130:
                 sText.blit()
 
-            for obstacle in obstacle_list:
-                obstacle.update_frame()
-                obstacle.move()
+            
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1254,11 +1275,17 @@ while RunVar == True:
                     isJumping = False
                     vert_acceleration = start_acceleration
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
                 obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
-                    del obstacle
+                    obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     
@@ -1316,9 +1343,7 @@ while RunVar == True:
                 #end_time_km_update += 1000
                 ObjectTimers.addTime("KM_Update", current_time + 1000)
 
-            for obstacle in obstacle_list:
-                obstacle.move()
-                obstacle.update_frame()
+           
                 
             collideIndex = 0
             for collide in collide_list:
@@ -1354,13 +1379,19 @@ while RunVar == True:
                 km_count = 80
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
+                obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
-                    # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], obstacle.Rect)
 
             screen.blit(current_player.current_frame, current_player.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
@@ -1449,9 +1480,6 @@ while RunVar == True:
                 #end_time_km_update += 5000
                 ObjectTimers.addTime("KM_Update", 5000)
 
-            for obstacle in obstacle_list:
-                obstacle.update_frame()
-                obstacle.move()
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1464,11 +1492,17 @@ while RunVar == True:
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Congratulations, try other animals too!", "TitleScreen")
 
 
+            if Testing:
+                for obstacle in collide_list:
+                    obstacle.show_hitbox(screen)
+                    current_player.show_hitbox(screen)
+
             #Blit all the objects
             for obstacle in obstacle_list:
                 obstacle.move()
+                obstacle.update_frame()
                 if obstacle.xcor < -200:
-                    del obstacle
+                    obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
                     
@@ -1749,13 +1783,6 @@ while RunVar == True:
             )
             continueText.blit()
             
-
-
-        #Commented because of run error
-        # case _:
-        #     #default
-        #     pass
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

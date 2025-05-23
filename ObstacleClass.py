@@ -1,4 +1,5 @@
 import pygame
+import DesignClass
 
 collide_list = []
 
@@ -21,16 +22,19 @@ class ObstacleClass():
             self.image = pygame.transform.scale(image, (width * 4, height * 4))
             self.images.append(self.image)
         self.frame_num = 0
-        self.Rect = pygame.Rect(startx, starty, self.rectwidth, self.rectheight)
+        self.Rect = pygame.Rect(startx, starty, self.rectwidth * 2, self.rectheight* 2)
 
 
     def move(self):
         self.xcor -= self.speedx
         self.ycor -= self.speedy
-        self.Rect = pygame.Rect(self.xcor, self.ycor, self.width, self.height)
+        self.Rect = pygame.Rect(self.xcor, self.ycor, self.rectwidth * 2, self.rectheight * 2)
 
     def update_frame(self):
         self.frame_num += 1
         if self.frame_num == len(self.images):
             self.frame_num = 0
         self.image = self.images[self.frame_num]
+
+    def show_hitbox(self, screen):
+        pygame.draw.rect(screen, DesignClass.Colors["GREEN"], self.Rect)
