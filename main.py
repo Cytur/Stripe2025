@@ -40,7 +40,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Eggs_Move", current_time + 3000)
     ObjectTimers.addTime("Trash_Spawn", current_time + 5000)
     ObjectTimers.addTime("Shark_Spawn", current_time + 8000)
-    ObjectTimers.addTime("Killerwhale_Spawncurrent_time + ", 8000)
+    ObjectTimers.addTime("Killerwhale_Spawn", current_time + 8000)
     ObjectTimers.addTime("Hunter", current_time + 0)
     ObjectTimers.addTime("Bug_Spawn", current_time + 1000)
     ObjectTimers.addTime("Trap_Spawn", current_time + 0)
@@ -364,7 +364,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "DeerLevel2"
+GameState = "TitleScreen"
 Testing = True
 RunVar = True
 
@@ -372,10 +372,6 @@ Sound.play_backround_music()
 
 while RunVar == True:
     current_time = pygame.time.get_ticks()
-
-    # if current_time > ObjectTimers.getCurrentValue("Music_Restart"):
-        
-    #     ObjectTimers.addTime("Music_Restart", current_time + 326000)
 
     match GameState:
         case "TitleScreen":
@@ -1478,12 +1474,15 @@ while RunVar == True:
                     obstacle_list.append(bullet)
                     collide_list.append(bullet)
 
-            if ObjectTimers.getCurrentValue("Hunter") != None:
-                if current_time > ObjectTimers.getCurrentValue("Hunter"):
-                    hunter = make_hunter()
-                    obstacle_list.append(hunter)
-                    #end_time_hunter = None
-                    ObjectTimers.removeObject("Hunter")
+            try:
+                if ObjectTimers.getCurrentValue("Hunter") != None:
+                    if current_time > ObjectTimers.getCurrentValue("Hunter"):
+                        hunter = make_hunter()
+                        obstacle_list.append(hunter)
+                        #end_time_hunter = None
+                        ObjectTimers.removeObject("Hunter")
+            except KeyError:
+                pass
             
 
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
