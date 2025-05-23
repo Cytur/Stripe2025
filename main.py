@@ -17,34 +17,34 @@ specialTransition = False
 
         
 def ChangeGameState(newGameState):
-    global GameState, ObjectTimers
+    global GameState, ObjectTimers, current_time
     global buttonlist
     global km_count
 
-    ObjectTimers.addTime("Player_Animation", 0)
-    ObjectTimers.addTime("Cloud_Spawn", 0)
-    ObjectTimers.addTime("Bubble_Spawn", 0)
-    ObjectTimers.addTime("Wolf_Spawn", 1000)
-    ObjectTimers.addTime("Wolf_Animation", 0)
-    ObjectTimers.addTime("Tree_Spawn", 1000)
-    ObjectTimers.addTime("Text", 8000)
-    ObjectTimers.addTime("Snow_Spawn", 0)
-    ObjectTimers.addTime("bNPC_Move", 0)
-    ObjectTimers.addTime("tNPC_Move", 0)
-    ObjectTimers.addTime("KM_Update", 0)
-    ObjectTimers.addTime("Rain_Spawn", 0)
-    ObjectTimers.addTime("Time_Pass", 0)
-    ObjectTimers.addTime("Hawk_Spawn", 0)
-    ObjectTimers.addTime("Hawk_Animation", 0)
-    ObjectTimers.addTime("Bullet_Spawn", 5000)
-    ObjectTimers.addTime("Eggs_Move", 3000)
-    ObjectTimers.addTime("Trash_Spawn", 5000)
-    ObjectTimers.addTime("Shark_Spawn", 8000)
-    ObjectTimers.addTime("Killerwhale_Spawn", 8000)
-    ObjectTimers.addTime("Hunter", 0)
-    ObjectTimers.addTime("Bug_Spawn", 1000)
-    ObjectTimers.addTime("Trap_Spawn", 0)
-    ObjectTimers.addTime("Pellet_Spawn", 3000)
+    ObjectTimers.addTime("Player_Animation", current_time + 0)
+    ObjectTimers.addTime("Cloud_Spawn", current_time + 0)
+    ObjectTimers.addTime("Bubble_Spawn", current_time + 0)
+    ObjectTimers.addTime("Wolf_Spawn", current_time + 1000)
+    ObjectTimers.addTime("Wolf_Animation", current_time + 0)
+    ObjectTimers.addTime("Tree_Spawn", current_time + 1000)
+    ObjectTimers.addTime("Text", current_time + 8000)
+    ObjectTimers.addTime("Snow_Spawn", current_time + 0)
+    ObjectTimers.addTime("bNPC_Move", current_time + 0)
+    ObjectTimers.addTime("tNPC_Move", current_time + 0)
+    ObjectTimers.addTime("KM_Update", current_time + 0)
+    ObjectTimers.addTime("Rain_Spawn", current_time + 0)
+    ObjectTimers.addTime("Time_Pass", current_time + 0)
+    ObjectTimers.addTime("Hawk_Spawn", current_time + 0)
+    ObjectTimers.addTime("Hawk_Animation", current_time + 0)
+    ObjectTimers.addTime("Bullet_Spawn", current_time + 5000)
+    ObjectTimers.addTime("Eggs_Move", current_time + 3000)
+    ObjectTimers.addTime("Trash_Spawn", current_time + 5000)
+    ObjectTimers.addTime("Shark_Spawn", current_time + 8000)
+    ObjectTimers.addTime("Killerwhale_Spawncurrent_time + ", 8000)
+    ObjectTimers.addTime("Hunter", current_time + 0)
+    ObjectTimers.addTime("Bug_Spawn", current_time + 1000)
+    ObjectTimers.addTime("Trap_Spawn", current_time + 0)
+    ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
     ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
     ObjectTimers.addTime("Highway_Change", 10000)
     ObjectTimers.addTime("Jellyfish_Spawn", 1400)
@@ -149,7 +149,7 @@ birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20, 20)
 birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20, 20)
 turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
 deer = Deer(50, 400)
-bonusDeer = BirdTurtle(50, 400, deer_frames, 60, 60)
+bonusDeer = Deer(50, 400)
 lives = Lives()
 Sound = SoundClass()
 
@@ -272,6 +272,7 @@ net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png
 pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
 jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/JellyfishAsset/jellyfish{x+1}.png"), (24, 24)) for x in range(6)]
+warning_img = pygame.image.load("ImageAssets/WarningAsset/Warning.png")
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -298,11 +299,11 @@ def make_bullet():
 def make_shark():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), shark_img.get_width() * 2, shark_img.get_height()  * 2, True,True, [shark_img], "Shark")
 def make_killerwhale():
-    return ObstacleClass(1000, random.randint(0, 400), 5, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), killerwhale_img.get_width() * 2, killerwhale_img.get_height() * 2, True,True, [killerwhale_img], "Killer Whale")
+    return ObstacleClass(1000, random.randint(0, 400), 10, 0, killerwhale_img.get_width(), killerwhale_img.get_height(), killerwhale_img.get_width() * 2, killerwhale_img.get_height() * 2, True,True, [killerwhale_img], "Killer Whale")
 def make_trash():
     return ObstacleClass(1000, random.randint(0, 400), 3, 0, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Trash")
 def make_bottle():
-    return ObstacleClass(1000, random.randint(0, 400), 3, 0, bottle_img.get_width(), bottle_img.get_height(), bottle_img.get_width() * 2, bottle_img.get_height() * 2, True,True, [bottle_img], "Plastic bottle")
+    return ObstacleClass(1000, random.randint(0, 400), 8, 0, bottle_img.get_width(), bottle_img.get_height(), bottle_img.get_width() * 2, bottle_img.get_height() * 2, True,True, [bottle_img], "Plastic bottle")
 def make_arrow():
     return ObstacleClass(1000, 450, 15, 0, arrow_imgs[0].get_width()/4, arrow_imgs[0].get_height()/4, arrow_imgs[0].get_width()/2, arrow_imgs[0].get_height(), True, True, arrow_imgs, "Arrow")
 fishNPC = BirdTurtle(1000, 150, [fish_img], 10, 10)
@@ -324,10 +325,13 @@ def make_pellet():
     return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
 def make_bonus_pollution():
     return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Pollution")
-def make_eagle():
-    return ObstacleClass(random.randint(100, 400), -100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
+def make_eagle(xcor):
+    return ObstacleClass(xcor+ 1000, -1100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
 def make_jellyfish():
-    return ObstacleClass(random.randint(500, 700), 600, 5, 2, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
+    return ObstacleClass(random.randint(500, 700), 600, 10, 4, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
+def make_warning(xcor):
+    return ObstacleClass(xcor, 0, 0, 0, 10, 10, 10, 10, False, False, [warning_img], "Warning")
+
 
 #Vars for player jumping
 isJumping = False
@@ -360,7 +364,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "BirdLevel"
+GameState = "DeerLevel2"
 Testing = True
 RunVar = True
 
@@ -642,8 +646,11 @@ while RunVar == True:
                 km_count = 601
 
             if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
-                eagle = make_eagle()
+                xcor = random.randint(100, 400)
+                warning = make_warning(xcor)
+                eagle = make_eagle(xcor)
                 obstacle_list.append(eagle)
+                obstacle_list.append(warning)
                 collide_list.append(eagle)
                 #end_time_eagle_spawn += random.randint(6000, 13000)
                 ObjectTimers.addTime("Eagle_Spawn", current_time + random.randint(6000, 13000))
@@ -677,7 +684,11 @@ while RunVar == True:
                 obstacle.move()
                 obstacle.update_frame()
                 if obstacle.xcor < -200:
+                    if obstacle.descriptor == "Eagle":
+                        obstacle_list.remove(warning)
                     obstacle_list.remove(obstacle)
+                    try:collide_list.remove(obstacle)
+                    except:pass
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
 
@@ -762,9 +773,9 @@ while RunVar == True:
                 #end_time_bNPC_move += 80
                 ObjectTimers.addTime("bNPC_Move", 80)
 
-            if current_time > end_time_km_update:
+            if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 3
-                end_time_km_update += 1
+                ObjectTimers.addTime("KM_Update", current_time + 1)
 
             if km_count > routelen:
                 Sound.play("Win")
@@ -1457,7 +1468,7 @@ while RunVar == True:
                 obstacle_list.append(rain)
 
             if current_time > ObjectTimers.getCurrentValue("Bullet_Spawn"):
-                if end_time_bullet_spawn < 5000:
+                if ObjectTimers.getCurrentValue("Bullet_Spawn") < 5000:
                     #end_time_bullet_spawn = pygame.time.get_ticks() + 5000
                     ObjectTimers.addTime("Bullet_Spawn", current_time + 5000)
                 else:
