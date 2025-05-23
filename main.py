@@ -47,6 +47,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
     ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
     ObjectTimers.addTime("Highway_Change", 10000)
+    ObjectTimers.addTime("Highway_Spawn", current_time + 20)
     ObjectTimers.addTime("Jellyfish_Spawn", 1400)
     ObjectTimers.addTime("Music_Restart", 326000)
 
@@ -240,6 +241,7 @@ ObjectTimers.addObject("Trap_Spawn", 0)
 ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
+ObjectTimers.addObject("Highway_Spawn", 20)
 ObjectTimers.addObject("Jellyfish_Spawn", 1400)
 ObjectTimers.addObject("Music_Restart", 0)
 
@@ -338,6 +340,9 @@ isJumping = False
 start_acceleration = 12
 vert_acceleration = 12
 gravity_force = 0.5
+
+#Highway vars
+highway_ycor = 400
 
 #End screen args default
 EndScreenTitle = "You Died!"
@@ -880,7 +885,11 @@ while RunVar == True:
                 collide_list.append(shark)
                 
             if current_time > ObjectTimers.getCurrentValue("Highway_Change"):
-                pass
+                highway_ycor = random.randint(150, 400)
+                
+            if current_time > ObjectTimers.getCurrentValue("Highway_Spawn"):
+                ObjectTimers.addTime("Highway_Spawn", current_time + 20)
+                make_highway(highway_ycor)
 
             if current_time < ObjectTimers.getCurrentValue("Eggs_Move"):
                 screen.blit(eggs, eggs.get_rect(center=(50,500)))
