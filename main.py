@@ -2,7 +2,7 @@ import pygame
 import random
 import DesignClass
 from birdturtle import BirdTurtle
-from ObstacleClass import ObstacleClass, collide_list
+from ObstacleClass import ObstacleClass
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from ObjectTimersClass import ObjectTimersClass
@@ -113,6 +113,27 @@ def SpecialLevelEnter():
     else:
         GameState = "TitleScreen"
 
+#End screen args default
+EndScreenTitle = "You Died!"
+EndScreenTitleColor = DesignClass.Colors["RED"]
+EndScreenReason = "N/A"
+EndScreenNextStage = "TitleScreen"
+
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
+    global EndScreenTitle
+    global EndScreenTitleColor
+    global EndScreenReason
+    global EndScreenNextStage
+    global km_count
+    global GameState
+    
+    EndScreenTitle = TitleText
+    EndScreenTitleColor = TitleTextColor
+    EndScreenReason = EndReason
+    EndScreenNextStage = NextStage
+    km_count = 0
+    GameState = "EndScreen"
+
 pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
@@ -131,34 +152,25 @@ for num in range(8):
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     bird_frames.append(frame)
-
 for num in range(6):
     frame = pygame.image.load(f"ImageAssets/TurtleAsset/24bit-seaturtle{num+1}.png")
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
-    
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/FriendlyBirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
-
 for img in range(5):
             frame = pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
             frame = pygame.transform.scale(frame, (28*4, 100))
             deer_frames.append(frame)
 
-# for num in range([NUMBER_OF_FRAMES]):
-#    frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
-#    frame = pygame.transform.scale(frame, size= (96, 96))
-#    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-#    turt_frames.append(frame)
 
 
 
 #Animal Obj s
-
 bird = BirdTurtle(50, 50, bird_frames, 64, 32)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 16, 16)
 birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20, 20)
@@ -167,8 +179,11 @@ birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20, 20)
 turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
 deer = Deer(50, 400)
 bonusDeer = Deer(50, 400)
+
+#Class Inits
 lives = Lives()
 Sound = SoundClass()
+ObjectTimers = ObjectTimersClass()
 
 
 #Info Cards
@@ -188,7 +203,6 @@ bird_info = InfoCard(
     ChangeGameState,
     "BirdLevel"
 )
-
 turtle_info = InfoCard(
     "Leather-Back Sea Turtle",
     "The largest sea turtle in the world, one",
@@ -205,7 +219,6 @@ turtle_info = InfoCard(
     ChangeGameState,
     "TurtleLevel"
 )
-
 deer_info = InfoCard(
     "White-Tailed Deer",
     "A white and brown deer, which is",
@@ -223,14 +236,14 @@ deer_info = InfoCard(
     "DeerLevel"
 )
 
+
 #Obstacle Related Lists
 obstacle_list = []
-cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset/Cloud 11.png", "ImageAssets/CloudAsset/Cloud 12.png"]
+collide_list = []
 
 
 
 #Wait Animation Section
-ObjectTimers = ObjectTimersClass()
 ObjectTimers.addObject("Player_Animation", 0)
 ObjectTimers.addObject("Cloud_Spawn", 0)
 ObjectTimers.addObject("Bubble_Spawn", 0)
@@ -265,7 +278,8 @@ ObjectTimers.addObject("Trot_Update", 980)
 ObjectTimers.addObject("Swim_Update", 1200)
 
 
-#Functions for Obstacles
+#Images for Obstacles
+cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset/Cloud 11.png", "ImageAssets/CloudAsset/Cloud 12.png"]
 bubble_img = pygame.image.load("ImageAssets/BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") for x in range(6)]
 revwolf_imgs = [pygame.transform.flip(pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") , True, False) for x in range(6)]
@@ -363,26 +377,7 @@ highway_ycor = random.randint(150, 400)
 turtle_km_increment = 1
 is_on_highway = False
 
-#End screen args default
-EndScreenTitle = "You Died!"
-EndScreenTitleColor = DesignClass.Colors["RED"]
-EndScreenReason = "N/A"
-EndScreenNextStage = "TitleScreen"
 
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
-    global EndScreenTitle
-    global EndScreenTitleColor
-    global EndScreenReason
-    global EndScreenNextStage
-    global km_count
-    global GameState
-    
-    EndScreenTitle = TitleText
-    EndScreenTitleColor = TitleTextColor
-    EndScreenReason = EndReason
-    EndScreenNextStage = NextStage
-    km_count = 0
-    GameState = "EndScreen"
     
 isCompletedBonus = False
 bugsCaughtAmount = 0
@@ -550,11 +545,12 @@ while RunVar == True:
                 km_count += 3
                 ObjectTimers.addTime("KM_Update", 1)
 
+
+
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
                 km_count = 6001
-                
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -568,7 +564,6 @@ while RunVar == True:
                 birdNPC.animation_update()
                 bird.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
-            
             
             if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
                 Sound.play("Flap")

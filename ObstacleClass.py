@@ -1,8 +1,6 @@
 import pygame
 import DesignClass
 
-collide_list = []
-
 #Enemies or obstacles which will move in a straight path
 class ObstacleClass():
     def __init__(self, startx: int, starty: int, speedx: int, speedy: int, width: int, height: int, rectwidth: int, rectheight: int, collision: bool, kill: bool, frames: list, descriptor: str):
