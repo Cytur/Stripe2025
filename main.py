@@ -396,9 +396,11 @@ Sound.play_backround_music()
 
 while RunVar == True:
     current_time = pygame.time.get_ticks()
+    print(buttonlist)
 
     match GameState:
         case "TitleScreen":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
             
             titleText = TextClass(
@@ -479,6 +481,7 @@ while RunVar == True:
 
 
         case "PlayerChoose":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
 
             titleText = TextClass(
@@ -1635,6 +1638,7 @@ while RunVar == True:
         
         
         case "ControlsPage":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
 
             UpDownText = TextClass(
@@ -1716,6 +1720,7 @@ while RunVar == True:
             
 
         case "InfoPage":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
             
             InfoTitle = TextClass(
