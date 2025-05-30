@@ -263,6 +263,7 @@ ObjectTimers.addObject("Music_Restart", 0)
 ObjectTimers.addObject("Flap_Update", 980)
 ObjectTimers.addObject("Trot_Update", 980)
 ObjectTimers.addObject("Swim_Update", 1200)
+ObjectTimers.addObject("Friendly_Bird_Transition", 10) #wip
 
 
 #Functions for Obstacles
@@ -363,6 +364,9 @@ highway_ycor = random.randint(150, 400)
 turtle_km_increment = 1
 is_on_highway = False
 
+#friendly bird vars
+
+
 #End screen args default
 EndScreenTitle = "You Died!"
 EndScreenTitleColor = DesignClass.Colors["RED"]
@@ -388,8 +392,8 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TitleScreen"
-Testing = True
+GameState = "TurtleLevel"
+Testing = False
 RunVar = True
 
 Sound.play_backround_music()
@@ -920,9 +924,9 @@ while RunVar == True:
                 
             if current_time > ObjectTimers.getCurrentValue("Highway_Spawn"):
                 if is_on_highway == False:
-                    ObjectTimers.addTime("Highway_Spawn", current_time + 585)
+                    ObjectTimers.addTime("Highway_Spawn", current_time + 500)
                 else:
-                    ObjectTimers.addTime("Highway_Spawn", current_time + 334)
+                    ObjectTimers.addTime("Highway_Spawn", current_time + 80)
                 
                 highway = make_highway(highway_ycor)
                 obstacle_list.append(highway)
@@ -956,9 +960,9 @@ while RunVar == True:
                 ObjectTimers.addTime("Swim_Update", current_time + 700)
 
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
-                km_count += 1
+                km_count += turtle_km_increment
                 #end_time_km_update += 1
-                ObjectTimers.addTime("KM_Update", turtle_km_increment)
+                ObjectTimers.addTime("KM_Update", current_time + 1)
 
             if specialTransition:
                 current_player.move("UP")
@@ -1003,21 +1007,17 @@ while RunVar == True:
                         collect_list = []
                         SpecialLevelEnter()
                     elif obstacle.descriptor == "Highway":
-                        print("Highway")
+                        #print("Highway")
                         
                         #increase speed of all other objects to make it look like faster speed, and increase km increment
-                        turtle_km_increment = 0.25
+                        turtle_km_increment = 2 #CHANGE THIS TO 2 OR 3 (whole number)
                         for obs in obstacle_list:
-                            obs.speedx = obs.speedxdefault * 1.75
-                            obs.speedy = obs.speedydefault * 1.75
+                            obs.speedx = obs.speedxdefault * 2
+                            obs.speedy = obs.speedydefault * 2
+                            
+                        is_on_highway = True
                             
                     else:
-                        #highway vars back to default
-                        turtle_km_increment = 1
-                        for obs in obstacle_list:
-                            obs.speedx = obs.speedxdefault
-                            obs.speedy = obs.speedydefault
-                        
                         dead = lives.remove_life()
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
@@ -1026,6 +1026,23 @@ while RunVar == True:
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
                         else:
                             Sound.play("Collision")
+            
+            #a way to check if turtle is NOT colliding with any highway so we can make is_on_highway false
+            touching_any_highway = False
+            for highway in collide_list:
+                if current_player.Rect.colliderect(highway.Rect) or highway.Rect.collidepoint(current_player.xcor, current_player.ycor):
+                    if highway.descriptor == "Highway":
+                        touching_any_highway = True
+                        break
+
+            if touching_any_highway == False:
+                #highway vars back to default
+                turtle_km_increment = 1
+                for obs in obstacle_list:
+                    obs.speedx = obs.speedxdefault
+                    obs.speedy = obs.speedydefault
+                is_on_highway = False
+            
 
 
         case "TurtleBonus":
