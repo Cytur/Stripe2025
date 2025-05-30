@@ -2,7 +2,7 @@ import pygame
 import random
 import DesignClass
 from birdturtle import BirdTurtle
-from ObstacleClass import ObstacleClass, collide_list
+from ObstacleClass import ObstacleClass
 from InfoCard import InfoCard
 from UIClasses import TextClass, ButtonClass
 from ObjectTimersClass import ObjectTimersClass
@@ -18,7 +18,7 @@ specialTransition = False
         
 def ChangeGameState(newGameState):
     global GameState, ObjectTimers, current_time
-    global buttonlist
+    global buttonlist, obstacle_list
     global km_count
     global highway_ycor
     global turtle_km_increment
@@ -56,6 +56,7 @@ def ChangeGameState(newGameState):
 
     GameState = newGameState
     buttonlist = []
+    obstacle_list = []
     ObjectTimers.addTime("Text", current_time)
     birdNPC.xcor = -100
     km_count = 0
@@ -113,6 +114,27 @@ def SpecialLevelEnter():
     else:
         GameState = "TitleScreen"
 
+#End screen args default
+EndScreenTitle = "You Died!"
+EndScreenTitleColor = DesignClass.Colors["RED"]
+EndScreenReason = "N/A"
+EndScreenNextStage = "TitleScreen"
+
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
+    global EndScreenTitle
+    global EndScreenTitleColor
+    global EndScreenReason
+    global EndScreenNextStage
+    global km_count
+    global GameState
+    
+    EndScreenTitle = TitleText
+    EndScreenTitleColor = TitleTextColor
+    EndScreenReason = EndReason
+    EndScreenNextStage = NextStage
+    km_count = 0
+    GameState = "EndScreen"
+
 pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
@@ -131,34 +153,25 @@ for num in range(8):
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     bird_frames.append(frame)
-
 for num in range(6):
     frame = pygame.image.load(f"ImageAssets/TurtleAsset/24bit-seaturtle{num+1}.png")
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
-    
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/FriendlyBirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
-
 for img in range(5):
             frame = pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
             frame = pygame.transform.scale(frame, (28*4, 100))
             deer_frames.append(frame)
 
-# for num in range([NUMBER_OF_FRAMES]):
-#    frame = pygame.image.load(f"FRAME FILE LOCATION, WITH A WAY TO DIFFERENCIATE FILE")
-#    frame = pygame.transform.scale(frame, size= (96, 96))
-#    frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
-#    turt_frames.append(frame)
 
 
 
 #Animal Obj s
-
 bird = BirdTurtle(50, 50, bird_frames, 64, 32)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 16, 16)
 birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20, 20)
@@ -167,8 +180,11 @@ birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20, 20)
 turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
 deer = Deer(50, 400)
 bonusDeer = Deer(50, 400)
+
+#Class Inits
 lives = Lives()
 Sound = SoundClass()
+ObjectTimers = ObjectTimersClass()
 
 
 #Info Cards
@@ -188,7 +204,6 @@ bird_info = InfoCard(
     ChangeGameState,
     "BirdLevel"
 )
-
 turtle_info = InfoCard(
     "Leather-Back Sea Turtle",
     "The largest sea turtle in the world, one",
@@ -205,7 +220,6 @@ turtle_info = InfoCard(
     ChangeGameState,
     "TurtleLevel"
 )
-
 deer_info = InfoCard(
     "White-Tailed Deer",
     "A white and brown deer, which is",
@@ -223,14 +237,14 @@ deer_info = InfoCard(
     "DeerLevel"
 )
 
+
 #Obstacle Related Lists
 obstacle_list = []
-cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset/Cloud 11.png", "ImageAssets/CloudAsset/Cloud 12.png"]
+collide_list = []
 
 
 
 #Wait Animation Section
-ObjectTimers = ObjectTimersClass()
 ObjectTimers.addObject("Player_Animation", 0)
 ObjectTimers.addObject("Cloud_Spawn", 0)
 ObjectTimers.addObject("Bubble_Spawn", 0)
@@ -263,10 +277,12 @@ ObjectTimers.addObject("Music_Restart", 0)
 ObjectTimers.addObject("Flap_Update", 980)
 ObjectTimers.addObject("Trot_Update", 980)
 ObjectTimers.addObject("Swim_Update", 1200)
+ObjectTimers.addObject("Warning_Remove", 0)
 ObjectTimers.addObject("Friendly_Bird_Transition", 10) #wip
 
 
-#Functions for Obstacles
+#Images for Obstacles
+cloud_img_list = ["ImageAssets/CloudAsset/Cloud 10.png", "ImageAssets/CloudAsset/Cloud 11.png", "ImageAssets/CloudAsset/Cloud 12.png"]
 bubble_img = pygame.image.load("ImageAssets/BubbleAsset/bubble.png")
 wolf_imgs = [pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") for x in range(6)]
 revwolf_imgs = [pygame.transform.flip(pygame.image.load(f"ImageAssets/WolfAsset/wolf{x+1}.png") , True, False) for x in range(6)]
@@ -293,6 +309,7 @@ pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
 jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/JellyfishAsset/jellyfish{x+1}.png"), (24, 24)) for x in range(6)]
 warning_img = pygame.image.load("ImageAssets/WarningAsset/Warning.png")
+warning_img2 = pygame.transform.flip(pygame.image.load("ImageAssets/WarningAsset/Warning.png"), True, True)
 
 #wolf_imgs = [pygame.image.load("white.png")]
 
@@ -332,7 +349,7 @@ def make_hunter():
 def make_bug():
     return ObstacleClass(1100, random.randint(10, 500), 10, 0, 10, 10, 20, 20, True,False, [bugList[random.randint(0, 1)]], "Bug")
 def make_trap():
-    return ObstacleClass(1100, 450, 8, 0, 32, 32, 64, 32, True, False, [trap_img], "BearTrap")
+    return ObstacleClass(1100, 482, 8, 0, 32, 16, 64, 32, True, False, [trap_img], "BearTrap")
 def make_wolfBonus():
     return ObstacleClass(-100, random.randint(100, 600), -15, 0, revwolf_imgs[0].get_width(), revwolf_imgs[0].get_height(), revwolf_imgs[0].get_width() * 2, revwolf_imgs[0].get_height() * 2, True, True, revwolf_imgs, "Wolf")
 def make_hole():
@@ -349,8 +366,10 @@ def make_eagle(xcor):
     return ObstacleClass(xcor+ 1000, -1100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
 def make_jellyfish():
     return ObstacleClass(random.randint(500, 700), 600, 10, 4, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
-def make_warning(xcor):
+def make_warning_bird(xcor):
     return ObstacleClass(xcor, 0, 0, 0, 10, 10, 10, 10, False, False, [warning_img], "Warning")
+def make_warning_deer(xcor, ycor):
+    return ObstacleClass(xcor, ycor, 0, 0, 10, 10, 10, 10, False, False, [warning_img2], "Warning")
 
 
 #Vars for player jumping
@@ -367,33 +386,14 @@ is_on_highway = False
 #friendly bird vars
 
 
-#End screen args default
-EndScreenTitle = "You Died!"
-EndScreenTitleColor = DesignClass.Colors["RED"]
-EndScreenReason = "N/A"
-EndScreenNextStage = "TitleScreen"
 
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
-    global EndScreenTitle
-    global EndScreenTitleColor
-    global EndScreenReason
-    global EndScreenNextStage
-    global km_count
-    global GameState
-    
-    EndScreenTitle = TitleText
-    EndScreenTitleColor = TitleTextColor
-    EndScreenReason = EndReason
-    EndScreenNextStage = NextStage
-    km_count = 0
-    GameState = "EndScreen"
     
 isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleLevel"
-Testing = False
+GameState = "DeerBonus"
+Testing = True
 RunVar = True
 
 Sound.play_backround_music()
@@ -401,8 +401,10 @@ Sound.play_backround_music()
 while RunVar == True:
     current_time = pygame.time.get_ticks()
 
+    
     match GameState:
         case "TitleScreen":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
             
             titleText = TextClass(
@@ -483,6 +485,7 @@ while RunVar == True:
 
 
         case "PlayerChoose":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
 
             titleText = TextClass(
@@ -551,11 +554,12 @@ while RunVar == True:
                 km_count += 3
                 ObjectTimers.addTime("KM_Update", 1)
 
+
+
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
                 km_count = 6001
-                
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -569,7 +573,6 @@ while RunVar == True:
                 birdNPC.animation_update()
                 bird.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
-            
             
             if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
                 Sound.play("Flap")
@@ -676,7 +679,7 @@ while RunVar == True:
 
             if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
                 xcor = random.randint(100, 400)
-                warning = make_warning(xcor)
+                warning = make_warning_bird(xcor)
                 eagle = make_eagle(xcor)
                 obstacle_list.append(eagle)
                 obstacle_list.append(warning)
@@ -996,9 +999,6 @@ while RunVar == True:
 
             kmText.blit()
 
-            #DELETE
-            pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], turtle.Rect)
-
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
@@ -1046,6 +1046,7 @@ while RunVar == True:
 
 
         case "TurtleBonus":
+            screen.fill(DesignClass.Colors["OCEANBLUE"])
             specialTransition = False
             current_player = turtle
             current_player.ycor = 400
@@ -1312,6 +1313,20 @@ while RunVar == True:
                 collide_list.append(wolf)
                 #end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
                 ObjectTimers.addTime("Wolf_Spawn", current_time + random.randint(7000, 12000))
+                wolf.xcor = 1300
+                try:
+                    if warning not in obstacle_list:
+                        print("warning")
+                        warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                        obstacle_list.append(warning)
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                    else:
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                except:
+                    print("warning")
+                    warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                    obstacle_list.append(warning)
+                    ObjectTimers.addTime("Warning_Remove", current_time + 500)
 
             if current_time > ObjectTimers.getCurrentValue("Trap_Spawn"):
                 trap = make_trap()
@@ -1319,6 +1334,21 @@ while RunVar == True:
                 collide_list.append(trap)
                 #end_time_trap_spawn = pygame.time.get_ticks() + random.randint(13000, 15000)
                 ObjectTimers.addTime("Trap_Spawn", current_time + random.randint(13000, 15000))
+
+                try:
+                    if warning not in obstacle_list:
+                        print("warning")
+                        warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                        obstacle_list.append(warning)
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                    else:
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                except:
+                    print("warning")
+                    warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                    obstacle_list.append(warning)
+                    ObjectTimers.addTime("Warning_Remove", current_time + 500)
+
 
             if current_time > ObjectTimers.getCurrentValue("Rain_Spawn"):
                 rain = make_rain_diagonal()
@@ -1330,7 +1360,13 @@ while RunVar == True:
                 km_count += 1
                 #end_time_km_update = pygame.time.get_ticks() + 250\
                 ObjectTimers.addTime("KM_Update", current_time + 250)
-                
+            
+            if current_time > ObjectTimers.getCurrentValue("Warning_Remove"):
+                try:
+                    obstacle_list.remove(warning)
+                except:
+                    pass
+
             if km_count == 123:
                 hole = make_hole()
                 obstacle_list.append(hole)
@@ -1475,6 +1511,27 @@ while RunVar == True:
                 obstacle_list.append(wolf)
                 #end_time_wolf_spawn = pygame.time.get_ticks() + 700
                 ObjectTimers.addTime("Wolf_Spawn", current_time + 700)
+                try:
+                    if warning not in obstacle_list:
+                        print("warning")
+                        warning = make_warning_deer(current_player.xcor+100, current_player.ycor-30)
+                        obstacle_list.append(warning)
+                        ObjectTimers.addTime("Warning_Remove", current_time + 100)
+                    else:
+                        ObjectTimers.addTime("Warning_Remove", current_time + 100)
+                except:
+                    print("warning")
+                    warning = make_warning_deer(current_player.xcor+100, current_player.ycor-30)
+                    obstacle_list.append(warning)
+                    ObjectTimers.addTime("Warning_Remove", current_time + 100)
+
+            if current_time > ObjectTimers.getCurrentValue("Warning_Remove"):
+                try:
+                    obstacle_list.remove(warning)
+                except:
+                    pass
+
+
                 
             # if current_time > ObjectTimers.getCurrentValue("Tree_Spawn"):
             #     tree = make_tree()
@@ -1576,8 +1633,24 @@ while RunVar == True:
                     bullet = make_bullet()
                     #end_time_bullet_spawn = pygame.time.get_ticks() + 1300
                     ObjectTimers.addTime("Bullet_Spawn", current_time + 1300)
+                    bullet.ycor = -500
                     obstacle_list.append(bullet)
                     collide_list.append(bullet)
+
+                try:
+                    if warning not in obstacle_list:
+                        print("warning")
+                        warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                        obstacle_list.append(warning)
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                    else:
+                        ObjectTimers.addTime("Warning_Remove", current_time + 500)
+                except:
+                    print("warning")
+                    warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                    obstacle_list.append(warning)
+                    ObjectTimers.addTime("Warning_Remove", current_time + 500)
+
 
             try:
                 if ObjectTimers.getCurrentValue("Hunter") != None:
@@ -1593,7 +1666,7 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
                 #end_time_km_update += 5000
-                ObjectTimers.addTime("KM_Update", 5000)
+                ObjectTimers.addTime("KM_Update", current_time + 5000)
 
 
 
@@ -1606,6 +1679,13 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("Trot_Update"):
                 Sound.play("Trot")
                 ObjectTimers.addTime("Trot_Update", current_time + 500)
+
+            if current_time > ObjectTimers.getCurrentValue("Warning_Remove"):
+                try:
+                    obstacle_list.remove(warning)
+                except:
+                    pass
+
 
             if km_count > routelen:
                 Sound.play("Win")
@@ -1652,6 +1732,7 @@ while RunVar == True:
         
         
         case "ControlsPage":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
 
             UpDownText = TextClass(
@@ -1733,6 +1814,7 @@ while RunVar == True:
             
 
         case "InfoPage":
+            buttonlist = []
             screen.fill(DesignClass.Colors["WHITE"])
             
             InfoTitle = TextClass(
