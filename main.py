@@ -384,7 +384,10 @@ turtle_km_increment = 1
 is_on_highway = False
 
 #friendly bird vars
-
+flock_cooldown = 30
+flock_time = 15
+flockTimeLeft = 0 #when adding in-game, do: current_time + flock_time
+isUsingFlock = False
 
 
     
@@ -392,7 +395,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "DeerBonus"
+GameState = "BirdLevel"
 Testing = True
 RunVar = True
 
@@ -531,6 +534,60 @@ while RunVar == True:
                 screen
             )
             
+            if isUsingFlock == False: #should be false
+                abilityText1 = TextClass(
+                    "Press",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["WHITE"],
+                    (DesignClass.SCREEN_WIDTH_CENTER - 220, 500),
+                    screen
+                )
+                abilityText1.blit()
+                
+                Key_Q = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/Q.png"), (40,40))
+                screen.blit(Key_Q, Key_Q.get_rect(center = (DesignClass.SCREEN_WIDTH_CENTER - 150, 500)))
+                
+                abilityText2 = TextClass(
+                    "To Activate \"Flock\" Ability",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["WHITE"],
+                    (DesignClass.SCREEN_WIDTH_CENTER + 70, 500),
+                    screen
+                )
+                abilityText2.blit()
+                
+            else:
+            #elif isUsingFlock == False: #delete this and put the else statment above
+                abilityText1 = TextClass(
+                    "\"Flock\" ability in use!",
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["WHITE"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 460),
+                    screen
+                )
+                abilityText1.blit()
+                
+                progressBarBg = pygame.draw.rect(
+                    screen,
+                    DesignClass.Colors["GREY"],
+                    pygame.rect.Rect(DesignClass.SCREEN_WIDTH_CENTER - 200, 540, 400, 15)
+                )
+                
+                progressBar = pygame.draw.rect(
+                    screen,
+                    DesignClass.Colors["WHITE"],
+                    pygame.rect.Rect(DesignClass.SCREEN_WIDTH_CENTER - 200, 540, ((flockTimeLeft / flock_time) * 400), 15)
+                )
+                
+                abilityText2 = TextClass(
+                    str(flockTimeLeft),
+                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                    DesignClass.Colors["WHITE"],
+                    (DesignClass.SCREEN_WIDTH_CENTER, 510),
+                    screen
+                )
+                abilityText2.blit()
+            
             
             
             #Set up backround
@@ -553,6 +610,38 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 3
                 ObjectTimers.addTime("KM_Update", 1)
+                
+            if current_time > ObjectTimers.getCurrentValue("Friendly_Bird_Transition"):
+                if isUsingFlock == True:
+                    if birdFlock1.ycor != bird.ycor - 100:
+                        heightDifference = birdFlock1.ycor - bird.ycor
+                        # positive = flock1 is higher
+                        # negative = bird is higher
+                        
+                        if heightDifference > 0:
+                            birdFlock1.ycor += 2
+                        elif heightDifference < 0:
+                            birdFlock1.ycor -= 2
+                    if birdFlock2.ycor != bird.ycor:
+                        heightDifference = birdFlock1.ycor - bird.ycor
+                        # positive = flock2 is higher
+                        # negative = bird is higher
+                        
+                        if heightDifference > 0:
+                            birdFlock2.ycor += 2
+                        elif heightDifference < 0:
+                            birdFlock2.ycor -= 2
+                    if birdFlock3.ycor != bird.ycor + 100:
+                        heightDifference = birdFlock1.ycor - bird.ycor
+                        # positive = bird is higher
+                        # negative = flock3 is higher
+                        
+                        if heightDifference > 0:
+                            birdFlock3.ycor += 2
+                        elif heightDifference < 0:
+                            birdFlock3.ycor -= 2
+                else:
+                    ObjectTimers.addTime("Friendly_Bird_Transition", current_time + 10)
 
 
 
@@ -2018,7 +2107,14 @@ while RunVar == True:
                     current_player.move("DOWN")
             if keys[pygame.K_q]:
                 #unique ability
-                pass
+                print("q pressed")
+                if current_player == bird:
+                    if flockTimeLeft == 0:
+                        if isUsingFlock == False:
+                            isUsingFlock = True
+                            flockTimeLeft = 15
+                        else:
+                            isUsingFlock = False
 
             if GameState == "DeerLevel2" or GameState == "TurtleBonus":
                 if keys[pygame.K_d]:
