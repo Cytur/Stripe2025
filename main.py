@@ -18,7 +18,7 @@ specialTransition = False
         
 def ChangeGameState(newGameState):
     global GameState, ObjectTimers, current_time
-    global buttonlist, obstacle_list
+    global buttonlist, obstacle_list, collide_list
     global km_count
     global highway_ycor
     global turtle_km_increment
@@ -57,6 +57,7 @@ def ChangeGameState(newGameState):
     GameState = newGameState
     buttonlist = []
     obstacle_list = []
+    collide_list = []
     ObjectTimers.addTime("Text", current_time)
     birdNPC.xcor = -100
     km_count = 0
@@ -363,7 +364,7 @@ def make_pellet():
 def make_bonus_pollution():
     return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Pollution")
 def make_eagle(xcor):
-    return ObstacleClass(xcor+ 1000, -1100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
+    return ObstacleClass(xcor+ 2200, -1200, 40, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() *2, eagle_img.get_height() * 1.5, True,True, [eagle_img], "Eagle")
 def make_jellyfish():
     return ObstacleClass(random.randint(500, 700), 600, 10, 4, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
 def make_warning_bird(xcor):
@@ -419,7 +420,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "BirdLevel"
+GameState = "TurtleLevel"
 Testing = True
 RunVar = True
 
@@ -843,7 +844,7 @@ while RunVar == True:
                 km_count = 601
 
             if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
-                xcor = random.randint(100, 400)
+                xcor = random.randint(300, 800)
                 warning = make_warning_bird(xcor)
                 eagle = make_eagle(xcor)
                 obstacle_list.append(eagle)
@@ -966,7 +967,7 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("Hawk_Spawn"):
                 hawk = make_hawk()
                 #end_time_hawk_spawn = pygame.time.get_ticks() + 800
-                ObjectTimers.addTime("Hawk_Spawn", current_time + 800)
+                ObjectTimers.addTime("Hawk_Spawn", current_time + random.randint(1300,2000))
                 obstacle_list.append(hawk)
                 collide_list.append(hawk)
 
