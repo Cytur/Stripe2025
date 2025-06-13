@@ -46,7 +46,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Killerwhale_Spawn", current_time + 8000)
     ObjectTimers.addTime("Hunter", current_time + 0)
     ObjectTimers.addTime("Bug_Spawn", current_time + 1000)
-    ObjectTimers.addTime("Trap_Spawn", current_time + 0)
+    ObjectTimers.addTime("Trap_Spawn", current_time + 5000)
     ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
     ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
     ObjectTimers.addTime("Highway_Change", 10000)
@@ -267,7 +267,7 @@ ObjectTimers.addObject("Shark_Spawn", 8000)
 ObjectTimers.addObject("Killerwhale_Spawn", 8000)
 ObjectTimers.addObject("Hunter", 0)
 ObjectTimers.addObject("Bug_Spawn", 1000)
-ObjectTimers.addObject("Trap_Spawn", 0)
+ObjectTimers.addObject("Trap_Spawn", 5000)
 ObjectTimers.addObject("Pellet_Spawn", 3000)
 ObjectTimers.addObject("Eagle_Spawn", random.randint(6000, 13000))
 ObjectTimers.addObject("Highway_Change", 10000)
@@ -371,6 +371,8 @@ def make_warning_bird(xcor):
 def make_warning_deer(xcor, ycor):
     return ObstacleClass(xcor, ycor, 0, 0, 10, 10, 10, 10, False, False, [warning_img2], "Warning")
 
+#deer vars
+hasFixedYcor = False
 
 #Vars for player jumping
 isJumping = False
@@ -420,7 +422,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "BirdLevel"
+GameState = "DeerLevel2"
 Testing = True
 RunVar = True
 
@@ -1447,6 +1449,10 @@ while RunVar == True:
             routelen = 250
             lives.load_hearts(2)
             ObjectTimers.addTime("Time_Pass", 1)
+            
+            if hasFixedYcor == False:
+                hasFixedYcor = True
+                deer.ycor = 400
 
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
@@ -1631,6 +1637,8 @@ while RunVar == True:
             routelen = 30
             lives.load_hearts(2)
             screen.fill(DesignClass.Colors["GRASSGREEN"])
+            
+            hasFixedYcor = False
 
             instructText = TextClass(
                 "Watch out for wolves running behind you!",
@@ -1712,7 +1720,7 @@ while RunVar == True:
                 Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
                 lives.add_hearts(1)
-                km_count = 80
+                km_count = 130
 
 
             if Testing:
@@ -1748,6 +1756,7 @@ while RunVar == True:
                         Sound.play("Lose")
                         isCompletedBonus = False
                         EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
+                        km_count = 130
                     else:
                         Sound.play("Collision")
 
