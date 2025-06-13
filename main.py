@@ -278,7 +278,7 @@ ObjectTimers.addObject("Flap_Update", 980)
 ObjectTimers.addObject("Trot_Update", 980)
 ObjectTimers.addObject("Swim_Update", 1200)
 ObjectTimers.addObject("Warning_Remove", 0)
-ObjectTimers.addObject("Friendly_Bird_Transition", 10) #wip
+ObjectTimers.addObject("Ability_Text_Update", 1000)
 
 
 #Images for Obstacles
@@ -384,10 +384,34 @@ turtle_km_increment = 1
 is_on_highway = False
 
 #friendly bird vars
-flock_cooldown = 30
+currentFriendlyTarget = ""
+friendly_bird_speed = 10
+flock_cooldown = 20
 flock_time = 15
-flockTimeLeft = 0 #when adding in-game, do: current_time + flock_time
+flockTimeLeft = 0
+flockCooldownLeft = -1
 isUsingFlock = False
+isFlockCooldown = False
+flock1Alive = False
+flock2Alive = False
+flock3Alive = False
+
+def reset_friendly_birds():
+    global flockTimeLeft
+    global flockCooldownLeft
+    global isUsingFlock
+    global isFlockCooldown
+    global flock1Alive
+    global flock2Alive
+    global flock3Alive
+    flockTimeLeft = 0
+    flockCooldownLeft = -1
+    isUsingFlock = False
+    isFlockCooldown = False
+    flock1Alive = False
+    flock2Alive = False
+    flock3Alive = False
+
 
 
     
@@ -516,6 +540,9 @@ while RunVar == True:
             speciallenBot = 500
             lives.load_hearts(2)
 
+            reset_friendly_birds()
+            currentFriendlyTarget = "Tree"
+
 
             screen.fill(DesignClass.Colors["FORESTGREEN"])
 
@@ -534,30 +561,48 @@ while RunVar == True:
                 screen
             )
             
-            if isUsingFlock == False: #should be false
-                abilityText1 = TextClass(
-                    "Press",
-                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                    DesignClass.Colors["WHITE"],
-                    (DesignClass.SCREEN_WIDTH_CENTER - 220, 500),
-                    screen
-                )
-                abilityText1.blit()
+            if isUsingFlock == False:
+                if isFlockCooldown == True:
+                    abilityText1 = TextClass(
+                        "\"Flock\" ability on cooldown!",
+                        pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                        DesignClass.Colors["WHITE"],
+                        (DesignClass.SCREEN_WIDTH_CENTER, 460),
+                        screen
+                    )
+                    abilityText1.blit()
+
+                    abilityText2 = TextClass(
+                        str(flockCooldownLeft),
+                        pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                        DesignClass.Colors["WHITE"],
+                        (DesignClass.SCREEN_WIDTH_CENTER, 510),
+                        screen
+                    )
+                    abilityText2.blit()
+                else:
+                    abilityText1 = TextClass(
+                        "Press",
+                        pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                        DesignClass.Colors["WHITE"],
+                        (DesignClass.SCREEN_WIDTH_CENTER - 220, 500),
+                        screen
+                    )
+                    abilityText1.blit()
+                    
+                    Key_Q = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/Q.png"), (40,40))
+                    screen.blit(Key_Q, Key_Q.get_rect(center = (DesignClass.SCREEN_WIDTH_CENTER - 150, 500)))
+                    
+                    abilityText2 = TextClass(
+                        "To Activate \"Flock\" Ability",
+                        pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                        DesignClass.Colors["WHITE"],
+                        (DesignClass.SCREEN_WIDTH_CENTER + 70, 500),
+                        screen
+                    )
+                    abilityText2.blit()
                 
-                Key_Q = pygame.transform.scale(pygame.image.load("ImageAssets/KeyboardAsset/Q.png"), (40,40))
-                screen.blit(Key_Q, Key_Q.get_rect(center = (DesignClass.SCREEN_WIDTH_CENTER - 150, 500)))
-                
-                abilityText2 = TextClass(
-                    "To Activate \"Flock\" Ability",
-                    pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                    DesignClass.Colors["WHITE"],
-                    (DesignClass.SCREEN_WIDTH_CENTER + 70, 500),
-                    screen
-                )
-                abilityText2.blit()
-                
-            else:
-            #elif isUsingFlock == False: #delete this and put the else statment above
+            elif isUsingFlock == True:
                 abilityText1 = TextClass(
                     "\"Flock\" ability in use!",
                     pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
@@ -610,40 +655,48 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 3
                 ObjectTimers.addTime("KM_Update", 1)
-                
-            if current_time > ObjectTimers.getCurrentValue("Friendly_Bird_Transition"):
-                if isUsingFlock == True:
-                    if birdFlock1.ycor != bird.ycor - 100:
-                        heightDifference = birdFlock1.ycor - bird.ycor
-                        # positive = flock1 is higher
-                        # negative = bird is higher
-                        
-                        if heightDifference > 0:
-                            birdFlock1.ycor += 2
-                        elif heightDifference < 0:
-                            birdFlock1.ycor -= 2
-                    if birdFlock2.ycor != bird.ycor:
-                        heightDifference = birdFlock1.ycor - bird.ycor
-                        # positive = flock2 is higher
-                        # negative = bird is higher
-                        
-                        if heightDifference > 0:
-                            birdFlock2.ycor += 2
-                        elif heightDifference < 0:
-                            birdFlock2.ycor -= 2
-                    if birdFlock3.ycor != bird.ycor + 100:
-                        heightDifference = birdFlock1.ycor - bird.ycor
-                        # positive = bird is higher
-                        # negative = flock3 is higher
-                        
-                        if heightDifference > 0:
-                            birdFlock3.ycor += 2
-                        elif heightDifference < 0:
-                            birdFlock3.ycor -= 2
+
+            if isUsingFlock == True:
+                if flock1Alive == True:
+                    birdFlock1.xcor = bird.xcor
+                    birdFlock1.ycor = bird.ycor - 100
+                    birdFlock1.rect_update()
+                    screen.blit(birdFlock1.current_frame, birdFlock1.Rect)
+
+                if flock2Alive == True:
+                    birdFlock2.xcor = bird.xcor + 100
+                    birdFlock2.ycor = bird.ycor
+                    birdFlock2.rect_update()
+                    screen.blit(birdFlock2.current_frame, birdFlock2.Rect)
+
+                if flock3Alive == True:
+                    birdFlock3.xcor = bird.xcor
+                    birdFlock3.ycor = bird.ycor + 100
+                    birdFlock3.rect_update()
+                    screen.blit(birdFlock3.current_frame, birdFlock3.Rect)
+
+            if current_time > ObjectTimers.getCurrentValue("Ability_Text_Update"):
+                if flockTimeLeft > 0:
+                    flockTimeLeft -= 1
                 else:
-                    ObjectTimers.addTime("Friendly_Bird_Transition", current_time + 10)
+                    if isUsingFlock == True and isFlockCooldown == False:
+                        isFlockCooldown = True
 
+                    if isFlockCooldown == True:
+                        if flockCooldownLeft == -1: 
+                            flockCooldownLeft = flock_cooldown
+                        else:
+                            flockCooldownLeft -= 1
 
+                            if flockCooldownLeft == 0:
+                                #prevent looping forever
+                                isFlockCooldown = False
+                                flockCooldownLeft -= 1
+
+                    isUsingFlock = False
+                
+                ObjectTimers.addTime("Ability_Text_Update", current_time + 1000)
+                    
 
             if km_count > routelen:
                 Sound.play("Win")
@@ -661,6 +714,9 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 birdNPC.animation_update()
                 bird.animation_update()
+                birdFlock1.animation_update()
+                birdFlock2.animation_update()
+                birdFlock3.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
             
             if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
@@ -724,6 +780,26 @@ while RunVar == True:
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
                         else:
                             Sound.play("Collision")
+                
+                flockList = [[flock1Alive, birdFlock1], [flock2Alive, birdFlock2], [flock3Alive, birdFlock3]]
+                for friendlyInfo in flockList:
+                    currentFlock = flockList.index(friendlyInfo)
+                    if friendlyInfo[0] == True:
+                        if friendlyInfo[1].Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(friendlyInfo[1].xcor, friendlyInfo[1].ycor):
+                            if obstacle.descriptor == currentFriendlyTarget:
+                                pygame.time.delay(100)
+                                collide_list.remove(obstacle)
+                                obstacle_list.remove(obstacle)
+                                
+                                Sound.play("Collision")
+
+                                match currentFlock:
+                                    case 0:
+                                        flock1Alive = False
+                                    case 1:
+                                        flock2Alive = False
+                                    case 2:
+                                        flock3Alive = False
 
 
         case "BirdBonus":
@@ -2107,14 +2183,21 @@ while RunVar == True:
                     current_player.move("DOWN")
             if keys[pygame.K_q]:
                 #unique ability
-                print("q pressed")
+                #print("q pressed")
+                
                 if current_player == bird:
-                    if flockTimeLeft == 0:
+                    print('1')
+                    if flockTimeLeft == 0 and flockCooldownLeft == -1 and isFlockCooldown == False:
+                        print('2')
                         if isUsingFlock == False:
+                            print('3')
                             isUsingFlock = True
-                            flockTimeLeft = 15
-                        else:
-                            isUsingFlock = False
+                            flockTimeLeft = flock_time
+                            ObjectTimers.addTime("Ability_Text_Update", current_time + 1000)
+
+                            flock1Alive = True
+                            flock2Alive = True
+                            flock3Alive = True
 
             if GameState == "DeerLevel2" or GameState == "TurtleBonus":
                 if keys[pygame.K_d]:
