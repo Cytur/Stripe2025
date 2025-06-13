@@ -385,6 +385,7 @@ turtle_km_increment = 1
 is_on_highway = False
 
 #friendly bird vars
+ranReset = False
 currentFriendlyTarget = ""
 friendly_bird_speed = 10
 flock_cooldown = 20
@@ -541,8 +542,10 @@ while RunVar == True:
             speciallenBot = 500
             lives.load_hearts(2)
 
-            reset_friendly_birds()
-            currentFriendlyTarget = "Tree"
+            if ranReset == False:
+                ranReset = True
+                reset_friendly_birds()
+                currentFriendlyTarget = "Tree"
 
 
             screen.fill(DesignClass.Colors["FORESTGREEN"])
@@ -660,19 +663,19 @@ while RunVar == True:
             if isUsingFlock == True:
                 if flock1Alive == True:
                     birdFlock1.xcor = bird.xcor
-                    birdFlock1.ycor = bird.ycor - 100
+                    birdFlock1.ycor = bird.ycor - 120
                     birdFlock1.rect_update()
                     screen.blit(birdFlock1.current_frame, birdFlock1.Rect)
 
                 if flock2Alive == True:
-                    birdFlock2.xcor = bird.xcor + 100
+                    birdFlock2.xcor = bird.xcor + 130
                     birdFlock2.ycor = bird.ycor
                     birdFlock2.rect_update()
                     screen.blit(birdFlock2.current_frame, birdFlock2.Rect)
 
                 if flock3Alive == True:
                     birdFlock3.xcor = bird.xcor
-                    birdFlock3.ycor = bird.ycor + 100
+                    birdFlock3.ycor = bird.ycor + 120
                     birdFlock3.rect_update()
                     screen.blit(birdFlock3.current_frame, birdFlock3.Rect)
 
@@ -768,7 +771,6 @@ while RunVar == True:
 
             #detecting player collisions with objects
             for obstacle in collide_list:
-                
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Arrow":
                         SpecialLevelEnter()
@@ -2187,11 +2189,8 @@ while RunVar == True:
                 #print("q pressed")
                 
                 if current_player == bird:
-                    print('1')
                     if flockTimeLeft == 0 and flockCooldownLeft == -1 and isFlockCooldown == False:
-                        print('2')
                         if isUsingFlock == False:
-                            print('3')
                             isUsingFlock = True
                             flockTimeLeft = flock_time
                             ObjectTimers.addTime("Ability_Text_Update", current_time + 1000)
