@@ -18,7 +18,7 @@ specialTransition = False
         
 def ChangeGameState(newGameState):
     global GameState, ObjectTimers, current_time
-    global buttonlist, obstacle_list
+    global buttonlist, obstacle_list, collide_list
     global km_count
     global highway_ycor
     global turtle_km_increment
@@ -30,7 +30,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Wolf_Spawn", current_time + 1000)
     ObjectTimers.addTime("Wolf_Animation", current_time + 0)
     ObjectTimers.addTime("Tree_Spawn", current_time + 1000)
-    ObjectTimers.addTime("Text", current_time + 8000)
+    ObjectTimers.addTime("Text", current_time + 10000)
     ObjectTimers.addTime("Snow_Spawn", current_time + 0)
     ObjectTimers.addTime("bNPC_Move", current_time + 0)
     ObjectTimers.addTime("tNPC_Move", current_time + 0)
@@ -51,13 +51,15 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Eagle_Spawn", random.randint(6000, 13000))
     ObjectTimers.addTime("Highway_Change", 10000)
     ObjectTimers.addTime("Highway_Spawn", current_time + 585)
-    ObjectTimers.addTime("Jellyfish_Spawn", 1400)
-    ObjectTimers.addTime("Music_Restart", 326000)
+    ObjectTimers.addTime("Jellyfish_Spawn", current_time + 1400)
+    ObjectTimers.addTime("Music_Restart", current_time + 326000)
+    ObjectTimers.addTime("Text", current_time + 10000)
 
     GameState = newGameState
     buttonlist = []
     obstacle_list = []
-    ObjectTimers.addTime("Text", current_time)
+    collide_list = []
+    ObjectTimers.addTime("Text", current_time + 10000)
     birdNPC.xcor = -100
     km_count = 0
     
@@ -78,7 +80,7 @@ def ResetGame():
     global is_on_highway
 
     buttonlist = []
-    ObjectTimers.addTime("Text", current_time)
+    ObjectTimers.addTime("Text", current_time + 10000)
     birdNPC.xcor = -100
     km_count = 0
     bugsCaughtAmount = 0
@@ -108,7 +110,7 @@ def ResetGame():
 def SpecialLevelEnter():
     global GameState
     global specialTransition
-    ObjectTimers.addTime("Text", current_time)
+    ObjectTimers.addTime("Text", current_time + 10000)
     if current_player.ycor < 840:
         specialTransition = True
     else:
@@ -279,6 +281,7 @@ ObjectTimers.addObject("Trot_Update", 980)
 ObjectTimers.addObject("Swim_Update", 1200)
 ObjectTimers.addObject("Warning_Remove", 0)
 ObjectTimers.addObject("Ability_Text_Update", 1000)
+ObjectTimers.addObject("Text", 10000)
 
 
 #Images for Obstacles
@@ -332,7 +335,7 @@ def make_rain_straight():
 def make_hawk():
     return ObstacleClass(1000, current_player.ycor, 20, random.randint(-2, 2), hawk_imgs[0].get_width(), hawk_imgs[0].get_height(), hawk_imgs[0].get_width() * 2, hawk_imgs[0].get_height() * 2, True,True, hawk_imgs, "Hawk")  
 def make_bullet():
-    return ObstacleClass(current_player.xcor, -40, 0, -7, bullet_img.get_width()/2, bullet_img.get_height()/2, bullet_img.get_width(), bullet_img.get_height(),True,True, [bullet_img], "Hunter")
+    return ObstacleClass(current_player.xcor, -500, 0, -30, bullet_img.get_width()/2, bullet_img.get_height()/2, bullet_img.get_width(), bullet_img.get_height(),True,True, [bullet_img], "Hunter")
 def make_shark():
     return ObstacleClass(1000, random.randint(0, 400), 5, 0, shark_img.get_width(), shark_img.get_height(), shark_img.get_width() * 2, shark_img.get_height()  * 2, True,True, [shark_img], "Shark")
 def make_killerwhale():
@@ -363,7 +366,7 @@ def make_pellet():
 def make_bonus_pollution():
     return ObstacleClass(random.randint(0,900), -100, 0, -5, trash_img.get_width(), trash_img.get_height(), trash_img.get_width() * 2, trash_img.get_height() * 2, True,True, [trash_img], "Pollution")
 def make_eagle(xcor):
-    return ObstacleClass(xcor+ 1000, -1100, 20, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() * 2, eagle_img.get_height() * 2, True,True, [eagle_img], "Eagle")
+    return ObstacleClass(xcor+ 2200, -1200, 40, -20, eagle_img.get_width(), eagle_img.get_height(), eagle_img.get_width() *2, eagle_img.get_height() * 1.5, True,True, [eagle_img], "Eagle")
 def make_jellyfish():
     return ObstacleClass(random.randint(500, 700), 600, 10, 4, jellyfish_imgs[0].get_width(), jellyfish_imgs[0].get_height(), jellyfish_imgs[0].get_width() * 2, jellyfish_imgs[0].get_height() * 2, True,True, jellyfish_imgs, "Jellyfish")
 def make_warning_bird(xcor):
@@ -552,7 +555,7 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["FORESTGREEN"])
 
             instructText = TextClass(
-                "Hurry Up! Pass through tree trunks",
+                "Hurry Up! Pass through tree trunks with W and S",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -816,7 +819,7 @@ while RunVar == True:
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
             instructText = TextClass(
-                "Bonus level: Catch 20 bugs for +1 heart!",
+                "Catch the bugs and dodge the eagles with W and S",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -847,7 +850,7 @@ while RunVar == True:
                 km_count = 601
 
             if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
-                xcor = random.randint(100, 400)
+                xcor = random.randint(300, 800)
                 warning = make_warning_bird(xcor)
                 eagle = make_eagle(xcor)
                 obstacle_list.append(eagle)
@@ -937,7 +940,7 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["SKYBLUE"])
 
             instructText = TextClass(
-                "You're catching up! Watch out for eagles!",
+                "You're catching up! Watch for eagles with W and S",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -970,7 +973,7 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("Hawk_Spawn"):
                 hawk = make_hawk()
                 #end_time_hawk_spawn = pygame.time.get_ticks() + 800
-                ObjectTimers.addTime("Hawk_Spawn", current_time + 800)
+                ObjectTimers.addTime("Hawk_Spawn", current_time + random.randint(1300,2000))
                 obstacle_list.append(hawk)
                 collide_list.append(hawk)
 
@@ -1053,7 +1056,7 @@ while RunVar == True:
             eggs = pygame.transform.scale(pygame.image.load("ImageAssets/TurtleExtraAsset/cracked-egg.png"), (86, 56))
 
             instructText = TextClass(
-                "Embark on your journey, avoid trash and sharks!",
+                "Reach the Atlantic, avoid predators with W and S!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -1225,12 +1228,13 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             instructText = TextClass(
-                "Bonus level: Catch 20 bits of kelp for +1 heart!",
+                "Catch kelp! Use A and D to move",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
+
             pelletsText = TextClass(
                 f"{pelletsCaughtAmount} Pellet(s) Caught",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
@@ -1272,6 +1276,12 @@ while RunVar == True:
                 pollution = make_bonus_pollution()
                 collide_list.append(pollution)
                 obstacle_list.append(pollution)
+                pollution2 = make_bonus_pollution()
+                collide_list.append(pollution2)
+                obstacle_list.append(pollution2)
+                pollution3 = make_bonus_pollution()
+                collide_list.append(pollution3)
+                obstacle_list.append(pollution3)
                 #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
                 
@@ -1298,6 +1308,7 @@ while RunVar == True:
 
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
+            print(ObjectTimers.getCurrentValue("Text"))
             pelletsText.blit()
 
             #detecting player collisions with objects
@@ -1330,7 +1341,7 @@ while RunVar == True:
             pygame.draw.rect(screen, DesignClass.Colors["OCEANYELLOW"], pygame.Rect(0,500,840,100))
 
             instructText = TextClass(
-                "Get to the end and lay your eggs! Beware: Killer Whales",
+                "Reach the end and lay your eggs, use W and S",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -1641,7 +1652,7 @@ while RunVar == True:
             hasFixedYcor = False
 
             instructText = TextClass(
-                "Watch out for wolves running behind you!",
+                "Watch out for wolves, avoid them with W and S!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -1774,7 +1785,7 @@ while RunVar == True:
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
 
             instructText = TextClass(
-                "Dodge the bullets! The hunters have found you!",
+                "The hunters have found you, dodge with A and D!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
@@ -1809,21 +1820,21 @@ while RunVar == True:
                     bullet = make_bullet()
                     #end_time_bullet_spawn = pygame.time.get_ticks() + 1300
                     ObjectTimers.addTime("Bullet_Spawn", current_time + 1300)
-                    bullet.ycor = -500
+                    bullet.ycor = -800
                     obstacle_list.append(bullet)
                     collide_list.append(bullet)
 
                 try:
                     if warning not in obstacle_list:
                         print("warning")
-                        warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                        warning = make_warning_deer(bullet.xcor, 0)
                         obstacle_list.append(warning)
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                     else:
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                 except:
                     print("warning")
-                    warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
+                    warning = make_warning_deer(bullet.xcor, 0)
                     obstacle_list.append(warning)
                     ObjectTimers.addTime("Warning_Remove", current_time + 500)
 
@@ -1888,7 +1899,7 @@ while RunVar == True:
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
                 #end_time_text += 10000
-                ObjectTimers.addTime("Text", 10000)
+                ObjectTimers.addTime("Text", current_time + 10000)
 
             lives.blit(screen)
 
@@ -1912,7 +1923,7 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["WHITE"])
 
             UpDownText = TextClass(
-                "Up/Down (Bird & Turtle Only)",
+                "Up/Down (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (350, 50),
@@ -1925,7 +1936,7 @@ while RunVar == True:
             screen.blit(Key_S, Key_S.get_rect(center = (95, 50)))
             
             LeftRightText = TextClass(
-                "Left/Right (Deer Lvl 2 Only)",
+                "Left/Right (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
                 (340, 130),
