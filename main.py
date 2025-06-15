@@ -61,7 +61,7 @@ def ChangeGameState(set_km_count, newGameState):
     ObjectTimers.addTime("Jellyfish_Spawn", current_time + 1400)
     ObjectTimers.addTime("Music_Restart", current_time + 326000)
     ObjectTimers.addTime("Text", current_time + 10000)
-    ObjectTimers.addTime("Garbage_Immunity", current_time + 2000)
+    ObjectTimers.addTime("Garbage_Immunity", current_time + 700)
 
     GameState = newGameState
     buttonlist = []
@@ -300,7 +300,7 @@ ObjectTimers.addObject("Warning_Remove", 0)
 ObjectTimers.addObject("Ability_Text_Update", 1000)
 ObjectTimers.addObject("Text", 10000)
 ObjectTimers.addObject("Timer", 1000)
-ObjectTimers.addObject("Garbage_Immunity", 2000)
+ObjectTimers.addObject("Garbage_Immunity", 700)
 
 
 #Images for Obstacles
@@ -1659,7 +1659,7 @@ while RunVar == True:
                         #Temporary immunity from additional garbage bags to prevent instantly dying
                         if isImmune == False:
                             if current_time > ObjectTimers.getCurrentValue("Garbage_Immunity"):
-                                ObjectTimers.addTime("Garbage_Immunity", current_time + 2000)
+                                ObjectTimers.addTime("Garbage_Immunity", current_time + 700)
                                 isImmune = True
                                 
                                 for obstacle in collide_list:
