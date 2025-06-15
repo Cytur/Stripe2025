@@ -2,20 +2,15 @@ import pygame
 import DesignClass
 
 class Deer():
-    def __init__(self, xcor:int, ycor:int):
+    def __init__(self, xcor:int, ycor:int, frames):
         self.speed = 10
         self.xcor = xcor
         self.ycor = ycor
         self.Rect = pygame.Rect((self.xcor, self.ycor), (28*4, 100))
         
-        self.frames = []
+        self.frames = frames
 
         self.icon = pygame.image.load("ImageAssets/DeerAsset/deer_icon.png")
-
-        for img in range(5):
-            image=pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
-            image = pygame.transform.scale(image, (28*4, 100))
-            self.frames.append(image)
 
         self.framesRev = [pygame.transform.flip(x, True, False) for x in self.frames]
         

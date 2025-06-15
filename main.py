@@ -164,7 +164,7 @@ for num in range(8):
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
-for img in range(5):
+for img in range(4):
             frame = pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
             frame = pygame.transform.scale(frame, (28*4, 100))
             deer_frames.append(frame)
@@ -179,8 +179,8 @@ birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20, 20)
 birdFlock2 = BirdTurtle(-50, bird.ycor, friendly_bird_frames, 20, 20)
 birdFlock3 = BirdTurtle(-100, bird.ycor + 100, friendly_bird_frames, 20, 20)
 turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
-deer = Deer(50, 400)
-bonusDeer = Deer(50, 400)
+deer = Deer(50, 400, deer_frames)
+bonusDeer = Deer(50, 400, deer_frames)
 
 #Class Inits
 lives = Lives()
@@ -2231,6 +2231,7 @@ while RunVar == True:
                 
                 else:
                     deerMoving = False
+                    deer.current_frame = deer.cur_frames[1]
         except:
             pass
         
