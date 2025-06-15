@@ -74,6 +74,8 @@ def ChangeGameState(set_km_count, newGameState):
     turtle_km_increment = 1
     is_on_highway = False
 
+    pygame.mixer.pause()
+
 def ResetGame():
     global GameState, buttonlist
     global obstacle_list, collide_list
@@ -683,7 +685,7 @@ while RunVar == True:
 
             if isUsingFlock == True:
                 if flock1Alive == True:
-                    birdFlock1.xcor = bird.xcor
+                    birdFlock1.xcor = bird.xcor + 10
                     birdFlock1.ycor = bird.ycor - 120
                     birdFlock1.rect_update()
                     screen.blit(birdFlock1.current_frame, birdFlock1.Rect)
@@ -695,7 +697,7 @@ while RunVar == True:
                     screen.blit(birdFlock2.current_frame, birdFlock2.Rect)
 
                 if flock3Alive == True:
-                    birdFlock3.xcor = bird.xcor
+                    birdFlock3.xcor = bird.xcor + 10
                     birdFlock3.ycor = bird.ycor + 120
                     birdFlock3.rect_update()
                     screen.blit(birdFlock3.current_frame, birdFlock3.Rect)
