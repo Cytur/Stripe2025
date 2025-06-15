@@ -14,6 +14,12 @@ class ObjectTimersClass:
     #Remove an object from the dictionary
     def removeObject(self, objectName):
         self.ObjectsDictionary.pop(objectName)
+        
+    def keyExists(self, objectName):
+        if objectName in self.ObjectsDictionary:
+            return True
+        else:
+            return False
     
     #Return the current time value of the object
     def getCurrentValue(self, objectName):
