@@ -1427,6 +1427,7 @@ while RunVar == True:
 
             if km_count >= 567 and km_count <= 570:
                 net = make_net()
+                net = make_net()
 
                 obstacle_list.append(net)
                 collide_list.append(net)
@@ -1451,8 +1452,12 @@ while RunVar == True:
 
             if specialTransition:
                 current_player.move("UP")
-                net.ycor -= 10
-                net.update_frame()
+                #net.ycor -= 10
+                #net.update_frame()
+                
+                for collide in collide_list:
+                    collide_list.remove(collide)
+                
                 if -100 > current_player.ycor:
 
                     ChangeGameState(0, "TurtleBonus")
@@ -1596,7 +1601,7 @@ while RunVar == True:
                 if turtleBonusTimer <= 0:
                     Sound.play("Lose")
                     isCompletedBonus = False
-                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel", 574)
+                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel", 700)
                 ObjectTimers.addTime("Timer", current_time + 1000)
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
