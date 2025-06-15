@@ -10,12 +10,18 @@ from deer import Deer
 from livesclass import Lives
 from sound import SoundClass
 
+
 buttonlist = []
 collect_list = []
+obstacle_list = []
+collide_list = []
+
+
 km_count = 0
 specialTransition = False
+turtleBonusTimer = 12
 
-        
+    
 def ChangeGameState(newGameState):
     global GameState, ObjectTimers, current_time
     global buttonlist, obstacle_list, collide_list
@@ -60,7 +66,6 @@ def ChangeGameState(newGameState):
     buttonlist = []
     obstacle_list = []
     collide_list = []
-    ObjectTimers.addTime("Text", current_time + 10000)
     birdNPC.xcor = -100
     km_count = 0
     
@@ -138,34 +143,37 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     km_count = 0
     GameState = "EndScreen"
 
+
+
 pygame.init()
 pygame.display.set_caption("Animal Journey")
 screen = pygame.display.set_mode((DesignClass.SCREEN_WIDTH, DesignClass.SCREEN_HEIGHT))
 
 
+#Main Player Frames
 
-
-#Animal Frame Lists
 bird_frames = []
-turt_frames = []
-deer_frames = []
-friendly_bird_frames = []
-
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/BirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     bird_frames.append(frame)
+
+turt_frames = []
 for num in range(6):
     frame = pygame.image.load(f"ImageAssets/TurtleAsset/24bit-seaturtle{num+1}.png")
     frame = pygame.transform.scale(frame, size= (96, 96))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     turt_frames.append(frame)
+
+friendly_bird_frames = []
 for num in range(8):
     frame = pygame.image.load(f"ImageAssets/FriendlyBirdAsset/BirdFlying{num+1}.png")
     frame = pygame.transform.scale(frame, size= (64, 48))
     frame = pygame.transform.flip(frame, flip_x=True, flip_y=False)
     friendly_bird_frames.append(frame)
+
+deer_frames = []
 for img in range(4):
             frame = pygame.image.load(f'ImageAssets/DeerAsset/deer{img+1}.png')
             frame = pygame.transform.scale(frame, (28*4, 100))
@@ -174,7 +182,7 @@ for img in range(4):
 
 
 
-#Animal Obj s
+#Creating Animals NPCs and players
 bird = BirdTurtle(50, 50, bird_frames, 64, 32)
 birdNPC = BirdTurtle(-100, 300, bird_frames, 16, 16)
 birdFlock1 = BirdTurtle(-100, bird.ycor - 100, friendly_bird_frames, 20, 20)
@@ -184,7 +192,7 @@ turtle = BirdTurtle(50, 400, turt_frames, 96, 96)
 deer = Deer(50, 400, deer_frames)
 bonusDeer = Deer(50, 400, deer_frames)
 
-#Class Inits
+#Initializing Nessescary classes
 lives = Lives()
 Sound = SoundClass()
 ObjectTimers = ObjectTimersClass()
@@ -241,12 +249,6 @@ deer_info = InfoCard(
 )
 
 
-#Obstacle Related Lists
-obstacle_list = []
-collide_list = []
-
-
-
 #Wait Animation Section
 ObjectTimers.addObject("Player_Animation", 0)
 ObjectTimers.addObject("Cloud_Spawn", 0)
@@ -283,6 +285,7 @@ ObjectTimers.addObject("Swim_Update", 1200)
 ObjectTimers.addObject("Warning_Remove", 0)
 ObjectTimers.addObject("Ability_Text_Update", 1000)
 ObjectTimers.addObject("Text", 10000)
+ObjectTimers.addObject("Timer", 1000)
 
 
 #Images for Obstacles
@@ -427,7 +430,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "BirdBonus"
+GameState = "TurtleBonus"
 Testing = True
 RunVar = True
 
@@ -435,7 +438,6 @@ Sound.play_backround_music()
 
 while RunVar == True:
     current_time = pygame.time.get_ticks()
-
     
     match GameState:
         case "TitleScreen":
@@ -717,7 +719,6 @@ while RunVar == True:
                 km_count = 601
                 obstacle_list.append(arrow)
                 collide_list.append(arrow)
-
         
                 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -728,16 +729,17 @@ while RunVar == True:
                 birdFlock3.animation_update()
                 ObjectTimers.addTime("Player_Animation", current_time + 50)
             
+
             if current_time > ObjectTimers.getCurrentValue("Flap_Update"):
                 Sound.play("Flap")
                 ObjectTimers.addTime("Flap_Update", current_time + 450)
 
             
-
             if Testing:
                 for obstacle in collide_list:
                     obstacle.show_hitbox(screen)
                     current_player.show_hitbox(screen)
+
 
             #Blit all the objects
             for obstacle in obstacle_list:
@@ -747,6 +749,7 @@ while RunVar == True:
                     obstacle_list.remove(obstacle)
                 else:
                     screen.blit(obstacle.image, (obstacle.xcor, obstacle.ycor))
+
 
             if specialTransition:
                 current_player.move("DOWN")
@@ -762,12 +765,12 @@ while RunVar == True:
                     current_player.ycor = 60
                     current_player.move("UP")
 
+
             if birdNPC.xcor < 1000:
                 screen.blit(birdNPC.current_frame, birdNPC.Rect)
 
-            screen.blit(bird.current_frame, bird.Rect)
-            # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
 
+            screen.blit(bird.current_frame, bird.Rect)
             lives.blit(screen)
 
             if current_time < ObjectTimers.getCurrentValue("Text"):
@@ -789,10 +792,11 @@ while RunVar == True:
                         else:
                             Sound.play("Collision")
                 
+
                 flockList = [[flock1Alive, birdFlock1], [flock2Alive, birdFlock2], [flock3Alive, birdFlock3]]
                 for friendlyInfo in flockList:
                     currentFlock = flockList.index(friendlyInfo)
-                    if friendlyInfo[0] == True:
+                    if friendlyInfo[0] == True:                        
                         if friendlyInfo[1].Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(friendlyInfo[1].xcor, friendlyInfo[1].ycor):
                             if obstacle.descriptor == currentFriendlyTarget:
                                 pygame.time.delay(100)
@@ -816,6 +820,8 @@ while RunVar == True:
             current_player.rect_update()
             routelen = 99999
             lives.load_hearts(2)
+
+            #Create background
             screen.fill(DesignClass.Colors["SKYBLUE"])
             pygame.draw.rect(screen, DesignClass.Colors["GRASSGREEN"], pygame.Rect(0,500,840,100))
             
@@ -919,6 +925,7 @@ while RunVar == True:
                 ObjectTimers.addTime("Cloud_Spawn", current_time + 700)
                 obstacle_list.append(cloud)
 
+
             if bugsCaughtAmount >= 20:
                 isCompletedBonus = True
                 Sound.play("Win")
@@ -926,6 +933,8 @@ while RunVar == True:
                 lives.add_hearts(1)
                 km_count = 601
 
+
+            # Create obstacles
             if current_time > ObjectTimers.getCurrentValue("Eagle_Spawn"):
                 xcor = random.randint(300, 800)
                 warning = make_warning_bird(xcor)
@@ -995,16 +1004,19 @@ while RunVar == True:
                 Sound.play("Flap")
                 ObjectTimers.addTime("Flap_Update", current_time + 450)
                 
+
             if current_time > ObjectTimers.getCurrentValue("Bug_Spawn"):
                 bug = make_bug()
                 collide_list.append(bug)
                 obstacle_list.append(bug)
                 ObjectTimers.addTime("Bug_Spawn", current_time + 3000)
                 
+
             if Testing:
                 for obstacle in collide_list:
                     obstacle.show_hitbox(screen)
                     current_player.show_hitbox(screen)
+
 
             #Blit all the objects
             for obstacle in obstacle_list:
@@ -1027,6 +1039,7 @@ while RunVar == True:
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             bugsText.blit()
+
 
             #detecting player collisions with objects
             for obstacle in collide_list:
@@ -1075,6 +1088,8 @@ while RunVar == True:
                 lives.load_hearts(3)
             else:
                 lives.load_hearts(2)
+
+
             screen.fill(DesignClass.Colors["SKYBLUE"])
             
             if ranReset == False:
@@ -1177,7 +1192,6 @@ while RunVar == True:
                 cloud = make_cloud()
                 ObjectTimers.addTime("Cloud_Spawn", current_time + 700)
                 obstacle_list.append(cloud)
-
 
             if current_time > ObjectTimers.getCurrentValue("Snow_Spawn"):
                 snow = make_snow()
@@ -1285,6 +1299,7 @@ while RunVar == True:
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             kmText.blit()
+
 
             #detecting player collisions with objects
             for obstacle in collide_list:
@@ -1496,7 +1511,6 @@ while RunVar == True:
             current_player.ycor = 400
             current_player.rect_update()
             routelen = 99999
-            lives.load_hearts(2)
             screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             instructText = TextClass(
@@ -1508,10 +1522,18 @@ while RunVar == True:
             )
 
             pelletsText = TextClass(
-                f"{pelletsCaughtAmount} Pellet(s) Caught",
+                f"{pelletsCaughtAmount}/20 peices of kelp caught",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
                 DesignClass.Colors["BLACK"],
-                (200, 25),
+                (270, 25),
+                screen
+            )
+
+            timerText = TextClass(
+                f"{turtleBonusTimer}s before starving",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
+                DesignClass.Colors["BLACK"],
+                (200, 70),
                 screen
             )
             
@@ -1539,20 +1561,25 @@ while RunVar == True:
             if current_time > ObjectTimers.getCurrentValue("Swim_Update"):
                 Sound.play("Swim")
                 ObjectTimers.addTime("Swim_Update", current_time + 700)
+
+            if current_time > ObjectTimers.getCurrentValue("Timer"):
+                turtleBonusTimer -= 1
+                if turtleBonusTimer <= 0:
+                    Sound.play("Lose")
+                    isCompletedBonus = False
+                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
+                ObjectTimers.addTime("Timer", current_time + 1000)
+
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
                 kelp = make_pellet()
                 collide_list.append(kelp)
                 obstacle_list.append(kelp)
-                pollution = make_bonus_pollution()
-                collide_list.append(pollution)
-                obstacle_list.append(pollution)
-                pollution2 = make_bonus_pollution()
-                collide_list.append(pollution2)
-                obstacle_list.append(pollution2)
-                pollution3 = make_bonus_pollution()
-                collide_list.append(pollution3)
-                obstacle_list.append(pollution3)
+                for s in range(3):
+                    pollution = make_bonus_pollution()
+                    collide_list.append(pollution)
+                    obstacle_list.append(pollution)
+                #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
                 
 
@@ -1579,24 +1606,21 @@ while RunVar == True:
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
             pelletsText.blit()
+            timerText.blit()
 
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Pellet": 
                         pelletsCaughtAmount += 1
+                        turtleBonusTimer = 12
                         obstacle_list.pop(obstacle_list.index(obstacle))
                         collide_list.pop(collide_list.index(obstacle))
                     else:
-                        dead = lives.remove_life()
+                        turtleBonusTimer -= 4
                         pygame.time.delay(100)
                         collide_list.remove(obstacle)
-                        if dead:
-                            Sound.play("Lose")
-                            isCompletedBonus = False
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
-                        else:
-                            Sound.play("Collision")
+                        Sound.play("Collision")
 
 
         case "TurtleLevel2":
