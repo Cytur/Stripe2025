@@ -22,7 +22,7 @@ specialTransition = False
 turtleBonusTimer = 15
 
     
-def ChangeGameState(newGameState):
+def ChangeGameState(set_km_count, newGameState):
     global GameState, ObjectTimers, current_time
     global buttonlist, obstacle_list, collide_list
     global km_count
@@ -68,7 +68,7 @@ def ChangeGameState(newGameState):
     obstacle_list = []
     collide_list = []
     birdNPC.xcor = -100
-    km_count = 0
+    km_count = set_km_count
     
     highway_ycor = random.randint(150, 400)
     turtle_km_increment = 1
@@ -129,7 +129,7 @@ EndScreenTitleColor = DesignClass.Colors["RED"]
 EndScreenReason = "N/A"
 EndScreenNextStage = "TitleScreen"
 
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
     global EndScreenTitle
     global EndScreenTitleColor
     global EndScreenReason
@@ -141,7 +141,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage):
     EndScreenTitleColor = TitleTextColor
     EndScreenReason = EndReason
     EndScreenNextStage = NextStage
-    km_count = 0
+    km_count = km_count_set
     GameState = "EndScreen"
 
 
@@ -214,6 +214,7 @@ bird_info = InfoCard(
     0,
     screen,
     ChangeGameState,
+    0,
     "BirdLevel"
 )
 turtle_info = InfoCard(
@@ -230,6 +231,7 @@ turtle_info = InfoCard(
     40,
     screen,
     ChangeGameState,
+    0,
     "TurtleLevel"
 )
 deer_info = InfoCard(
@@ -246,6 +248,7 @@ deer_info = InfoCard(
     40,
     screen,
     ChangeGameState,
+    0,
     "DeerLevel"
 )
 
@@ -716,8 +719,7 @@ while RunVar == True:
 
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2")
-                km_count = 6001
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2", 6001)
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -759,7 +761,7 @@ while RunVar == True:
             if specialTransition:
                 current_player.move("DOWN")
                 if 600 < current_player.ycor:
-                    ChangeGameState("BirdBonus")
+                    ChangeGameState(0, "BirdBonus")
                     
                     collideIndex = 0
                     for collide in collide_list:
@@ -793,7 +795,7 @@ while RunVar == True:
                         collide_list.remove(obstacle)
                         if dead:
                             Sound.play("Lose")
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                         else:
                             Sound.play("Collision")
                 
@@ -934,9 +936,8 @@ while RunVar == True:
             if bugsCaughtAmount >= 20:
                 isCompletedBonus = True
                 Sound.play("Win")
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel")
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel", 601)
                 lives.add_hearts(1)
-                km_count = 601
 
 
             # Create obstacles
@@ -1060,7 +1061,7 @@ while RunVar == True:
                         if dead:
                             Sound.play("Lose")
                             isCompletedBonus = False
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel")
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel", 601)
                         else:
                             Sound.play("Collision")
                             
@@ -1262,7 +1263,7 @@ while RunVar == True:
 
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen")
+                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen", 0)
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1314,7 +1315,7 @@ while RunVar == True:
                     collide_list.remove(obstacle)
                     if dead:
                         Sound.play("Lose")
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                     else:
                         Sound.play("Collision")
                         
@@ -1417,7 +1418,7 @@ while RunVar == True:
             
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2", 2001)
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
@@ -1437,7 +1438,7 @@ while RunVar == True:
                 net.update_frame()
                 if -100 > current_player.ycor:
 
-                    ChangeGameState("TurtleBonus")
+                    ChangeGameState(0, "TurtleBonus")
                         
                     current_player.ycor = 70
 
@@ -1487,7 +1488,7 @@ while RunVar == True:
                         collide_list.remove(obstacle)
                         if dead:
                             Sound.play("Lose")
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                         else:
                             Sound.play("Collision")
             
@@ -1554,9 +1555,8 @@ while RunVar == True:
             if pelletsCaughtAmount >= 20:
                 isCompletedBonus = True
                 Sound.play("Win")
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel")
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel", 574)
                 lives.add_hearts(1)
-                km_count = 574
 
                 
             collideIndex = 0
@@ -1579,7 +1579,7 @@ while RunVar == True:
                 if turtleBonusTimer <= 0:
                     Sound.play("Lose")
                     isCompletedBonus = False
-                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
+                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel", 574)
                 ObjectTimers.addTime("Timer", current_time + 1000)
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
@@ -1655,7 +1655,7 @@ while RunVar == True:
         case "TurtleLevel2":
             #Starting variables for TurtleLevel2
             current_player = turtle
-            routelen = 2000
+            routelen = 4000
             current_player.rect_update()
             lives.load_hearts(2)
 
@@ -1714,7 +1714,7 @@ while RunVar == True:
 
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen")
+                EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, try other animals!", "TitleScreen", 0)
 
             
 
@@ -1764,7 +1764,7 @@ while RunVar == True:
                     collide_list.remove(obstacle)
                     if dead:
                         Sound.play("Lose")
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                     else:
                             Sound.play("Collision")
 
@@ -1887,13 +1887,13 @@ while RunVar == True:
 
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "DeerLevel2", 0)
 
             #Transition phase into deer bonus
             if specialTransition:
                 current_player.move("DOWN")
                 if 700 < current_player.ycor:
-                    ChangeGameState("DeerBonus")
+                    ChangeGameState(0, "DeerBonus")
                     km_count = 0
                     
                     collideIndex = 0
@@ -1950,7 +1950,7 @@ while RunVar == True:
                         collide_list.remove(obstacle)
                         if dead:
                             Sound.play("Lose")
-                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                            EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                         else:
                             Sound.play("Collision")
 
@@ -2032,9 +2032,8 @@ while RunVar == True:
             if km_count >= routelen:
                 isCompletedBonus = True
                 Sound.play("Win")
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel")
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "DeerLevel", 130)
                 lives.add_hearts(1)
-                km_count = 130
 
 
             if Testing:
@@ -2069,8 +2068,7 @@ while RunVar == True:
                     if dead:
                         Sound.play("Lose")
                         isCompletedBonus = False
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel")
-                        km_count = 130
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "DeerLevel", 130)
                     else:
                         Sound.play("Collision")
 
@@ -2170,7 +2168,7 @@ while RunVar == True:
 
             if km_count > routelen:
                 Sound.play("Win")
-                EndLevel("You Won", DesignClass.Colors["GREEN"], "Congratulations, try other animals too!", "TitleScreen")
+                EndLevel("You Won", DesignClass.Colors["GREEN"], "Congratulations, try other animals too!", "TitleScreen", 0)
 
 
             if Testing:
@@ -2206,7 +2204,7 @@ while RunVar == True:
                     collide_list.remove(obstacle)
                     if dead:
                         Sound.play("Lose")
-                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen")
+                        EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
                     else:
                         Sound.play("Collision")
         
@@ -2475,7 +2473,10 @@ while RunVar == True:
             mousepos = pygame.mouse.get_pos()
             for button in buttonlist:
                 if button.rectangleRender.collidepoint(mousepos):
-                    button.command(button.param)
+                    try:
+                        button.command(0, button.param)
+                    except TypeError:
+                        button.command(button.param)
 
 
         #Detecting key presses
@@ -2532,7 +2533,7 @@ while RunVar == True:
             if keys[pygame.K_SPACE]:
                 if GameState == "EndScreen":
                     pygame.time.delay(100)
-                    GameState = EndScreenNextStage
+                    ChangeGameState(0, EndScreenNextStage)
                 elif GameState == "DeerLevel":
                     isJumping = True
  
