@@ -44,7 +44,8 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Trash_Spawn", current_time + 5000)
     ObjectTimers.addTime("Shark_Spawn", current_time + 8000)
     ObjectTimers.addTime("Killerwhale_Spawn", current_time + 8000)
-    ObjectTimers.addTime("Hunter", current_time + 0)
+    if ObjectTimers.keyExists("Hunter"):
+        ObjectTimers.addTime("Hunter", current_time + 0)
     ObjectTimers.addTime("Bug_Spawn", current_time + 1000)
     ObjectTimers.addTime("Trap_Spawn", current_time + 5000)
     ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
@@ -1840,7 +1841,7 @@ while RunVar == True:
 
 
             try:
-                if ObjectTimers.getCurrentValue("Hunter") != None:
+                if ObjectTimers.keyExists("Hunter"):
                     if current_time > ObjectTimers.getCurrentValue("Hunter"):
                         hunter = make_hunter()
                         obstacle_list.append(hunter)
