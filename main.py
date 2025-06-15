@@ -1181,7 +1181,7 @@ while RunVar == True:
                         collect_list = []
                         SpecialLevelEnter()
                     elif obstacle.descriptor == "Highway":
-                        #print("Highway")
+                        
                         
                         #increase speed of all other objects to make it look like faster speed, and increase km increment
                         turtle_km_increment = 2 #CHANGE THIS TO 2 OR 3 (whole number)
@@ -1310,7 +1310,6 @@ while RunVar == True:
 
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
-            print(ObjectTimers.getCurrentValue("Text"))
             pelletsText.blit()
 
             #detecting player collisions with objects
@@ -1497,19 +1496,16 @@ while RunVar == True:
                 wolf = make_wolf()
                 obstacle_list.append(wolf)
                 collide_list.append(wolf)
-                #end_time_wolf_spawn = pygame.time.get_ticks() + random.randint(7000, 12000)
                 ObjectTimers.addTime("Wolf_Spawn", current_time + random.randint(7000, 12000))
                 wolf.xcor = 1300
                 try:
                     if warning not in obstacle_list:
-                        print("warning")
                         warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
                         obstacle_list.append(warning)
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                     else:
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                 except:
-                    print("warning")
                     warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
                     obstacle_list.append(warning)
                     ObjectTimers.addTime("Warning_Remove", current_time + 500)
@@ -1523,14 +1519,12 @@ while RunVar == True:
 
                 try:
                     if warning not in obstacle_list:
-                        print("warning")
                         warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
                         obstacle_list.append(warning)
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                     else:
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                 except:
-                    print("warning")
                     warning = make_warning_deer(deer.xcor+100, deer.ycor-30)
                     obstacle_list.append(warning)
                     ObjectTimers.addTime("Warning_Remove", current_time + 500)
@@ -1594,7 +1588,7 @@ while RunVar == True:
 
             #Jumping
             if isJumping == True:
-                deer.current_frame = deer.frames[4]
+                deer.current_frame = deer.frames[3]
 
                 current_player.jump(vert_acceleration)
                 
@@ -1701,14 +1695,12 @@ while RunVar == True:
                 ObjectTimers.addTime("Wolf_Spawn", current_time + 700)
                 try:
                     if warning not in obstacle_list:
-                        print("warning")
                         warning = make_warning_deer(current_player.xcor+100, current_player.ycor-30)
                         obstacle_list.append(warning)
                         ObjectTimers.addTime("Warning_Remove", current_time + 100)
                     else:
                         ObjectTimers.addTime("Warning_Remove", current_time + 100)
-                except:
-                    print("warning")
+                except:        
                     warning = make_warning_deer(current_player.xcor+100, current_player.ycor-30)
                     obstacle_list.append(warning)
                     ObjectTimers.addTime("Warning_Remove", current_time + 100)
@@ -1828,14 +1820,12 @@ while RunVar == True:
 
                 try:
                     if warning not in obstacle_list:
-                        print("warning")
                         warning = make_warning_deer(bullet.xcor, 0)
                         obstacle_list.append(warning)
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                     else:
                         ObjectTimers.addTime("Warning_Remove", current_time + 500)
                 except:
-                    print("warning")
                     warning = make_warning_deer(bullet.xcor, 0)
                     obstacle_list.append(warning)
                     ObjectTimers.addTime("Warning_Remove", current_time + 500)
@@ -2206,8 +2196,7 @@ while RunVar == True:
                 elif current_player.ycor < 500:
                     current_player.move("DOWN")
             if keys[pygame.K_q]:
-                #unique ability
-                #print("q pressed")
+                pass
                 
                 if current_player == bird:
                     if flockTimeLeft == 0 and flockCooldownLeft == -1 and isFlockCooldown == False:
