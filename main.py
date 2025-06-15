@@ -448,7 +448,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleBonus"
+GameState = "TitleScreen"
 Testing = False
 RunVar = True
 
@@ -1451,8 +1451,8 @@ while RunVar == True:
 
             if specialTransition:
                 current_player.move("UP")
-                net.ycor -= 10
-                net.update_frame()
+                #net.ycor -= 10
+                #net.update_frame()
                 
                 for collide in collide_list:
                     collide_list.remove(collide)
