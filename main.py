@@ -441,7 +441,7 @@ bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
 GameState = "TurtleBonus"
-Testing = True
+Testing = False
 RunVar = True
 
 Sound.play_backround_music()
