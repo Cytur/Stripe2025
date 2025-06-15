@@ -1426,8 +1426,7 @@ while RunVar == True:
                 instructText.blit()
 
             if km_count >= 567 and km_count <= 570:
-                #net = make_net()
-                pass
+                net = make_net()
 
                 obstacle_list.append(net)
                 collide_list.append(net)
@@ -1636,8 +1635,6 @@ while RunVar == True:
 
             screen.blit(current_player.current_frame, current_player.Rect)
             # pygame.draw.rect(screen, DesignClass.Colors["GREEN"], bird.Rect)d
-
-            lives.blit(screen)
 
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
