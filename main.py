@@ -393,6 +393,8 @@ def make_warning_bird(xcor):
     return ObstacleClass(xcor, 0, 0, 0, 10, 10, 10, 10, False, False, [warning_img], "Warning")
 def make_warning_deer(xcor, ycor):
     return ObstacleClass(xcor, ycor, 0, 0, 10, 10, 10, 10, False, False, [warning_img2], "Warning")
+def make_kelp(ycor):
+    return  ObstacleClass(900, ycor, 4, 0, 16, 16, 32, 32, True, False, [pellet_img], "Kelp")
 
 #deer vars
 hasFixedYcor = False
@@ -1359,7 +1361,9 @@ while RunVar == True:
 
         case "TurtleLevel":
             current_player = turtle
-            current_player.xcor = 50
+            if specialTransition != True:
+                print("setting")
+                current_player.xcor = 50
             routelen = 2000
             current_player.rect_update()
             lives.load_hearts(2)
@@ -1426,13 +1430,16 @@ while RunVar == True:
             if km_count < 300:
                 instructText.blit()
 
-            if km_count >= 567 and km_count <= 570:
-                net = make_net()
-                net = make_net()
+            if km_count > 525 and km_count < 527:
+                turt_set_ycor = turtle.ycor
 
-                obstacle_list.append(net)
-                collide_list.append(net)
-                km_count = 571
+            if km_count >= 530 and km_count <= 531:
+                kelp = make_kelp(turtle.ycor)
+                obstacle_list.append(kelp)
+                collide_list.append(kelp)
+                
+            if km_count > 532 and km_count < 1000:
+                kelp.ycor = turtle.ycor
             
             if km_count > routelen:
                 Sound.play("Win")
@@ -1453,14 +1460,13 @@ while RunVar == True:
 
             if specialTransition:
                 current_player.move("UP")
-                #net.ycor -= 10
-                #net.update_frame()
+                kelp.ycor -= 10
+                kelp.update_frame()
+                screen.blit(kelp.image, (kelp.xcor, kelp.ycor))
                 
-                for collide in collide_list:
-                    collide_list.remove(collide)
+                collide_list = []
                 
-                if -100 > current_player.ycor:
-
+                if -500 > current_player.ycor:
                     ChangeGameState(0, "TurtleBonus")
                         
                     current_player.ycor = 70
@@ -1490,7 +1496,7 @@ while RunVar == True:
             #detecting player collisions with objects
             for obstacle in collide_list:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
-                    if obstacle.descriptor == "Net":
+                    if obstacle.descriptor == "Kelp":
                         obstacle_list = []
                         collect_list = []
                         SpecialLevelEnter()
@@ -1578,7 +1584,7 @@ while RunVar == True:
             if pelletsCaughtAmount >= 20:
                 isCompletedBonus = True
                 Sound.play("Win")
-                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel", 574)
+                EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "TurtleLevel", 1001)
                 lives.add_hearts(1)
 
                 
@@ -1602,7 +1608,7 @@ while RunVar == True:
                 if turtleBonusTimer <= 0:
                     Sound.play("Lose")
                     isCompletedBonus = False
-                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel", 700)
+                    EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel", 1001)
                 ObjectTimers.addTime("Timer", current_time + 1000)
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
