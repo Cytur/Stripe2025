@@ -133,8 +133,9 @@ EndScreenTitle = "You Died!"
 EndScreenTitleColor = DesignClass.Colors["RED"]
 EndScreenReason = "N/A"
 EndScreenNextStage = "TitleScreen"
+km_count_set = 0
 
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_countm):
     global EndScreenTitle
     global EndScreenTitleColor
     global EndScreenReason
@@ -142,12 +143,13 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
     global km_count
     global GameState
     global ranReset
+    global km_count_set
     
     EndScreenTitle = TitleText
     EndScreenTitleColor = TitleTextColor
     EndScreenReason = EndReason
     EndScreenNextStage = NextStage
-    km_count = km_count_set
+    km_count_set = km_countm
     GameState = "EndScreen"
     
     ranReset = False
@@ -2552,7 +2554,7 @@ while RunVar == True:
             if keys[pygame.K_SPACE]:
                 if GameState == "EndScreen":
                     pygame.time.delay(100)
-                    ChangeGameState(0, EndScreenNextStage)
+                    ChangeGameState(km_count_set, EndScreenNextStage)
                 elif GameState == "DeerLevel":
                     isJumping = True
  

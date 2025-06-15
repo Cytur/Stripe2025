@@ -16,6 +16,7 @@ class SoundClass:
         pygame.mixer.Sound.set_volume(self.sound_dict["Flap"], 200)
         pygame.mixer.Sound.set_volume(self.sound_dict["Swim"], 2000)
         mixer.music.load("SoundFiles\Music.mp3")
+        mixer.music.set_volume(30)
 
     def play(self, *sounds):
         for sound in sounds:
