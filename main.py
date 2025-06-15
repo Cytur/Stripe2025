@@ -85,6 +85,7 @@ def ResetGame():
     global highway_ycor
     global turtle_km_increment
     global is_on_highway
+    global ranReset
 
     buttonlist = []
     ObjectTimers.addTime("Text", current_time + 10000)
@@ -113,6 +114,8 @@ def ResetGame():
     is_on_highway = False
     
     GameState = "TitleScreen"
+    
+    ranReset = False
 
 def SpecialLevelEnter():
     global GameState
@@ -136,6 +139,7 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
     global EndScreenNextStage
     global km_count
     global GameState
+    global ranReset
     
     EndScreenTitle = TitleText
     EndScreenTitleColor = TitleTextColor
@@ -143,6 +147,8 @@ def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
     EndScreenNextStage = NextStage
     km_count = km_count_set
     GameState = "EndScreen"
+    
+    ranReset = False
 
 
 
@@ -438,8 +444,8 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "DeerBonus"
-Testing = True
+GameState = "TitleScreen"
+Testing = False
 RunVar = True
 
 Sound.play_backround_music()
@@ -1416,7 +1422,8 @@ while RunVar == True:
                 instructText.blit()
 
             if km_count >= 567 and km_count <= 570:
-                net = make_net()
+                #net = make_net()
+                pass
 
                 obstacle_list.append(net)
                 collide_list.append(net)
