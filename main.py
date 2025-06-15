@@ -1595,7 +1595,6 @@ while RunVar == True:
                 pollution3 = make_bonus_pollution()
                 collide_list.append(pollution3)
                 obstacle_list.append(pollution3)
-                #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
                 
             if current_time > ObjectTimers.getCurrentValue("Garbage_Immunity"):
