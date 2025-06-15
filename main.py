@@ -33,7 +33,7 @@ def ChangeGameState(set_km_count, newGameState):
     ObjectTimers.addTime("Player_Animation", current_time + 0)
     ObjectTimers.addTime("Cloud_Spawn", current_time + 0)
     ObjectTimers.addTime("Bubble_Spawn", current_time + 0)
-    ObjectTimers.addTime("Wolf_Spawn", current_time + 1000)
+    ObjectTimers.addTime("Wolf_Spawn", current_time + 1500)
     ObjectTimers.addTime("Wolf_Animation", current_time + 0)
     ObjectTimers.addTime("Tree_Spawn", current_time + 1000)
     ObjectTimers.addTime("Text", current_time + 10000)
@@ -257,7 +257,7 @@ deer_info = InfoCard(
 ObjectTimers.addObject("Player_Animation", 0)
 ObjectTimers.addObject("Cloud_Spawn", 0)
 ObjectTimers.addObject("Bubble_Spawn", 0)
-ObjectTimers.addObject("Wolf_Spawn", 1000)
+ObjectTimers.addObject("Wolf_Spawn", 1500)
 ObjectTimers.addObject("Wolf_Animation", 0)
 ObjectTimers.addObject("Tree_Spawn", 1000)
 ObjectTimers.addObject("Text", 8000)
@@ -438,7 +438,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleBonus"
+GameState = "DeerBonus"
 Testing = True
 RunVar = True
 
@@ -720,6 +720,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2", 6001)
+                ranReset = False
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -796,6 +797,7 @@ while RunVar == True:
                         if dead:
                             Sound.play("Lose")
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
+                            ranReset = False
                         else:
                             Sound.play("Collision")
                 
@@ -937,6 +939,7 @@ while RunVar == True:
                 isCompletedBonus = True
                 Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel", 601)
+                ranReset = False
                 lives.add_hearts(1)
 
 
@@ -1062,6 +1065,7 @@ while RunVar == True:
                             Sound.play("Lose")
                             isCompletedBonus = False
                             EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel", 601)
+                            ranReset = False
                         else:
                             Sound.play("Collision")
                             
@@ -1264,6 +1268,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen", 0)
+                ranReset = False
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1316,6 +1321,7 @@ while RunVar == True:
                     if dead:
                         Sound.play("Lose")
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
+                        ranReset = False
                     else:
                         Sound.play("Collision")
                         
@@ -1419,6 +1425,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2", 2001)
+                ranReset = False
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
@@ -2217,7 +2224,7 @@ while RunVar == True:
                 "Up/Down (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (350, 50),
+                (375, 50),
                 screen
             )
             UpDownText.blit()
@@ -2230,7 +2237,7 @@ while RunVar == True:
                 "Left/Right (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (340, 130),
+                (375, 130),
                 screen
             )
             LeftRightText.blit()
