@@ -4,7 +4,7 @@ from UIClasses import TextClass, ButtonClass
 
 
 class InfoCard():
-    def __init__(self, Title: str, Description1:str, Description2, Challenges:str, migrationpattern: str, routelen: str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen, gamestatefunc, gamestate: str):
+    def __init__(self, Title: str, Description1:str, Description2, Challenges:str, migrationpattern: str, routelen: str, xcor, ycor, icon: pygame.Surface, bg: tuple, y_offset, screen, gamestatefunc, km_count:int, gamestate: str):
         self.screen = screen
 
         self.title = Title
