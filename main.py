@@ -19,7 +19,7 @@ collide_list = []
 
 km_count = 0
 specialTransition = False
-turtleBonusTimer = 12
+turtleBonusTimer = 15
 
     
 def ChangeGameState(newGameState):
@@ -61,6 +61,7 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Jellyfish_Spawn", current_time + 1400)
     ObjectTimers.addTime("Music_Restart", current_time + 326000)
     ObjectTimers.addTime("Text", current_time + 10000)
+    ObjectTimers.addTime("Garbage_Immunity", current_time + 2000)
 
     GameState = newGameState
     buttonlist = []
@@ -286,6 +287,7 @@ ObjectTimers.addObject("Warning_Remove", 0)
 ObjectTimers.addObject("Ability_Text_Update", 1000)
 ObjectTimers.addObject("Text", 10000)
 ObjectTimers.addObject("Timer", 1000)
+ObjectTimers.addObject("Garbage_Immunity", 2000)
 
 
 #Images for Obstacles
@@ -311,7 +313,7 @@ arrow_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/ArrowAsset/
 trap_img = pygame.image.load("ImageAssets/BearTrapAsset/trap1.png")
 hole_img = pygame.transform.scale(pygame.image.load("ImageAssets/HoleAsset/Hole.png"), (27.5, 15))
 highway_img = pygame.transform.scale(pygame.image.load("ImageAssets/HighwayAsset/Highway.png"), (20, 50))
-net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 32))
+net_img = pygame.transform.scale(pygame.image.load("ImageAssets/NetAsset/Net.png"), (64, 448))
 pellet_img = pygame.image.load("ImageAssets/KelpAsset/Kelp.png")
 eagle_img = pygame.transform.rotate(pygame.transform.flip(pygame.image.load("ImageAssets/EagleAsset/Eagle.png"), True, False), 45)
 jellyfish_imgs = [pygame.transform.scale(pygame.image.load(f"ImageAssets/JellyfishAsset/jellyfish{x+1}.png"), (24, 24)) for x in range(6)]
@@ -364,7 +366,7 @@ def make_hole():
 def make_highway(ycor):
     return ObstacleClass(1000, ycor, 10, 0, 40, 6, 80, 12, False, False, [highway_img], "Highway")
 def make_net():
-    return  ObstacleClass(1000, 10, 10, 0, 32, 32, 64, 64, True, False, [net_img], "Net")
+    return  ObstacleClass(1000, -300, 10, 0, 224, 224, 448, 448, True, False, [net_img], "Net")
 def make_pellet():
     return  ObstacleClass(random.randint(15, 700), -100, 0, -12, 16, 16, 32, 32, True, False, [pellet_img], "Pellet")
 def make_bonus_pollution():
@@ -392,6 +394,9 @@ gravity_force = 0.5
 highway_ycor = random.randint(150, 400)
 turtle_km_increment = 1
 is_on_highway = False
+
+#turtle bonus vars
+isImmune = False
 
 #friendly bird vars
 ranReset = False
@@ -1350,14 +1355,14 @@ while RunVar == True:
             instructText = TextClass(
                 "Reach the Atlantic, avoid predators with W and S!",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
             kmText = TextClass(
                 f"{km_count}km",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (100, 25),
                 screen
             )
@@ -1514,17 +1519,24 @@ while RunVar == True:
             screen.fill(DesignClass.Colors["OCEANBLUE"])
 
             instructText = TextClass(
-                "Catch kelp! Use A and D to move",
+                "Catch kelp! Use A and D to move.",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
+                screen
+            )
+            instructText2 = TextClass(
+                "Eating garbage will remove 4 seconds!",
+                pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
+                DesignClass.Colors["WHITE"],
+                (DesignClass.SCREEN_WIDTH_CENTER, 160),
                 screen
             )
 
             pelletsText = TextClass(
-                f"{pelletsCaughtAmount}/20 peices of kelp caught",
+                f"{pelletsCaughtAmount}/20 pieces of kelp caught",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (270, 25),
                 screen
             )
@@ -1532,7 +1544,7 @@ while RunVar == True:
             timerText = TextClass(
                 f"{turtleBonusTimer}s before starving",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 35),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["RED"],
                 (200, 70),
                 screen
             )
@@ -1569,18 +1581,25 @@ while RunVar == True:
                     isCompletedBonus = False
                     EndLevel("You starved!", DesignClass.Colors["RED"], "Bonus incomplete!", "TurtleLevel")
                 ObjectTimers.addTime("Timer", current_time + 1000)
-
                 
             if current_time > ObjectTimers.getCurrentValue("Pellet_Spawn"):
                 kelp = make_pellet()
                 collide_list.append(kelp)
                 obstacle_list.append(kelp)
-                for s in range(3):
-                    pollution = make_bonus_pollution()
-                    collide_list.append(pollution)
-                    obstacle_list.append(pollution)
+                pollution = make_bonus_pollution()
+                collide_list.append(pollution)
+                obstacle_list.append(pollution)
+                pollution2 = make_bonus_pollution()
+                collide_list.append(pollution2)
+                obstacle_list.append(pollution2)
+                pollution3 = make_bonus_pollution()
+                collide_list.append(pollution3)
+                obstacle_list.append(pollution3)
                 #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
+                
+            if current_time > ObjectTimers.getCurrentValue("Garbage_Immunity"):
+                isImmune = False
                 
 
 
@@ -1605,6 +1624,7 @@ while RunVar == True:
 
             if current_time < ObjectTimers.getCurrentValue("Text"):
                 instructText.blit()
+                instructText2.blit()
             pelletsText.blit()
             timerText.blit()
 
@@ -1613,14 +1633,24 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Pellet": 
                         pelletsCaughtAmount += 1
-                        turtleBonusTimer = 12
+                        turtleBonusTimer = 15
                         obstacle_list.pop(obstacle_list.index(obstacle))
                         collide_list.pop(collide_list.index(obstacle))
                     else:
-                        turtleBonusTimer -= 4
-                        pygame.time.delay(100)
-                        collide_list.remove(obstacle)
-                        Sound.play("Collision")
+                        #Temporary immunity from additional garbage bags to prevent instantly dying
+                        if isImmune == False:
+                            if current_time > ObjectTimers.getCurrentValue("Garbage_Immunity"):
+                                ObjectTimers.addTime("Garbage_Immunity", current_time + 2000)
+                                isImmune = True
+                                
+                                for obstacle in collide_list:
+                                    if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
+                                        collide_list.remove(obstacle)
+                                
+                                turtleBonusTimer -= 4
+                                pygame.time.delay(100)
+                                #collide_list.remove(obstacle)
+                                Sound.play("Collision")
 
 
         case "TurtleLevel2":
@@ -1637,14 +1667,14 @@ while RunVar == True:
             instructText = TextClass(
                 "Reach the end and lay your eggs, use W and S",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (DesignClass.SCREEN_WIDTH_CENTER, 125),
                 screen
             )
             kmText = TextClass(
                 f"{km_count}km",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
-                DesignClass.Colors["BLACK"],
+                DesignClass.Colors["WHITE"],
                 (100, 25),
                 screen
             )
