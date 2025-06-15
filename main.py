@@ -44,7 +44,6 @@ def ChangeGameState(newGameState):
     ObjectTimers.addTime("Trash_Spawn", current_time + 5000)
     ObjectTimers.addTime("Shark_Spawn", current_time + 8000)
     ObjectTimers.addTime("Killerwhale_Spawn", current_time + 8000)
-    ObjectTimers.addTime("Hunter", current_time + 0)
     ObjectTimers.addTime("Bug_Spawn", current_time + 1000)
     ObjectTimers.addTime("Trap_Spawn", current_time + 5000)
     ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
@@ -376,6 +375,7 @@ def make_warning_deer(xcor, ycor):
 
 #deer vars
 hasFixedYcor = False
+deerMoving = True
 
 #Vars for player jumping
 isJumping = False
@@ -1856,11 +1856,11 @@ while RunVar == True:
                 ObjectTimers.addTime("KM_Update", current_time + 5000)
 
 
-
-            if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
-                current_player.animation_update()
-                #end_time_player_animation = pygame.time.get_ticks() + 60
-                ObjectTimers.addTime("Player_Animation", current_time + 60)
+            if deerMoving == True:
+                if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
+                    current_player.animation_update()
+                    #end_time_player_animation = pygame.time.get_ticks() + 60
+                    ObjectTimers.addTime("Player_Animation", current_time + 60)
 
                 
             if current_time > ObjectTimers.getCurrentValue("Trot_Update"):
@@ -2221,13 +2221,16 @@ while RunVar == True:
             if GameState == "DeerLevel2" or GameState == "TurtleBonus":
                 if keys[pygame.K_d]:
                     if current_player.xcor < 730:
-                      
+                        deerMoving = True
                         current_player.move("RIGHT")
 
-                if keys[pygame.K_a]:
-                  
+                elif keys[pygame.K_a]:
                     if current_player.xcor > 15:
+                        deerMoving = True
                         current_player.move("LEFT")
+                
+                else:
+                    deerMoving = False
         except:
             pass
         
