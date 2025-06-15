@@ -27,7 +27,7 @@ def ChangeGameState(set_km_count, newGameState):
     global buttonlist, obstacle_list, collide_list
     global km_count
     global highway_ycor
-    global turtle_km_increment
+    global turtle_km_increment, turtleBonusTimer
     global is_on_highway
 
     ObjectTimers.addTime("Player_Animation", current_time + 0)
@@ -71,6 +71,7 @@ def ChangeGameState(set_km_count, newGameState):
     km_count = set_km_count
     
     highway_ycor = random.randint(150, 400)
+    turtleBonusTimer = 15
     turtle_km_increment = 1
     is_on_highway = False
 
