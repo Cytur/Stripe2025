@@ -1362,7 +1362,6 @@ while RunVar == True:
         case "TurtleLevel":
             current_player = turtle
             if specialTransition != True:
-                print("setting")
                 current_player.xcor = 50
             routelen = 2000
             current_player.rect_update()
