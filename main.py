@@ -33,7 +33,7 @@ def ChangeGameState(set_km_count, newGameState):
     ObjectTimers.addTime("Player_Animation", current_time + 0)
     ObjectTimers.addTime("Cloud_Spawn", current_time + 0)
     ObjectTimers.addTime("Bubble_Spawn", current_time + 0)
-    ObjectTimers.addTime("Wolf_Spawn", current_time + 1000)
+    ObjectTimers.addTime("Wolf_Spawn", current_time + 1500)
     ObjectTimers.addTime("Wolf_Animation", current_time + 0)
     ObjectTimers.addTime("Tree_Spawn", current_time + 1000)
     ObjectTimers.addTime("Text", current_time + 10000)
@@ -87,6 +87,7 @@ def ResetGame():
     global highway_ycor
     global turtle_km_increment
     global is_on_highway
+    global ranReset
 
     buttonlist = []
     ObjectTimers.addTime("Text", current_time + 10000)
@@ -115,6 +116,8 @@ def ResetGame():
     is_on_highway = False
     
     GameState = "TitleScreen"
+    
+    ranReset = False
 
 def SpecialLevelEnter():
     global GameState
@@ -130,21 +133,26 @@ EndScreenTitle = "You Died!"
 EndScreenTitleColor = DesignClass.Colors["RED"]
 EndScreenReason = "N/A"
 EndScreenNextStage = "TitleScreen"
+km_count_set = 0
 
-def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_count_set):
+def EndLevel(TitleText, TitleTextColor, EndReason, NextStage, km_countm):
     global EndScreenTitle
     global EndScreenTitleColor
     global EndScreenReason
     global EndScreenNextStage
     global km_count
     global GameState
+    global ranReset
+    global km_count_set
     
     EndScreenTitle = TitleText
     EndScreenTitleColor = TitleTextColor
     EndScreenReason = EndReason
     EndScreenNextStage = NextStage
-    km_count = km_count_set
+    km_count_set = km_countm
     GameState = "EndScreen"
+    
+    ranReset = False
 
 
 
@@ -259,7 +267,7 @@ deer_info = InfoCard(
 ObjectTimers.addObject("Player_Animation", 0)
 ObjectTimers.addObject("Cloud_Spawn", 0)
 ObjectTimers.addObject("Bubble_Spawn", 0)
-ObjectTimers.addObject("Wolf_Spawn", 1000)
+ObjectTimers.addObject("Wolf_Spawn", 1500)
 ObjectTimers.addObject("Wolf_Animation", 0)
 ObjectTimers.addObject("Tree_Spawn", 1000)
 ObjectTimers.addObject("Text", 8000)
@@ -440,7 +448,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TurtleBonus"
+GameState = "TitleScreen"
 Testing = False
 RunVar = True
 
@@ -722,6 +730,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "BirdLevel2", 6001)
+                ranReset = False
 
             if km_count > speciallenBot and km_count < speciallenTop:
                 arrow = make_arrow()
@@ -798,6 +807,7 @@ while RunVar == True:
                         if dead:
                             Sound.play("Lose")
                             EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
+                            ranReset = False
                         else:
                             Sound.play("Collision")
                 
@@ -939,6 +949,7 @@ while RunVar == True:
                 isCompletedBonus = True
                 Sound.play("Win")
                 EndLevel("Bonus complete!", DesignClass.Colors["GREEN"], "Return to Level 1", "BirdLevel", 601)
+                ranReset = False
                 lives.add_hearts(1)
 
 
@@ -1064,6 +1075,7 @@ while RunVar == True:
                             Sound.play("Lose")
                             isCompletedBonus = False
                             EndLevel("You died!", DesignClass.Colors["RED"], "Bonus incomplete!", "BirdLevel", 601)
+                            ranReset = False
                         else:
                             Sound.play("Collision")
                             
@@ -1266,6 +1278,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won!", DesignClass.Colors["GREEN"], "Congratulations, Try Other Animals Too!", "TitleScreen", 0)
+                ranReset = False
 
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
@@ -1318,6 +1331,7 @@ while RunVar == True:
                     if dead:
                         Sound.play("Lose")
                         EndLevel("You died!", DesignClass.Colors["RED"], "Unfortunately, you did not migrate successfully.", "TitleScreen", 0)
+                        ranReset = False
                     else:
                         Sound.play("Collision")
                         
@@ -1412,7 +1426,8 @@ while RunVar == True:
                 instructText.blit()
 
             if km_count >= 567 and km_count <= 570:
-                net = make_net()
+                #net = make_net()
+                pass
 
                 obstacle_list.append(net)
                 collide_list.append(net)
@@ -1421,6 +1436,7 @@ while RunVar == True:
             if km_count > routelen:
                 Sound.play("Win")
                 EndLevel("You Won", DesignClass.Colors["GREEN"], "Go to level 2", "TurtleLevel2", 2001)
+                ranReset = False
 
             if current_time > ObjectTimers.getCurrentValue("Player_Animation"):
                 current_player.animation_update()
@@ -1597,7 +1613,6 @@ while RunVar == True:
                 pollution3 = make_bonus_pollution()
                 collide_list.append(pollution3)
                 obstacle_list.append(pollution3)
-                #end_time_pellet_spawn = pygame.time.get_ticks() + 3000
                 ObjectTimers.addTime("Pellet_Spawn", current_time + 3000)
                 
             if current_time > ObjectTimers.getCurrentValue("Garbage_Immunity"):
@@ -2220,7 +2235,7 @@ while RunVar == True:
                 "Up/Down (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (350, 50),
+                (375, 50),
                 screen
             )
             UpDownText.blit()
@@ -2233,7 +2248,7 @@ while RunVar == True:
                 "Left/Right (Depends on the level)",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 30),
                 DesignClass.Colors["BLACK"],
-                (340, 130),
+                (375, 130),
                 screen
             )
             LeftRightText.blit()
@@ -2536,7 +2551,7 @@ while RunVar == True:
             if keys[pygame.K_SPACE]:
                 if GameState == "EndScreen":
                     pygame.time.delay(100)
-                    ChangeGameState(0, EndScreenNextStage)
+                    ChangeGameState(km_count_set, EndScreenNextStage)
                 elif GameState == "DeerLevel":
                     isJumping = True
  
