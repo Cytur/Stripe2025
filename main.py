@@ -451,7 +451,7 @@ isCompletedBonus = False
 bugsCaughtAmount = 0
 pelletsCaughtAmount = 0
 
-GameState = "TitleScreen"
+GameState = "DeerLevel2"
 Testing = False
 RunVar = True
 
@@ -1659,7 +1659,11 @@ while RunVar == True:
                 if current_player.Rect.colliderect(obstacle.Rect) or obstacle.Rect.collidepoint(current_player.xcor, current_player.ycor):
                     if obstacle.descriptor == "Pellet": 
                         pelletsCaughtAmount += 1
-                        turtleBonusTimer = 15
+                        turtleBonusTimer += 10
+                        
+                        if turtleBonusTimer > 15:
+                            turtleBonusTimer = 15
+                        
                         obstacle_list.pop(obstacle_list.index(obstacle))
                         collide_list.pop(collide_list.index(obstacle))
                     else:
@@ -2120,7 +2124,7 @@ while RunVar == True:
                 screen
             )
             kmText = TextClass(
-                f"{km_count} hours till safe",
+                f"{24 - km_count} hours until safe",
                 pygame.font.Font(DesignClass.Fonts["Poppins"], 40),
                 DesignClass.Colors["BLACK"],
                 (200, 25),
@@ -2173,7 +2177,7 @@ while RunVar == True:
 
             if current_time > ObjectTimers.getCurrentValue("KM_Update"):
                 km_count += 1
-                ObjectTimers.addTime("KM_Update", current_time + 5000)
+                ObjectTimers.addTime("KM_Update", current_time + 2500)
 
 
             if deerMoving == True:
