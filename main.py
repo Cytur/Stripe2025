@@ -1588,7 +1588,7 @@ while RunVar == True:
 
             #Jumping
             if isJumping == True:
-                deer.current_frame = deer.frames[4]
+                deer.current_frame = deer.frames[3]
 
                 current_player.jump(vert_acceleration)
                 
