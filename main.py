@@ -1457,6 +1457,7 @@ while RunVar == True:
         case "DeerLevel":
             current_player = deer
             deer.xcor = 50
+            current_player.cur_frames = deer.frames
             current_player.rect_update()
             routelen = 250
             lives.load_hearts(2)
